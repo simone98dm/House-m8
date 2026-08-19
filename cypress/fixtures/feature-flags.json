@@ -1,0 +1,6 @@
+{
+  "stripe-integration": true,
+  "profile-pictures": true,
+  "new-users": true,
+  "max-users": 10
+}

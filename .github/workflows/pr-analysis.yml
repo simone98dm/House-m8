@@ -1,0 +1,313 @@
+name: PR Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+# A new push supersedes the previous run — no point finishing an analysis of code
+# that is already stale.
+concurrency:
+  group: pr-analysis-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '24'
+
+jobs:
+  # Lint, formatting, types and a standalone build. Fast, and the first thing a
+  # reviewer needs to know. Each step runs even if an earlier one failed, so a
+  # single PR surfaces every class of problem at once instead of one per push.
+  quality:
+    name: Lint, types & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+          # Makes setup-node write the GitHub Packages auth line into ~/.npmrc
+          # from NODE_AUTH_TOKEN. The committed .npmrc only maps the scope.
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@simone98dm'
+
+      # PACKAGES_TOKEN is a PAT with read:packages. The default GITHUB_TOKEN is
+      # scoped to THIS repo and cannot read a package published from another
+      # one, so it only works if simone98dm-layer explicitly grants house-m8-fe
+      # access under the package's "Manage Actions access" settings.
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+        run: yarn install --frozen-lockfile
+
+      - name: ESLint
+        if: always()
+        run: yarn lint
+
+      # `yarn format` is the check-only variant (prettier --check .);
+      # `format:fix` is the writing one.
+      - name: Prettier
+        if: always()
+        run: yarn format
+
+      # Reporting-only for now. `yarn typecheck` was broken outright (it shelled
+      # out to a floating npx vue-tsc that could not resolve typescript), which
+      # is why it sits commented out in ci.yml. With vue-tsc installed it runs,
+      # and immediately reports ~16 pre-existing errors — mostly `possibly
+      # undefined` in test files, plus a real one in
+      # app/components/ui/Notification.vue whose template binds a `typeStyles`
+      # that setup never returns. Flip this to a hard gate once that backlog is
+      # cleared; leaving it blocking today would redden every PR on arrival.
+      - name: Typecheck
+        if: always()
+        continue-on-error: true
+        run: yarn typecheck
+
+      # `nuxt build --dotenv .env.production` needs the file to exist, and every
+      # .env* except .env.example is gitignored. The example's values are
+      # placeholders, which is fine: nothing connects to Postgres at build time.
+      - name: Create build env
+        if: always()
+        run: cp .env.example .env.production
+
+      # Separate from the Lighthouse job: a build break should read as a build
+      # break, not as a performance audit that timed out.
+      - name: Build
+        if: always()
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+        run: yarn build
+
+  coverage:
+    name: Test coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+          # Makes setup-node write the GitHub Packages auth line into ~/.npmrc
+          # from NODE_AUTH_TOKEN. The committed .npmrc only maps the scope.
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@simone98dm'
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+        run: yarn install --frozen-lockfile
+
+      # continue-on-error: a red suite is exactly when the coverage comment is
+      # most useful. The job still fails at the end, after commenting.
+      - name: Run tests with coverage
+        id: tests
+        continue-on-error: true
+        run: yarn test:coverage
+
+      # always(): if install or the run dies, the PR should still say so rather
+      # than showing nothing at all.
+      - name: Comment coverage on PR
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          TESTS_OUTCOME: ${{ steps.tests.outcome }}
+        with:
+          script: |
+            const fs = require('fs');
+            const MARKER = '<!-- pr-analysis:coverage -->';
+            const testsPassed = process.env.TESTS_OUTCOME === 'success';
+
+            // Thresholds live in vitest.config.ts; keep this table in sync with it.
+            const THRESHOLDS = {
+              lines: 90,
+              statements: 90,
+              functions: 75,
+              branches: 82,
+            };
+
+            let body;
+            try {
+              const total = JSON.parse(
+                fs.readFileSync('./coverage/coverage-summary.json', 'utf8')
+              ).total;
+
+              const icon = (pct, min) => (pct >= min ? '🟢' : pct >= min - 10 ? '🟡' : '🔴');
+              const row = (label, key, m) =>
+                `| ${label} | ${icon(m.pct, THRESHOLDS[key])} ${m.pct.toFixed(2)}% | ${THRESHOLDS[key]}% | ${m.covered} / ${m.total} |`;
+
+              body = [
+                MARKER,
+                '## 🧪 Test coverage',
+                '',
+                testsPassed
+                  ? '✅ All tests passed and coverage is above its thresholds.'
+                  : '❌ **`yarn test:coverage` failed** — either a test is red or a coverage threshold in `vitest.config.ts` was breached. The table below still reports where coverage landed; check the job log for which one it was.',
+                '',
+                '| Metric | Coverage | Threshold | Covered / Total |',
+                '| --- | --- | --- | --- |',
+                row('Lines', 'lines', total.lines),
+                row('Statements', 'statements', total.statements),
+                row('Functions', 'functions', total.functions),
+                row('Branches', 'branches', total.branches),
+                '',
+                '🔴 well under threshold · 🟡 within 10 points · 🟢 at or above.',
+              ].join('\n');
+            } catch (error) {
+              body = [
+                MARKER,
+                '## 🧪 Test coverage',
+                '',
+                `⚠️ Could not read the coverage report: \`${error.message}\``,
+                'The test run probably crashed before writing it — check the job log.',
+              ].join('\n');
+            }
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number,
+            });
+            const existing = comments.find((c) => c.body.includes(MARKER));
+
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+
+      - name: Fail if tests failed
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
+
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+          # Makes setup-node write the GitHub Packages auth line into ~/.npmrc
+          # from NODE_AUTH_TOKEN. The committed .npmrc only maps the scope.
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@simone98dm'
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+        run: yarn install --frozen-lockfile
+
+      - name: Create build env
+        run: cp .env.example .env.production
+
+      - name: Build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+        run: yarn build
+
+      # Nitro's default node-server preset. Backgrounded, then polled until it
+      # answers — Lighthouse against a half-booted server produces noise, not data.
+      #
+      # No database service is needed: the repositories plugin only constructs a
+      # pg Pool at boot and pg connects lazily on first query, and none of the
+      # audited routes below query the database while rendering.
+      - name: Start server
+        env:
+          BASE_URL: http://localhost:3000
+          NUXT_PUBLIC_BASE_URL: http://localhost:3000
+        run: |
+          node .output/server/index.mjs &
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/ > /dev/null; then
+              echo "server up after ${i} attempts"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::server did not respond on :3000 within 60s"
+          exit 1
+
+      - name: Run Lighthouse
+        id: lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          # The audited routes and the score gates both live in
+          # lighthouserc.json, so `yarn lighthouse` locally and this job measure
+          # exactly the same thing. Deliberately NOT passing `urls:` here — it
+          # would override the config and let the two drift apart.
+          #
+          # i18n strategy is "no_prefix", so those routes carry no locale
+          # segment. Only routes reachable without a session are listed:
+          # everything behind app/middleware/auth.global.ts (dashboard,
+          # expenses, balance, bills, reports, house, user) redirects an
+          # anonymous client to /auth/login, so auditing them would score the
+          # login page several times over rather than the pages themselves.
+          # Add them once the run can authenticate.
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Comment Lighthouse results on PR
+        if: always() && steps.lighthouse.outcome != 'skipped'
+        uses: actions/github-script@v7
+        # Passed through env, never interpolated into the script body: a "${" or a
+        # backtick inside the JSON would otherwise break parsing or get evaluated.
+        env:
+          LH_MANIFEST: ${{ steps.lighthouse.outputs.manifest }}
+          LH_LINKS: ${{ steps.lighthouse.outputs.links }}
+        with:
+          script: |
+            const MARKER = '<!-- pr-analysis:lighthouse -->';
+            const lines = [MARKER, '## 🔦 Lighthouse', ''];
+
+            try {
+              const manifest = JSON.parse(process.env.LH_MANIFEST || '[]');
+              const links = JSON.parse(process.env.LH_LINKS || '{}');
+
+              if (manifest.length === 0) {
+                lines.push('⚠️ Lighthouse produced no results — check the job log.');
+              } else {
+                const icon = (score) => (score >= 0.9 ? '🟢' : score >= 0.5 ? '🟡' : '🔴');
+                const cell = (score) =>
+                  typeof score === 'number' ? `${icon(score)} ${Math.round(score * 100)}` : '—';
+
+                lines.push('| URL | Performance | Accessibility | Best practices | SEO | Report |');
+                lines.push('| --- | --- | --- | --- | --- | --- |');
+
+                for (const run of manifest.filter((r) => r.isRepresentativeRun)) {
+                  const s = run.summary;
+                  const path = new URL(run.url).pathname;
+                  const report = links[run.url] ? `[view](${links[run.url]})` : '—';
+                  lines.push(
+                    `| \`${path}\` | ${cell(s.performance)} | ${cell(s.accessibility)} | ` +
+                    `${cell(s['best-practices'])} | ${cell(s.seo)} | ${report} |`
+                  );
+                }
+
+                lines.push('', '🔴 <50 · 🟡 50–89 · 🟢 ≥90. Accessibility is a hard gate at 90 (see `lighthouserc.json`); the rest warn. Scores come from a shared CI runner and move a few points between runs — read trends, not single digits.');
+              }
+            } catch (error) {
+              lines.push(`⚠️ Could not parse the Lighthouse output: \`${error.message}\``);
+            }
+
+            const body = lines.join('\n');
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number,
+            });
+            const existing = comments.find((c) => c.body.includes(MARKER));
+
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
