@@ -19,8 +19,19 @@ jobs:
         with:
           node-version: '24'
           cache: 'yarn'
+          # @simone98dm/layer lives on GitHub Packages. setup-node writes the
+          # auth line into ~/.npmrc from NODE_AUTH_TOKEN; the committed .npmrc
+          # only maps the scope to the registry. Without this the install 401s.
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@simone98dm'
 
+      # PACKAGES_TOKEN is a PAT with read:packages. The default GITHUB_TOKEN is
+      # scoped to THIS repo and cannot read a package published from another
+      # one, so the fallback only works if simone98dm-layer grants this repo
+      # access under the package's "Manage Actions access" settings.
       - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
         run: yarn install --frozen-lockfile
 
       - name: Security audit
