@@ -110,8 +110,11 @@ local.*
 # Misc
 # ===========================================
 graphify-out/
-marketing/
-templates/
+# Anchored to the repo root on purpose: unanchored, `templates/` matched
+# server/templates/ too and silently excluded the 12 email templates that
+# server/emails/index.ts imports, breaking `nuxt build` at the prerender step.
+/marketing/
+/templates/
 .scripts
 DESIGN.md
 CLAUDE.md
@@ -189,6 +192,8 @@ agentdb.rvf.lock
 .playwright-mcp/
 # Backup of a previous .claude/ config, kept locally during migration.
 .old-claude/
+# Local markdown issue tracker (see docs/agents/issue-tracker.md).
+.scratch/
 
 # NOT ignored, deliberately:
 #   .impeccable/critique/  — Phase 1 critique snapshots. docs/handover/

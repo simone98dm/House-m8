@@ -1,0 +1,25 @@
+/* ─── Empty State ─────────────────────────────────────────── */
+@layer components {
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+    gap: 12px;
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--fg);
+    }
+
+    p {
+      font-size: var(--text-base);
+      color: var(--fg-muted);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+  }
+}

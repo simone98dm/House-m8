@@ -1,0 +1,31 @@
+/* ============================================================
+   House M8 — Style entry point
+   Plus Jakarta Sans · Tailwind + semantic design tokens
+
+   This file is intentionally `@use`-only: Sass emits each module's CSS in
+   `@use` order, so the cascade below mirrors the order the rules need to
+   land in (fonts → Tailwind layers → tokens → base → utilities →
+   components → layout → features → animations). Adding plain CSS here
+   would be emitted *after* every module and silently reorder the cascade.
+   ============================================================ */
+
+@use 'fonts';
+@use 'tailwind';
+@use 'tokens';
+@use 'base';
+@use 'utilities';
+
+@use 'components/card';
+@use 'components/badge';
+@use 'components/stat';
+@use 'components/avatar';
+@use 'components/empty-state';
+@use 'components/state-card';
+@use 'components/table';
+@use 'components/transitions';
+
+@use 'layout/app';
+
+@use 'features/dashboard';
+
+@use 'animations';

@@ -1,0 +1,42 @@
+/* ─── Dashboard Layout ────────────────────────────────────── */
+.greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--fg);
+  }
+
+  p {
+    font-size: var(--text-base);
+    color: var(--fg-muted);
+    margin-top: 3px;
+  }
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-left,
+.dash-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dash-left {
+  min-width: 0;
+}
