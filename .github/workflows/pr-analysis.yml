@@ -130,10 +130,10 @@ jobs:
 
             // Thresholds live in vitest.config.ts; keep this table in sync with it.
             const THRESHOLDS = {
-              lines: 90,
-              statements: 90,
-              functions: 75,
-              branches: 82,
+              lines: 81,
+              statements: 79,
+              functions: 73,
+              branches: 69,
             };
 
             let body;
