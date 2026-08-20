@@ -60,7 +60,7 @@ const toInitials = computed(() => {
 
       <Icon
         name="heroicons:arrow-right"
-        class="size-4 text-gray-400 dark:text-gray-500 shrink-0"
+        class="size-4 text-gray-500 dark:text-gray-400 shrink-0"
         aria-hidden="true"
       />
 

@@ -1,0 +1,16 @@
+/* ─── Utilities ────────────────────────────────────────────
+   Type-scale helper prefixed `fs-` to avoid clashing with Tailwind's
+   built-in text-* size utilities. Only the steps actually consumed by
+   components are declared — add a `.fs-*` step when a call site needs it
+   rather than mirroring the whole --text-* scale up front. */
+@layer utilities {
+  .fs-2xs {
+    font-size: var(--text-2xs);
+  }
+
+  .text-numeric {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+}

@@ -75,7 +75,7 @@ const formatHistoryTime = (timestamp: Date) => {
   return formatShort(timestamp);
 };
 
-// Notification type → shared state-card icon-chip variant (main.css).
+// Notification type → shared state-card icon-chip variant (components/_state-card.scss).
 // 'info' reuses 'primary' — no dedicated DESIGN.md token for it.
 const getTypeStyle = (type: string) => {
   const variant = type === 'info' ? 'primary' : type;

@@ -53,7 +53,7 @@ const hasNoInformation = computed(
     <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
       {{ $t('profile.personal.noInformation') }}
     </p>
-    <p class="text-xs text-gray-400 dark:text-gray-500">
+    <p class="text-xs text-gray-500 dark:text-gray-400">
       {{ $t('profile.personal.clickEditToAdd') }}
     </p>
   </div>

@@ -408,7 +408,7 @@ watch(
               name: `${member.user?.first_name ?? ''} ${member.user?.last_name ?? ''}`.trim(),
             })
           "
-          class="shrink-0 rounded-full p-1.5 text-gray-400 hover:bg-[var(--danger-subtle)] hover:text-[var(--danger-fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-gray-500"
+          class="shrink-0 rounded-full p-1.5 text-gray-500 hover:bg-[var(--danger-subtle)] hover:text-[var(--danger-fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-gray-400"
           @click="requestMemberRemoval(member.user_id, $event)"
         >
           <Icon
@@ -420,7 +420,7 @@ watch(
 
         <Icon
           name="heroicons:chevron-right"
-          class="h-4 w-4 shrink-0 text-gray-400 dark:text-gray-500"
+          class="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400"
           aria-hidden="true"
         />
       </div>

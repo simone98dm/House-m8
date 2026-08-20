@@ -29,7 +29,9 @@ useSeoMeta({
 const route = useRoute();
 const userStore = useUserStore();
 const auth = useAuth();
-const { isEnabled } = useFeatureFlags(); // raw buttons below use AuthShell's .auth-submit/.btn-google (see login.vue), not on UiButton's scale
+// The Google button below stays raw: AuthShell owns the .btn-google variant
+// and it is not on UiButton's scale (see login.vue).
+const { isEnabled } = useFeatureFlags();
 
 const email = ref('');
 const termsAccepted = ref(false);
@@ -98,13 +100,14 @@ onMounted(() => {
       <h1 class="auth-heading">{{ t('auth.register.closed.title') }}</h1>
       <p class="auth-sub">{{ t('auth.register.closed.message') }}</p>
       <div class="auth-form">
-        <button
-          class="btn btn-primary auth-submit"
+        <UiButton
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.goToLogin')"
           @click="navigateTo('/auth/login')"
         >
           {{ t('auth.register.closed.button') }}
-        </button>
+        </UiButton>
       </div>
     </template>
 
@@ -119,13 +122,14 @@ onMounted(() => {
         <p class="auth-sub" style="text-align: center">
           {{ t('auth.register.emailSent.message') }}
         </p>
-        <button
-          class="btn btn-primary auth-submit"
+        <UiButton
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.goToLogin')"
           @click="navigateTo('/auth/login')"
         >
           {{ t('auth.register.emailSent.button') }}
-        </button>
+        </UiButton>
       </div>
     </template>
 
@@ -135,6 +139,7 @@ onMounted(() => {
 
       <div
         v-if="error"
+        id="register-error"
         class="auth-alert auth-alert-error"
         role="alert"
         aria-live="assertive"
@@ -144,40 +149,32 @@ onMounted(() => {
       </div>
 
       <form class="auth-form" novalidate @submit.prevent="signUp">
-        <!-- Email: raw, .input-with-icon design system has no UiInput equivalent -->
-        <div class="input-group">
-          <label class="input-label" for="email">{{
-            $t('auth.signUp.email')
-          }}</label>
-          <div class="input-with-icon">
-            <span class="input-icon" aria-hidden="true">
-              <AuthIconEmail />
-            </span>
-            <input
-              id="email"
-              v-model="email"
-              class="input"
-              type="email"
-              :placeholder="$t('auth.signUp.emailPlaceholder')"
-              autocomplete="email"
-              required
-              :disabled="loading"
-              :aria-describedby="error ? 'register-error' : undefined"
-            />
-          </div>
-        </div>
+        <UiInput
+          id="email"
+          v-model="email"
+          type="email"
+          :label="$t('auth.signUp.email')"
+          :placeholder="$t('auth.signUp.emailPlaceholder')"
+          autocomplete="email"
+          required
+          :disabled="loading"
+          :aria-describedby="error ? 'register-error' : undefined"
+        >
+          <template #icon><AuthIconEmail /></template>
+        </UiInput>
 
         <GdprConsentCheckbox v-model="termsAccepted" />
 
-        <button
+        <UiButton
           type="submit"
-          class="btn btn-primary auth-submit"
-          :disabled="loading || !isValidForm"
+          size="lg"
+          full-width
+          :loading="loading"
+          :disabled="!isValidForm"
           :aria-label="$t('a11y.buttons.signUp')"
         >
-          <AuthIconSpinner v-if="loading" />
           {{ loading ? $t('common.loading') : t('auth.signUp.button') }}
-        </button>
+        </UiButton>
 
         <template v-if="isEnabled('new-users')">
           <div class="auth-divider">

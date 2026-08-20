@@ -132,7 +132,9 @@ onMounted(() => {
           class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5"
         >
           {{ $t('currency.label') }}
-          <span class="text-error-500" aria-hidden="true">*</span>
+          <span class="text-error-500 dark:text-error-400" aria-hidden="true"
+            >*</span
+          >
         </label>
         <select
           id="currency"

@@ -45,7 +45,7 @@ export default defineNuxtConfig({
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.scss'],
 
   app: {
     head: {
@@ -171,7 +171,7 @@ export default defineNuxtConfig({
   },
 
   tailwindcss: {
-    cssPath: '~/assets/css/main.css',
+    cssPath: '~/assets/css/main.scss',
   },
 
   i18n: {

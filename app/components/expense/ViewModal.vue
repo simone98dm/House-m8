@@ -84,7 +84,7 @@ const handleDelete = () => {
       >
         <div>
           <p
-            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            class="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider"
           >
             {{ $t('expenses.viewModal.totalAmount') }}
           </p>
@@ -96,7 +96,7 @@ const handleDelete = () => {
         </div>
         <div class="text-right">
           <p
-            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            class="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider"
           >
             {{ $t('expenses.viewModal.currency') }}
           </p>

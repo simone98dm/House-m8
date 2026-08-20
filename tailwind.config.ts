@@ -6,6 +6,28 @@ import containerQueries from '@tailwindcss/container-queries';
 export default {
   darkMode: 'class',
   content: ['./app/**/*.{js,vue,ts}', './app.vue', './error.vue'],
+
+  /* Classes assembled at runtime never appear literally in a template, so the
+     content scan above drops them and Tailwind purges the matching
+     `@layer components` rules. Both entries below were silently missing from
+     the production bundle before being safelisted:
+       - Vue derives `list-item-{enter,leave}-active` / `-move` from
+         `<TransitionGroup name="list-item">` (expenses + bills lists).
+       - Notification / NotificationDropdown build
+         `state-card[-icon-chip]--${variant}` from the notification type. */
+  safelist: [
+    'list-item-enter-active',
+    'list-item-leave-active',
+    'list-item-move',
+    'state-card--success',
+    'state-card--error',
+    'state-card--warning',
+    'state-card--primary',
+    'state-card-icon-chip--success',
+    'state-card-icon-chip--error',
+    'state-card-icon-chip--warning',
+    'state-card-icon-chip--primary',
+  ],
   theme: {
     extend: {
       /* Typography - Improved hierarchy */
@@ -43,7 +65,7 @@ export default {
         semibold: '600',
         bold: '700',
         extrabold: '800',
-        // Plus Jakarta Sans ships no 900 face — main.css declares 200-800 only.
+        // Plus Jakarta Sans ships no 900 face — app/assets/css/_fonts.scss declares 200-800 only.
         // Measured in Chromium: a 900 request renders the 800 face at an
         // identical width (373.3828125px vs 373.3828125px at 64px), i.e. no
         // faux-bold synthesis. Mapping `black` to the heaviest real weight
@@ -191,7 +213,7 @@ export default {
           50: '#fff0f0',
           100: '#ffdada',
           200: '#ffb3b3',
-          // 400 filled in (matches --red-400 in main.css) — success/warning/primary
+          // 400 filled in (matches --red-400 in _tokens.scss) — success/warning/primary
           // all define a 400 step for dark-surface text, error didn't, so every
           // `dark:text-error-400` / `dark:border-error-400` in the codebase was
           // silently generating no rule (undefined Tailwind class) and falling

@@ -43,7 +43,7 @@ const descriptionError = computed(() => {
 
 const charCountClasses = computed(() => {
   const len = description.value.length;
-  if (len >= MAX_CHARS) return 'text-error-600';
+  if (len >= MAX_CHARS) return 'text-error-600 dark:text-error-400';
   if (len >= MAX_CHARS * 0.9) return 'text-warning-600';
   return 'text-gray-400';
 });
@@ -101,7 +101,7 @@ defineExpose({ resetForm });
 
 <template>
   <form class="space-y-5" @submit.prevent="handleSubmit">
-    <!-- House context banner: shared state-card pattern (main.css) — was
+    <!-- House context banner: shared state-card pattern (components/_state-card.scss) — was
          bg-primary-50/border-primary-100 with zero dark: coverage. -->
     <div v-if="houseName" class="state-card state-card--primary items-center">
       <div class="state-card-icon-chip state-card-icon-chip--primary size-7">
@@ -118,7 +118,11 @@ defineExpose({ resetForm });
         class="block text-sm font-semibold text-gray-700 dark:text-gray-300"
       >
         {{ t('reports.form.description') }}
-        <span class="text-error-500 ml-0.5" aria-hidden="true">*</span>
+        <span
+          class="text-error-500 dark:text-error-400 ml-0.5"
+          aria-hidden="true"
+          >*</span
+        >
       </label>
 
       <div class="relative">
@@ -144,7 +148,7 @@ defineExpose({ resetForm });
         <p
           v-if="descriptionError"
           id="description-error"
-          class="text-xs text-error-600"
+          class="text-xs text-error-600 dark:text-error-400"
           role="alert"
         >
           {{ descriptionError }}

@@ -51,7 +51,7 @@ const faqs = computed(() => [
             {{ faq.question }}
             <Icon
               name="heroicons:chevron-down"
-              class="h-5 w-5 flex-shrink-0 text-gray-400 transition-transform duration-200 group-open:rotate-180 dark:text-gray-500"
+              class="h-5 w-5 flex-shrink-0 text-gray-500 transition-transform duration-200 group-open:rotate-180 dark:text-gray-400"
               aria-hidden="true"
             />
           </summary>

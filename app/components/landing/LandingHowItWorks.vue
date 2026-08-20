@@ -61,7 +61,7 @@ const steps = computed(() => [
                  information or undeclared decoration. Now explicitly the
                  latter, and legible enough to read as intentional. -->
             <span
-              class="text-5xl font-black text-gray-300 dark:text-gray-600"
+              class="text-5xl font-black text-gray-400 dark:text-gray-400"
               aria-hidden="true"
               >{{ index + 1 }}</span
             >

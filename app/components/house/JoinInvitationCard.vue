@@ -82,7 +82,7 @@ const { formatShort } = useDate();
     >
       <Icon
         name="heroicons:exclamation-circle"
-        class="w-4 h-4 text-error-600 mt-0.5 shrink-0"
+        class="w-4 h-4 text-error-600 dark:text-error-400 mt-0.5 shrink-0"
         aria-hidden="true"
       />
       <p class="text-sm text-error-700">{{ error }}</p>

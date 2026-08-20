@@ -6,6 +6,7 @@ import RegisterPage from '~/pages/auth/register.vue';
 
 import { useUserStore } from '~/stores/user';
 import { useAuth } from '~/composables/useAuth';
+import { uiButtonStub } from '~/tests/utils';
 
 vi.mock('~/stores/user', () => ({ useUserStore: vi.fn() }));
 vi.mock('~/composables/useAuth', () => ({ useAuth: vi.fn() }));
@@ -35,19 +36,7 @@ const G = {
   stubs: {
     Icon: true,
     NuxtLink: true,
-    UiButton: {
-      template:
-        '<button class="ui-btn" :disabled="disabled || loading" @click="$emit(\'click\')"><slot /></button>',
-      props: [
-        'variant',
-        'disabled',
-        'loading',
-        'type',
-        'ariaLabel',
-        'fullWidth',
-      ],
-      emits: ['click'],
-    },
+    UiButton: uiButtonStub,
     GdprConsentCheckbox: {
       template:
         '<input type="checkbox" @change="$emit(\'update:modelValue\', $event.target.checked)" />',
@@ -216,7 +205,7 @@ describe('Register Page', () => {
   it('closed-state button navigates to login', async () => {
     mockFlags = { 'new-users': false };
     const wrapper = await mountSuspended(RegisterPage, { global: G });
-    await wrapper.find('.auth-submit').trigger('click');
+    await wrapper.find('.ui-btn').trigger('click');
     expect(navigateToMock).toHaveBeenCalledWith('/auth/login');
   });
 
@@ -228,7 +217,7 @@ describe('Register Page', () => {
     await wrapper.find('form').trigger('submit');
     await flushPromises();
     await wrapper.vm.$nextTick();
-    await wrapper.find('.auth-submit').trigger('click');
+    await wrapper.find('.ui-btn').trigger('click');
     expect(navigateToMock).toHaveBeenCalledWith('/auth/login');
   });
 

@@ -100,7 +100,7 @@ const handleMarkSolved = () => emit('mark-solved', report.id);
         <div v-else class="w-full h-full flex items-center justify-center">
           <Icon
             name="heroicons:document-text"
-            class="w-10 h-10 text-gray-400 dark:text-gray-500"
+            class="w-10 h-10 text-gray-500 dark:text-gray-400"
             aria-hidden="true"
           />
         </div>
@@ -119,7 +119,7 @@ const handleMarkSolved = () => emit('mark-solved', report.id);
           <div class="flex items-start justify-between gap-4 mb-2">
             <div class="flex items-center gap-2">
               <span
-                class="text-gray-400 dark:text-gray-500 text-xs font-medium"
+                class="text-gray-500 dark:text-gray-400 text-xs font-medium"
               >
                 #{{ report.id.slice(0, 8) }}
               </span>
@@ -161,7 +161,7 @@ const handleMarkSolved = () => emit('mark-solved', report.id);
 
           <div class="flex items-center gap-2 shrink-0">
             <p
-              class="text-xs text-gray-400 dark:text-gray-500 hidden @md:block"
+              class="text-xs text-gray-500 dark:text-gray-400 hidden @md:block"
             >
               {{ formatDate(report.created_at) }}
             </p>

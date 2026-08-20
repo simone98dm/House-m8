@@ -87,7 +87,7 @@ const formatMemberDate = (dateString: string) => formatShort(dateString);
             />
           </div>
           <div>
-            <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
               {{ $t('profile.currentHouse.joinedHouse') }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">

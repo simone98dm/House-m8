@@ -36,17 +36,14 @@ const { loading, confirmed, tokenExpired, error } = useEmailConfirmation();
           t('auth.confirmation.success.redirect')
         }}</span>
       </p>
-      <!-- Raw: this page's own full-width `.btn-full` variant (padding/
-           font-size not on UiButton's scale), used identically on both a
-           NuxtLink and a <button> below so the pair stays visually matched —
-           converting only the buttons would break that pairing. -->
-      <button
-        class="btn btn-primary btn-full"
+      <UiButton
+        size="lg"
+        full-width
         :aria-label="$t('a11y.buttons.goToDashboard')"
         @click="navigateTo('/dashboard')"
       >
         {{ t('common.goHome') }}
-      </button>
+      </UiButton>
     </AuthConfirmStateCard>
 
     <AuthConfirmStateCard v-else-if="tokenExpired" variant="danger">
@@ -56,22 +53,23 @@ const { loading, confirmed, tokenExpired, error } = useEmailConfirmation();
       </h1>
       <p class="confirm-body">{{ t('auth.confirmation.expired.message') }}</p>
       <div class="confirm-actions">
-        <NuxtLink
+        <UiButton
           to="/auth/register"
-          class="btn btn-primary btn-full"
+          size="lg"
+          full-width
           :aria-label="$t('auth.confirmation.expired.resendButton')"
         >
           {{ t('auth.confirmation.expired.resendButton') }}
-        </NuxtLink>
-        <!-- Raw: paired with the NuxtLink above using the same `.btn-full`
-             variant, see comment on the "Go Home" button above. -->
-        <button
-          class="btn btn-secondary btn-full"
+        </UiButton>
+        <UiButton
+          variant="secondary"
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.goToLogin')"
           @click="navigateTo('/auth/login')"
         >
           {{ t('auth.confirmation.error.loginButton') }}
-        </button>
+        </UiButton>
       </div>
     </AuthConfirmStateCard>
 
@@ -98,22 +96,23 @@ const { loading, confirmed, tokenExpired, error } = useEmailConfirmation();
       </h1>
       <p class="confirm-body">{{ error }}</p>
       <div class="confirm-actions">
-        <!-- Raw: same page-local `.btn-full` variant, see comment on the
-             "Go Home" button above. -->
-        <button
-          class="btn btn-primary btn-full"
+        <UiButton
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.goToLogin')"
           @click="navigateTo('/auth/login')"
         >
           {{ t('auth.confirmation.error.loginButton') }}
-        </button>
-        <button
-          class="btn btn-secondary btn-full"
+        </UiButton>
+        <UiButton
+          variant="secondary"
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.signUp')"
           @click="navigateTo('/auth/register')"
         >
           {{ t('auth.confirmation.error.registerButton') }}
-        </button>
+        </UiButton>
       </div>
     </AuthConfirmStateCard>
   </AuthShell>
@@ -154,13 +153,5 @@ const { loading, confirmed, tokenExpired, error } = useEmailConfirmation();
   flex-direction: column;
   gap: 10px;
   width: 100%;
-}
-
-.btn-full {
-  width: 100%;
-  justify-content: center;
-  padding: 11px 16px;
-  font-size: var(--text-lg);
-  font-weight: 600;
 }
 </style>

@@ -192,6 +192,8 @@ agentdb.rvf.lock
 .playwright-mcp/
 # Backup of a previous .claude/ config, kept locally during migration.
 .old-claude/
+# Local markdown issue tracker (see docs/agents/issue-tracker.md).
+.scratch/
 
 # NOT ignored, deliberately:
 #   .impeccable/critique/  — Phase 1 critique snapshots. docs/handover/

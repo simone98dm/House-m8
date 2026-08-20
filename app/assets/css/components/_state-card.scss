@@ -1,0 +1,82 @@
+/* ─── Semantic State Card ─────────────────────────────────────
+   Canonical bg + border + icon-chip + text pattern for banners, alerts,
+   inline errors and status surfaces. Built on the --{state}-subtle /
+   --{state}-fg custom properties, which already flip under `.dark` — so
+   consumers never need `dark:` classes of their own for these states.
+   Use `.state-card` on the container + `.state-card--{variant}`, and
+   `.state-card-icon-chip` + `.state-card-icon-chip--{variant}` on the
+   leading icon wrapper (the chip class works standalone too, e.g. inside
+   a list row).
+
+   Established by the ui/ primitives sweep — reuse this instead of
+   hand-rolling color-100/color-700 Tailwind pairs per component; that
+   pattern was found duplicated ad hoc (Notification, chips, upload
+   errors) with inconsistent/missing dark-mode coverage.
+
+   Variants are generated from the map below. Notification and
+   NotificationDropdown build the modifier at runtime
+   (`state-card--${variant}`), mapping `info` onto `primary` — so every
+   key here must stay in sync with the notification type union. */
+
+@use 'sass:map';
+
+$state-card-variants: (
+  'success': (
+    'ink': --success-fg,
+    'tone': --success,
+    'bg': --success-subtle,
+  ),
+  'error': (
+    'ink': --danger-fg,
+    'tone': --danger,
+    'bg': --danger-subtle,
+  ),
+  'warning': (
+    'ink': --warning-fg,
+    'tone': --warning,
+    'bg': --warning-subtle,
+  ),
+  'primary': (
+    'ink': --primary-hover,
+    'tone': --primary,
+    'bg': --primary-subtle,
+  ),
+);
+
+@layer components {
+  .state-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border-radius: var(--radius-lg);
+    padding: 0.875rem 1rem;
+    border: 1px solid transparent;
+  }
+
+  .state-card-icon-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  @each $name, $tokens in $state-card-variants {
+    $ink: map.get($tokens, 'ink');
+    $tone: map.get($tokens, 'tone');
+    $bg: map.get($tokens, 'bg');
+
+    .state-card--#{$name} {
+      color: var(#{$ink});
+      background: var(#{$bg});
+      border-color: color-mix(in srgb, var(#{$tone}) 25%, transparent);
+    }
+
+    .state-card-icon-chip--#{$name} {
+      color: var(#{$ink});
+      background: color-mix(in srgb, var(#{$tone}) 18%, transparent);
+    }
+  }
+}

@@ -26,7 +26,7 @@ const emit = defineEmits<Events>();
     @close="emit('cancel')"
   >
     <div class="space-y-4">
-      <!-- Shared state-card pattern (main.css) — was bg-error-50/border-error-200
+      <!-- Shared state-card pattern (components/_state-card.scss) — was bg-error-50/border-error-200
            with zero dark: coverage, plus text-error-800 which isn't a defined
            shade (silently produced no color at all). -->
       <div class="state-card state-card--error items-center">

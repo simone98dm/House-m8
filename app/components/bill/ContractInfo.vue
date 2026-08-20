@@ -35,7 +35,7 @@ const {
           <div class="flex items-center gap-2">
             <Icon
               name="heroicons:play-circle"
-              class="w-5 h-5 text-success-600"
+              class="w-5 h-5 text-success-700 dark:text-success-500"
               aria-hidden="true"
             />
             <span class="text-sm text-gray-900 dark:text-gray-100">

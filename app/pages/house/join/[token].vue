@@ -96,7 +96,7 @@ const { data: preview } = await useFetch<{
         >
           <Icon
             name="heroicons:exclamation-triangle"
-            class="w-8 h-8 text-error-600"
+            class="w-8 h-8 text-error-600 dark:text-error-400"
             aria-hidden="true"
           />
         </div>
@@ -121,7 +121,7 @@ const { data: preview } = await useFetch<{
         >
           <Icon
             name="heroicons:check-circle"
-            class="w-8 h-8 text-success-600"
+            class="w-8 h-8 text-success-700 dark:text-success-500"
             aria-hidden="true"
           />
         </div>
@@ -131,7 +131,7 @@ const { data: preview } = await useFetch<{
         <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
           {{ $t('invitation.welcomeMessage', { houseName: house?.name }) }}
         </p>
-        <p class="text-xs text-gray-400 dark:text-gray-500">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
           {{ $t('invitation.redirecting') }}
         </p>
       </div>

@@ -25,7 +25,7 @@ const emit = defineEmits<Events>();
     leave-from-class="opacity-100 translate-y-0"
     leave-to-class="opacity-0 translate-y-2"
   >
-    <!-- Shared state-card pattern (main.css) — was bg-error-50/border-error-200
+    <!-- Shared state-card pattern (components/_state-card.scss) — was bg-error-50/border-error-200
          with zero dark: coverage, plus a hover:text-error-800 that silently
          did nothing (error-800 isn't a defined shade). -->
     <div

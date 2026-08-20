@@ -46,9 +46,9 @@ const daysUntilDue = computed(() => {
 });
 
 const dueDateClass = computed(() => {
-  if (daysUntilDue.value < 0) return 'text-error-600';
+  if (daysUntilDue.value < 0) return 'text-error-600 dark:text-error-400';
   if (daysUntilDue.value <= 7) return 'text-warning-600';
-  return 'text-gray-500';
+  return 'text-gray-500 dark:text-gray-400';
 });
 
 const isOverdue = computed(() => daysUntilDue.value < 0);
@@ -85,7 +85,7 @@ const isDueSoon = computed(() => !isOverdue.value && daysUntilDue.value <= 7);
               {{ $t('bills.card.due') }} {{ formattedDueDate }}
             </span>
             <span
-              class="text-gray-400 dark:text-gray-500 mx-1"
+              class="text-gray-500 dark:text-gray-400 mx-1"
               aria-hidden="true"
               >•</span
             >
@@ -125,7 +125,7 @@ const isDueSoon = computed(() => !isOverdue.value && daysUntilDue.value <= 7);
       <div class="flex items-center gap-4 ml-4">
         <div class="hidden sm:flex flex-col items-end gap-0.5">
           <span
-            class="text-xs font-normal uppercase tracking-tighter text-gray-400 dark:text-gray-500"
+            class="text-xs font-normal uppercase tracking-tighter text-gray-500 dark:text-gray-400"
           >
             {{ $t('bills.card.perMonth') }}
           </span>

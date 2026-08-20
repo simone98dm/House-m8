@@ -92,7 +92,7 @@ onMounted(() => {
 
         <div class="relative z-10">
           <p
-            class="text-primary-100/80 font-medium text-sm mb-1 uppercase tracking-wider"
+            class="text-primary-50 font-medium text-sm mb-1 uppercase tracking-wider"
           >
             {{ $t('bills.summary.monthlyTotal') }}
           </p>
@@ -102,7 +102,7 @@ onMounted(() => {
               :currency-code="currentHouse?.currency || 'EUR'"
             />
           </h2>
-          <p class="mt-3 text-sm text-white/80">
+          <p class="mt-3 text-sm text-white">
             {{ $t('bills.summary.activeBills') }}: {{ activeBills.length }}
           </p>
         </div>
@@ -147,7 +147,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Error state: shared state-card pattern (main.css) — was
+      <!-- Error state: shared state-card pattern (components/_state-card.scss) — was
            bg-error-50/border-error-200 with zero dark: coverage. -->
       <div
         v-else-if="error"

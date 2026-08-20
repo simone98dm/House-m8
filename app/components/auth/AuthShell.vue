@@ -190,15 +190,8 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
   background: var(--border);
 }
 
-:deep(.auth-submit) {
-  width: 100%;
-  justify-content: center;
-  padding: 11px 16px;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  gap: 8px;
-}
-
+/* The only raw control left in the auth pages: a branded OAuth button that is
+   deliberately off UiButton's scale (flat surface, no gradient, no pill). */
 :deep(.btn-google) {
   width: 100%;
   padding: 10px 16px;

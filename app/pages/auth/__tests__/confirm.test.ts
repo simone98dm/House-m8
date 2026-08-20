@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import ConfirmPage from '~/pages/auth/confirm.vue';
+import { uiButtonStub } from '~/tests/utils';
 
 import { useApi } from '~/composables/useApi';
 import { useAuth } from '~/composables/useAuth';
@@ -21,7 +22,7 @@ mockNuxtImport('navigateTo', () => navigateToMock);
 
 const G = {
   mocks: { $t: (k: string) => k },
-  stubs: { Icon: true, NuxtLink: true, UiButton: true },
+  stubs: { Icon: true, NuxtLink: true, UiButton: uiButtonStub },
 };
 
 describe('Confirm Email Page', () => {

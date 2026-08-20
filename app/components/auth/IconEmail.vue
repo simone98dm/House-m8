@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 // Shared envelope icon: login/register email inputs and register's
-// "email sent" success state render the identical path. The input-icon
-// context sizes this via the global `.input-with-icon .input-icon svg` rule
-// in main.css; the success-icon context sizes it via a `size` prop.
+// "email sent" success state render the identical path. Both contexts size it
+// through the `size` prop (UiInput's `#icon` slot also caps svg children at
+// 1rem, so the default already matches the field icon).
 interface Props {
   size?: number;
 }

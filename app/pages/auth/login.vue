@@ -77,7 +77,9 @@ const signInWithGoogle = async () => {
 </script>
 
 <template>
-  <!-- Raw buttons below use AuthShell's shared .auth-submit/.btn-google variants, not on UiButton's scale --><AuthShell>
+  <!-- The Google button below stays raw: AuthShell owns the .btn-google
+       variant and it is not on UiButton's scale. -->
+  <AuthShell>
     <h1 class="auth-heading">{{ $t('auth.login.title') }}</h1>
     <p class="auth-sub">{{ $t('auth.login.subtitle') }}</p>
 
@@ -110,67 +112,36 @@ const signInWithGoogle = async () => {
     </div>
 
     <form class="auth-form" novalidate @submit.prevent="signIn">
-      <!-- Email: raw, .input-with-icon design system (leading icon) has no UiInput equivalent -->
-      <div class="input-group">
-        <label class="input-label" for="email">{{
-          $t('auth.login.email')
-        }}</label>
-        <div class="input-with-icon">
-          <span class="input-icon" aria-hidden="true">
-            <AuthIconEmail />
-          </span>
-          <input
-            id="email"
-            v-model="email"
-            class="input"
-            type="email"
-            :placeholder="$t('auth.login.email')"
-            autocomplete="email"
-            required
-            :disabled="loading"
-            aria-required="true"
-          />
-        </div>
-      </div>
+      <UiInput
+        id="email"
+        v-model="email"
+        type="email"
+        :label="$t('auth.login.email')"
+        :placeholder="$t('auth.login.email')"
+        autocomplete="email"
+        required
+        :disabled="loading"
+      >
+        <template #icon><AuthIconEmail /></template>
+      </UiInput>
 
-      <!-- Password: raw, same .input-with-icon constraint as email above -->
-      <div class="input-group">
-        <div class="input-label-row">
-          <label class="input-label" for="password">{{
-            $t('auth.login.password')
-          }}</label>
+      <UiInput
+        id="password"
+        v-model="password"
+        type="password"
+        :label="$t('auth.login.password')"
+        :placeholder="$t('auth.login.password')"
+        autocomplete="current-password"
+        required
+        :disabled="loading"
+      >
+        <template #icon><AuthIconLock /></template>
+        <template #label-append>
           <NuxtLink to="/auth/forgot-password" class="auth-forgot-link">{{
             $t('auth.login.forgotPassword')
           }}</NuxtLink>
-        </div>
-        <div class="input-with-icon">
-          <span class="input-icon" aria-hidden="true">
-            <svg
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          </span>
-          <input
-            id="password"
-            v-model="password"
-            class="input"
-            type="password"
-            :placeholder="$t('auth.login.password')"
-            autocomplete="current-password"
-            required
-            :disabled="loading"
-            aria-required="true"
-          />
-        </div>
-      </div>
+        </template>
+      </UiInput>
 
       <!-- Remember me: raw, UiCheckbox is a toggle switch, wrong shape here -->
       <label class="auth-check-row">
@@ -178,15 +149,16 @@ const signInWithGoogle = async () => {
         <span>{{ $t('auth.login.rememberMe') }}</span>
       </label>
 
-      <button
+      <UiButton
         type="submit"
-        class="btn btn-primary auth-submit"
-        :disabled="loading || !email || !password"
+        size="lg"
+        full-width
+        :loading="loading"
+        :disabled="!email || !password"
         :aria-label="$t('a11y.buttons.signIn')"
       >
-        <AuthIconSpinner v-if="loading" />
         {{ loading ? $t('common.loading') : $t('auth.login.button') }}
-      </button>
+      </UiButton>
 
       <template v-if="isEnabled('new-users')">
         <div class="auth-divider">{{ $t('auth.login.orContinueWith') }}</div>
@@ -257,13 +229,6 @@ const signInWithGoogle = async () => {
   border-radius: 4px;
   cursor: pointer;
   accent-color: var(--primary);
-}
-
-.input-label-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
 }
 
 .auth-forgot-link {

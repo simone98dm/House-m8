@@ -164,3 +164,68 @@ const billIconBg = (bill: Bill): string => {
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+/* ─── Bill Rows ───────────────────────────────────────────── */
+.bill-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.bill-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: var(--text-xl);
+}
+
+.bill-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bill-name {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.bill-due {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  margin-top: 1px;
+}
+
+.bill-amount {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ─── Expense Table Extras ────────────────────────────────── */
+.expense-amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.paid-by-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+}
+</style>

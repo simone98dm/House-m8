@@ -29,7 +29,7 @@ defineProps<Props>();
         />
       </div>
       <div class="flex-1">
-        <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
           {{ $t('user.phone') }}
         </p>
         <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -45,7 +45,7 @@ defineProps<Props>();
         <Icon name="logos:instagram-icon" class="h-5 w-5" aria-hidden="true" />
       </div>
       <div class="flex-1">
-        <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
           {{ $t('profile.social.instagram') }}
         </p>
         <a
@@ -66,7 +66,7 @@ defineProps<Props>();
         <Icon name="logos:twitter" class="h-5 w-5" aria-hidden="true" />
       </div>
       <div class="flex-1">
-        <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
           {{ $t('profile.social.twitter') }}
         </p>
         <a
@@ -87,7 +87,7 @@ defineProps<Props>();
         <Icon name="logos:linkedin-icon" class="h-5 w-5" aria-hidden="true" />
       </div>
       <div class="flex-1">
-        <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
           {{ $t('profile.social.linkedin') }}
         </p>
         <a
@@ -112,7 +112,7 @@ defineProps<Props>();
         <Icon name="logos:tiktok-icon" class="h-5 w-5" aria-hidden="true" />
       </div>
       <div class="flex-1">
-        <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
           {{ $t('profile.social.tiktok') }}
         </p>
         <a

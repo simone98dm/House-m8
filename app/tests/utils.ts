@@ -263,3 +263,39 @@ export function createMockCurrency() {
     },
   };
 }
+
+/**
+ * Mount stub for `UiButton`.
+ *
+ * Auth pages render every action through UiButton, and their tests select by
+ * element (`find('button')`, `find('.confirm-actions button')`). A bare
+ * `UiButton: true` stub renders `<ui-button-stub>` and drops the slot, so
+ * those selectors and text assertions silently stop matching. This mirrors the
+ * real component closely enough for both: an `<a>` when `to` is set, a
+ * `<button>` otherwise, with the slot rendered.
+ */
+export const uiButtonStub = {
+  template: `
+    <component
+      :is="to ? 'a' : 'button'"
+      class="ui-btn"
+      :href="to"
+      :type="to ? undefined : type"
+      :disabled="to ? undefined : (disabled || loading)"
+      @click="$emit('click')"
+    ><slot /></component>
+  `,
+  props: [
+    'variant',
+    'size',
+    'type',
+    'disabled',
+    'loading',
+    'success',
+    'icon',
+    'fullWidth',
+    'outline',
+    'to',
+  ],
+  emits: ['click'],
+};

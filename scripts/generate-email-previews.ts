@@ -12,7 +12,7 @@ import { getNewReportNotificationTemplate } from '../server/templates/new-report
 import { getAccountDeletionRequestedTemplate } from '../server/templates/account-deletion-requested';
 import { getMemberInviteTemplate } from '../server/templates/member-invite';
 
-const baseUrl = 'https://house-m8.app';
+const baseUrl = '';
 
 const previews: Record<string, string> = {
   registration: getRegistrationEmailTemplate({

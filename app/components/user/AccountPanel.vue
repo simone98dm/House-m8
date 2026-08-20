@@ -68,7 +68,7 @@ const themeOptions = computed(() => [
         >
           <Icon
             name="heroicons:home"
-            class="h-5 w-5 text-gray-400 dark:text-gray-500"
+            class="h-5 w-5 text-gray-500 dark:text-gray-400"
             aria-hidden="true"
           />
         </div>

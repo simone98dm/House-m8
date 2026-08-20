@@ -23,14 +23,14 @@ const { t: $t } = useI18n();
   >
     <div>
       <p
-        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+        class="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider"
       >
         {{ $t('expenses.summary.youOwe') }}
       </p>
       <UiCurrency
         :amount="totalOwed"
         :currency-code="currencyCode"
-        class="text-2xl font-bold text-numeric text-error-600 mt-1 block"
+        class="text-2xl font-bold text-numeric text-error-600 dark:text-error-400 mt-1 block"
       />
     </div>
 
@@ -38,14 +38,14 @@ const { t: $t } = useI18n();
 
     <div class="text-right">
       <p
-        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+        class="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider"
       >
         {{ $t('expenses.summary.owedToYou') }}
       </p>
       <UiCurrency
         :amount="totalOwedToYou"
         :currency-code="currencyCode"
-        class="text-2xl font-bold text-numeric text-success-600 mt-1 block"
+        class="text-2xl font-bold text-numeric text-success-700 dark:text-success-500 mt-1 block"
       />
     </div>
   </section>
@@ -64,7 +64,7 @@ const { t: $t } = useI18n();
       </div>
       <div>
         <p
-          class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+          class="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider"
         >
           {{ $t('expenses.summary.totalExpenses') }}
         </p>
@@ -86,7 +86,7 @@ const { t: $t } = useI18n();
       </div>
       <div>
         <p
-          class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+          class="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider"
         >
           {{ $t('expenses.summary.pending') }}
         </p>
@@ -110,7 +110,7 @@ const { t: $t } = useI18n();
       </div>
       <div>
         <p
-          class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+          class="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider"
         >
           {{ $t('expenses.summary.owedToYou') }}
         </p>

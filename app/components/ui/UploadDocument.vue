@@ -89,7 +89,7 @@ const handleUpload = () => {
       @files-selected="addFiles"
     />
 
-    <!-- Error message: shared semantic-state card (main.css) — was a hand-rolled
+    <!-- Error message: shared semantic-state card (components/_state-card.scss) — was a hand-rolled
          bg-error-50/border-error-200 pair with no dark: coverage, plus a
          hover:text-error-800 class that silently did nothing (error-800 isn't
          a defined shade). -->

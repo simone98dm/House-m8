@@ -233,7 +233,7 @@ const handleCancel = () => {
 
     <div class="pt-4 border-t border-gray-100 dark:border-gray-700">
       <h3
-        class="text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4 flex items-center gap-2"
+        class="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2"
       >
         <Icon
           name="heroicons:chat-bubble-left-right"

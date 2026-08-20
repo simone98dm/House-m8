@@ -226,4 +226,4 @@ Pass `CRON_SECRET` as a header in the Vercel cron configuration to protect the e
 | TypeScript                    | `yarn typecheck`  | CI               |
 | Tests                         | `yarn test`       | CI               |
 | SonarQube                     | `yarn sonar`      | CI (optional)    |
-| Lighthouse                    | `yarn lighthouse` | CI (optional)    |
+| Lighthouse                    | `yarn lighthouse` | Local only       |

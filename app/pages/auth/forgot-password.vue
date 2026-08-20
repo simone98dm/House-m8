@@ -35,7 +35,6 @@ const submit = async () => {
 </script>
 
 <template>
-  <!-- Raw buttons below use AuthShell's shared .auth-submit variant, see login.vue -->
   <AuthShell>
     <template v-if="submitted">
       <div class="auth-success-state">
@@ -48,13 +47,14 @@ const submit = async () => {
         <p class="auth-sub" style="text-align: center">
           {{ t('auth.forgotPassword.sent.message') }}
         </p>
-        <button
-          class="btn btn-primary auth-submit"
+        <UiButton
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.goToLogin')"
           @click="navigateTo('/auth/login')"
         >
           {{ t('auth.forgotPassword.sent.button') }}
-        </button>
+        </UiButton>
       </div>
     </template>
 
@@ -74,38 +74,30 @@ const submit = async () => {
       </div>
 
       <form class="auth-form" novalidate @submit.prevent="submit">
-        <div class="input-group">
-          <label class="input-label" for="email">{{
-            $t('auth.forgotPassword.email')
-          }}</label>
-          <div class="input-with-icon">
-            <span class="input-icon" aria-hidden="true">
-              <AuthIconEmail />
-            </span>
-            <input
-              id="email"
-              v-model="email"
-              class="input"
-              type="email"
-              :placeholder="$t('auth.forgotPassword.email')"
-              autocomplete="email"
-              required
-              :disabled="loading"
-              aria-required="true"
-              :aria-describedby="error ? 'forgot-password-error' : undefined"
-            />
-          </div>
-        </div>
+        <UiInput
+          id="email"
+          v-model="email"
+          type="email"
+          :label="$t('auth.forgotPassword.email')"
+          :placeholder="$t('auth.forgotPassword.email')"
+          autocomplete="email"
+          required
+          :disabled="loading"
+          :aria-describedby="error ? 'forgot-password-error' : undefined"
+        >
+          <template #icon><AuthIconEmail /></template>
+        </UiInput>
 
-        <button
+        <UiButton
           type="submit"
-          class="btn btn-primary auth-submit"
-          :disabled="loading || !email"
+          size="lg"
+          full-width
+          :loading="loading"
+          :disabled="!email"
           :aria-label="$t('a11y.buttons.sendResetLink')"
         >
-          <AuthIconSpinner v-if="loading" />
           {{ loading ? $t('common.loading') : t('auth.forgotPassword.button') }}
-        </button>
+        </UiButton>
       </form>
     </template>
 

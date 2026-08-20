@@ -89,7 +89,11 @@ async function cancelDeletion() {
             })
           }}
         </p>
-        <p v-if="error" class="mt-2 text-sm text-red-600" role="alert">
+        <p
+          v-if="error"
+          class="mt-2 text-sm text-red-600 dark:text-red-400"
+          role="alert"
+        >
           {{ error }}
         </p>
         <UiButton
@@ -135,7 +139,11 @@ async function cancelDeletion() {
         {{ t('gdpr.deleteButton') }}
       </UiButton>
     </div>
-    <p v-if="error" class="mt-2 text-sm text-red-600" role="alert">
+    <p
+      v-if="error"
+      class="mt-2 text-sm text-red-600 dark:text-red-400"
+      role="alert"
+    >
       {{ error }}
     </p>
   </div>

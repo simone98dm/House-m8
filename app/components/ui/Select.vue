@@ -62,7 +62,7 @@ const selectClasses = computed(() => {
         'bg-error-600/[0.04]',
         'focus:border-error-600',
         'focus:ring-error-600/20',
-        'text-error-600',
+        'text-error-600 dark:text-error-400',
         'dark:bg-error-600/[0.08]',
         'dark:text-error-400',
       ]
@@ -102,7 +102,10 @@ const selectClasses = computed(() => {
       class="block text-sm font-semibold text-gray-700 dark:text-gray-300"
     >
       {{ label }}
-      <span v-if="required" class="text-error-600 ml-0.5" aria-hidden="true"
+      <span
+        v-if="required"
+        class="text-error-600 dark:text-error-400 ml-0.5"
+        aria-hidden="true"
         >*</span
       >
     </label>

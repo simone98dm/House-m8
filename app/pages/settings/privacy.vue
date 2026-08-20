@@ -51,7 +51,7 @@ function formatDate(iso: string | null | undefined) {
       <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
         {{ t('gdpr.settingsTitle') }}
       </h1>
-      <p class="mt-1 text-gray-500 dark:text-gray-400">
+      <p class="mt-1 text-gray-500 dark:text-gray-300">
         {{ t('gdpr.settingsSubtitle') }}
       </p>
     </div>
@@ -81,7 +81,7 @@ function formatDate(iso: string | null | undefined) {
       >
         {{ t('gdpr.docsTitle') }}
       </h2>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
         {{ t('gdpr.docsDescription') }}
       </p>
       <div class="mt-4 flex flex-wrap gap-3">
@@ -120,7 +120,7 @@ function formatDate(iso: string | null | undefined) {
             </p>
             <p
               v-if="termsAcceptedAt"
-              class="text-xs text-gray-400 dark:text-gray-500"
+              class="text-xs text-gray-500 dark:text-gray-300"
             >
               {{
                 t('gdpr.consentAcceptedOn', {
@@ -129,7 +129,7 @@ function formatDate(iso: string | null | undefined) {
                 })
               }}
             </p>
-            <p v-else class="text-xs text-gray-400 dark:text-gray-500">
+            <p v-else class="text-xs text-gray-500 dark:text-gray-300">
               {{ t('gdpr.consentNotAcceptedYet') }}
             </p>
           </div>
@@ -150,7 +150,10 @@ function formatDate(iso: string | null | undefined) {
     </section>
 
     <section aria-labelledby="danger-section-heading">
-      <h2 id="danger-section-heading" class="mb-3 font-semibold text-red-600">
+      <h2
+        id="danger-section-heading"
+        class="mb-3 font-semibold text-red-600 dark:text-red-400"
+      >
         {{ t('gdpr.dangerZone') }}
       </h2>
       <GdprAccountDeletion

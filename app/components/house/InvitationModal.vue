@@ -37,7 +37,7 @@ const { t: $t } = useI18n();
       >
         <div class="flex-1 min-w-0">
           <p
-            class="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1"
+            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"
           >
             {{ $t('houseProfile.invitationUrl') }}
           </p>

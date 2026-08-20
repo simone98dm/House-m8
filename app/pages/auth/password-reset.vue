@@ -84,13 +84,14 @@ const submit = async () => {
         {{ t('auth.passwordReset.missingToken.message') }}
       </p>
       <div class="confirm-actions">
-        <NuxtLink
+        <UiButton
           to="/auth/forgot-password"
-          class="btn btn-primary btn-full"
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.requestNewResetLink')"
         >
           {{ t('auth.passwordReset.missingToken.requestButton') }}
-        </NuxtLink>
+        </UiButton>
       </div>
     </AuthConfirmStateCard>
 
@@ -103,20 +104,23 @@ const submit = async () => {
         {{ t('auth.passwordReset.invalidToken.message') }}
       </p>
       <div class="confirm-actions">
-        <NuxtLink
+        <UiButton
           to="/auth/forgot-password"
-          class="btn btn-primary btn-full"
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.requestNewResetLink')"
         >
           {{ t('auth.passwordReset.invalidToken.requestButton') }}
-        </NuxtLink>
-        <button
-          class="btn btn-secondary btn-full"
+        </UiButton>
+        <UiButton
+          variant="secondary"
+          size="lg"
+          full-width
           :aria-label="$t('a11y.buttons.goToLogin')"
           @click="navigateTo('/auth/login')"
         >
           {{ t('auth.passwordReset.invalidToken.loginButton') }}
-        </button>
+        </UiButton>
       </div>
     </AuthConfirmStateCard>
 
@@ -149,105 +153,54 @@ const submit = async () => {
       </div>
 
       <form class="auth-form" novalidate @submit.prevent="submit">
-        <div class="input-group">
-          <label class="input-label" for="new-password">{{
-            $t('auth.passwordReset.newPassword')
-          }}</label>
-          <div class="input-with-icon">
-            <span class="input-icon" aria-hidden="true">
-              <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-            </span>
-            <input
-              id="new-password"
-              v-model="password"
-              class="input"
-              type="password"
-              :placeholder="$t('auth.passwordReset.newPassword')"
-              autocomplete="new-password"
-              minlength="8"
-              required
-              :disabled="loading"
-              aria-required="true"
-              :aria-describedby="
-                passwordTooShort ? 'new-password-hint' : undefined
-              "
-            />
-          </div>
-          <p
-            v-if="passwordTooShort"
-            id="new-password-hint"
-            class="input-hint"
-            role="alert"
-          >
-            {{ t('auth.passwordReset.passwordHint') }}
-          </p>
-        </div>
+        <UiInput
+          id="new-password"
+          v-model="password"
+          type="password"
+          :label="$t('auth.passwordReset.newPassword')"
+          :placeholder="$t('auth.passwordReset.newPassword')"
+          autocomplete="new-password"
+          minlength="8"
+          required
+          :disabled="loading"
+          :error="passwordTooShort"
+          :hint="
+            passwordTooShort ? t('auth.passwordReset.passwordHint') : undefined
+          "
+        >
+          <template #icon><AuthIconLock /></template>
+        </UiInput>
 
-        <div class="input-group">
-          <label class="input-label" for="confirm-password">{{
-            $t('auth.passwordReset.confirmPassword')
-          }}</label>
-          <div class="input-with-icon">
-            <span class="input-icon" aria-hidden="true">
-              <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-            </span>
-            <input
-              id="confirm-password"
-              v-model="confirmPassword"
-              class="input"
-              type="password"
-              :placeholder="$t('auth.passwordReset.confirmPassword')"
-              autocomplete="new-password"
-              minlength="8"
-              required
-              :disabled="loading"
-              aria-required="true"
-              :aria-describedby="
-                passwordsMismatch ? 'confirm-password-hint' : undefined
-              "
-            />
-          </div>
-          <p
-            v-if="passwordsMismatch"
-            id="confirm-password-hint"
-            class="input-hint"
-            role="alert"
-          >
-            {{ t('auth.passwordReset.passwordMismatch') }}
-          </p>
-        </div>
+        <UiInput
+          id="confirm-password"
+          v-model="confirmPassword"
+          type="password"
+          :label="$t('auth.passwordReset.confirmPassword')"
+          :placeholder="$t('auth.passwordReset.confirmPassword')"
+          autocomplete="new-password"
+          minlength="8"
+          required
+          :disabled="loading"
+          :error="passwordsMismatch"
+          :hint="
+            passwordsMismatch
+              ? t('auth.passwordReset.passwordMismatch')
+              : undefined
+          "
+        >
+          <template #icon><AuthIconLock /></template>
+        </UiInput>
 
-        <button
+        <UiButton
           type="submit"
-          class="btn btn-primary auth-submit"
-          :disabled="loading || !isValidForm"
+          size="lg"
+          full-width
+          :loading="loading"
+          :disabled="!isValidForm"
           :aria-label="$t('a11y.buttons.resetPassword')"
         >
-          <AuthIconSpinner v-if="loading" />
           {{ loading ? $t('common.loading') : t('auth.passwordReset.button') }}
-        </button>
+        </UiButton>
       </form>
     </template>
   </AuthShell>
@@ -270,12 +223,6 @@ const submit = async () => {
   pointer-events: none;
 }
 
-.input-hint {
-  font-size: var(--text-sm);
-  color: var(--danger-fg);
-  margin-top: 4px;
-}
-
 .confirm-body {
   font-size: var(--text-md);
   color: var(--fg-muted);
@@ -294,13 +241,5 @@ const submit = async () => {
   flex-direction: column;
   gap: 10px;
   width: 100%;
-}
-
-.btn-full {
-  width: 100%;
-  justify-content: center;
-  padding: 11px 16px;
-  font-size: var(--text-lg);
-  font-weight: 600;
 }
 </style>

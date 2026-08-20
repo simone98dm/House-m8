@@ -106,7 +106,7 @@ async function downloadPdf() {
     <div class="mb-4 flex items-start justify-between">
       <div>
         <p
-          class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500"
+          class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
         >
           {{ t('gdpr.exportSection') }}
         </p>
@@ -120,7 +120,11 @@ async function downloadPdf() {
       <span aria-hidden="true" class="ml-4 text-3xl">📦</span>
     </div>
 
-    <p v-if="error" class="mb-3 text-sm text-red-600" role="alert">
+    <p
+      v-if="error"
+      class="mb-3 text-sm text-red-600 dark:text-red-400"
+      role="alert"
+    >
       {{ error }}
     </p>
 

@@ -62,7 +62,7 @@ const handleLeave = async () => {
     </div>
 
     <template v-else>
-      <!-- Owner warning: shared state-card pattern (main.css) — was
+      <!-- Owner warning: shared state-card pattern (components/_state-card.scss) — was
            bg-warning-50/border-warning-200 with zero dark: coverage. -->
       <div
         v-if="isOwner"

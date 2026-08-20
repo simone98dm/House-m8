@@ -39,6 +39,24 @@ const generatedHintId = useId();
 const finalId = computed(() => id ?? generatedId);
 const hintId = computed(() => (hint ? generatedHintId : undefined));
 
+const slots = useSlots();
+const attrs = useAttrs();
+
+/**
+ * The hint owns `aria-describedby`, but call sites also point the field at
+ * page-level markup (auth pages reference their error banner). Binding
+ * `hintId` alone silently dropped that reference, because the explicit
+ * binding below wins over the one spread from `v-bind="$attrs"`. Merge both.
+ */
+const describedBy = computed(() => {
+  const external = attrs['aria-describedby'];
+  return (
+    [hintId.value, typeof external === 'string' ? external : undefined]
+      .filter(Boolean)
+      .join(' ') || undefined
+  );
+});
+
 defineEmits<InputEvents>();
 
 // Without this, undeclared native attributes (min, max, step, pattern, ...)
@@ -79,7 +97,7 @@ const inputClasses = computed(() => {
         'bg-error-600/[0.04]',
         'focus:border-error-600',
         'focus:ring-error-600/20',
-        'text-error-600',
+        'text-error-600 dark:text-error-400',
         'dark:bg-error-600/[0.08]',
         'dark:text-error-400',
         // gray-500 (dark bg) measured ~2.75:1; gray-300 clears AA (~6.5:1).
@@ -111,54 +129,84 @@ const inputClasses = computed(() => {
       ]
     : [];
 
+  // Clears the absolutely-positioned leading icon. `pl-*` is emitted after
+  // `px-*` in Tailwind's output, so it wins over the size class above.
+  const iconClasses = slots.icon ? ['pl-10'] : [];
+
   return [
     ...baseClasses,
     ...sizeClasses[size],
     ...stateClasses,
     ...disabledClasses,
+    ...iconClasses,
   ].join(' ');
 });
 </script>
 
 <template>
   <div class="space-y-1.5">
-    <label
-      v-if="label"
-      :for="finalId"
-      class="block text-sm font-semibold text-gray-700 dark:text-gray-300"
+    <!-- `label-append` puts an action on the label's own line (login's
+         "forgot password?" link) without a second copy of the label
+         styling at the call site. -->
+    <div
+      v-if="label || $slots['label-append']"
+      class="flex items-baseline justify-between gap-2"
     >
-      {{ label }}
-      <span v-if="required" class="text-error-600 ml-0.5" aria-hidden="true"
-        >*</span
+      <label
+        v-if="label"
+        :for="finalId"
+        class="block text-sm font-semibold text-gray-700 dark:text-gray-300"
       >
-    </label>
+        {{ label }}
+        <span
+          v-if="required"
+          class="text-error-600 dark:text-error-400 ml-0.5"
+          aria-hidden="true"
+          >*</span
+        >
+      </label>
+      <slot name="label-append" />
+    </div>
 
-    <component
-      :is="isTextarea ? 'textarea' : 'input'"
-      v-bind="$attrs"
-      :id="finalId"
-      :type="isTextarea ? undefined : type"
-      :value="modelValue"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :required="required"
-      :rows="isTextarea ? rows : undefined"
-      :class="inputClasses"
-      :aria-label="ariaLabel || undefined"
-      :aria-invalid="error"
-      :aria-required="required"
-      :aria-describedby="hintId"
-      @input="
-        modelValue = ($event.target as HTMLInputElement | HTMLTextAreaElement)
-          .value
-      "
-      @blur="$emit('blur')"
-      @focus="$emit('focus')"
-    />
+    <div class="relative">
+      <span
+        v-if="$slots.icon"
+        class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 [&_svg]:size-4"
+        aria-hidden="true"
+      >
+        <slot name="icon" />
+      </span>
 
+      <component
+        :is="isTextarea ? 'textarea' : 'input'"
+        v-bind="$attrs"
+        :id="finalId"
+        :type="isTextarea ? undefined : type"
+        :value="modelValue"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :required="required"
+        :rows="isTextarea ? rows : undefined"
+        :class="inputClasses"
+        :aria-label="ariaLabel || undefined"
+        :aria-invalid="error"
+        :aria-required="required"
+        :aria-describedby="describedBy"
+        @input="
+          modelValue = ($event.target as HTMLInputElement | HTMLTextAreaElement)
+            .value
+        "
+        @blur="$emit('blur')"
+        @focus="$emit('focus')"
+      />
+    </div>
+
+    <!-- An error hint is a validation result the user must hear, not a static
+         helper line — hence role="alert" only in the error state. -->
     <p
       v-if="hint"
       :id="hintId"
+      :role="error ? 'alert' : undefined"
       class="text-xs"
       :class="
         error

@@ -34,7 +34,7 @@ describe('StatusBadge', () => {
       props: { active: true },
       global: G,
     });
-    // Dark-mode-safe token class (see app/assets/css/main.css --success-subtle),
+    // Dark-mode-safe token class (see app/assets/css/_tokens.scss --success-subtle),
     // replacing the old bg-success-100 which had no dark: coverage.
     expect(wrapper.html()).toContain('bg-[var(--success-subtle)]');
   });

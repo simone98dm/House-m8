@@ -20,7 +20,7 @@ const { t } = useI18n();
 const showModal = ref(false);
 
 // Falls back rather than emitting `sticky-undefined`, which matches no rule in
-// main.css and renders the note in the board's own background — the exact
+// _bulletin.scss and renders the note in the board's own background — the exact
 // failure that shipped while bulletin_notes had no `color` column at all.
 const stickyClass = (note: BulletinNote) => `sticky-${note.color ?? 'yellow'}`;
 
@@ -120,3 +120,73 @@ const handleCreateNote = (payload: CreateBulletinNotePayload) => {
     />
   </div>
 </template>
+
+<style lang="scss" scoped>
+/* ─── Bulletin Board ──────────────────────────────────────────
+   `.sticky-*` modifiers are built at runtime from the PostItColor union
+   (`sticky-${note.color}`), so every member of that union needs a rule
+   here even though no template names one literally. */
+
+@use 'sass:list';
+
+$postit-colors: (
+  'yellow': (
+    #fef08a,
+    #422006,
+  ),
+  'blue': (
+    #bfdbfe,
+    #1e3a5f,
+  ),
+  'green': (
+    #bbf7d0,
+    #14532d,
+  ),
+  'pink': (
+    #fecdd3,
+    #4c0519,
+  ),
+  'purple': (
+    #e9d5ff,
+    #3b0764,
+  ),
+);
+
+.bulletin-board {
+  background: #faf9f0;
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 200px;
+
+  .dark & {
+    background: #1a1e35;
+  }
+}
+
+.sticky-note {
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: var(--text-base);
+  line-height: 1.55;
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.2);
+
+  .note-author {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+}
+
+@each $name, $pair in $postit-colors {
+  .sticky-#{$name} {
+    background: list.nth($pair, 1);
+    color: list.nth($pair, 2);
+  }
+}
+</style>

@@ -95,7 +95,7 @@ const {
           >
             {{ expense.description }}
           </p>
-          <p class="text-xs text-gray-400 dark:text-gray-500">
+          <p class="text-xs text-gray-500 dark:text-gray-400">
             {{ formattedDateShort }}
           </p>
         </div>
@@ -118,7 +118,9 @@ const {
             v-if="userShare"
             class="text-xs"
             :class="
-              userShare.amount_due > 0 ? 'text-error-600' : 'text-success-600'
+              userShare.amount_due > 0
+                ? 'text-error-600 dark:text-error-400'
+                : 'text-success-700 dark:text-success-500'
             "
           >
             <UiCurrency

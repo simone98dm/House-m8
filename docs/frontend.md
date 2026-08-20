@@ -8,7 +8,7 @@ The frontend is a **Nuxt 4 / Vue 3.5** application using the Composition API thr
 
 ```
 app/
-├── assets/css/main.css       # Tailwind entry point + custom tokens
+├── assets/css/main.scss      # Sass entry (@use-only) → partials + Tailwind
 ├── components/               # Dumb UI components (grouped by domain)
 │   ├── balance/
 │   ├── bill/

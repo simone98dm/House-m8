@@ -79,7 +79,7 @@ const {
       >
         <!-- Resting colour was relying on inheriting text-gray-500 from the
              parent <nav>, but a global `a { color: var(--primary) }` rule in
-             main.css's @layer base wins over inheritance, so it rendered
+             _base.scss's @layer base wins over inheritance, so it rendered
              primary-500 blue at ~3.36:1 (fails AA) instead of gray. Fixed by
              declaring the colour directly on the link: a Tailwind utility
              class lives in @layer utilities, which Tailwind always orders

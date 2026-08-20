@@ -42,7 +42,7 @@ const chipClasses = computed(() => {
   };
 
   // Unselected fills use the --{state}-subtle/--{state}-fg CSS custom
-  // properties (main.css) via arbitrary-value classes rather than raw
+  // properties (assets/css/_tokens.scss) via arbitrary-value classes rather than raw
   // Tailwind color-100/700 pairs — those vars already flip under `.dark`,
   // so no separate dark: classes are needed here (matches the Card.vue
   // `bg-[var(--surface)]` precedent). The previous hardcoded pairs had no

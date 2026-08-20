@@ -27,7 +27,7 @@ const modelValue = defineModel<boolean>({ required: true });
           <NuxtLink
             to="/privacy"
             target="_blank"
-            class="text-blue-600 underline hover:text-blue-800"
+            class="text-blue-600 underline hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200"
             >{{ $t('gdpr.privacyLink').replace(' →', '') }}</NuxtLink
           >
         </template>
@@ -35,12 +35,14 @@ const modelValue = defineModel<boolean>({ required: true });
           <NuxtLink
             to="/terms"
             target="_blank"
-            class="text-blue-600 underline hover:text-blue-800"
+            class="text-blue-600 underline hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200"
             >{{ $t('gdpr.termsLink').replace(' →', '') }}</NuxtLink
           >
         </template>
       </i18n-t>
-      <span class="ml-1 text-red-500" aria-hidden="true">*</span>
+      <span class="ml-1 text-red-500 dark:text-red-300" aria-hidden="true"
+        >*</span
+      >
     </label>
   </div>
 </template>

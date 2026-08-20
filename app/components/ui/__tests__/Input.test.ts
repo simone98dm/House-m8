@@ -62,4 +62,63 @@ describe('UiInput', () => {
     });
     expect(wrapper.find('span').text()).toBe('*');
   });
+
+  describe('leading icon', () => {
+    it('renders the icon slot and clears room for it', () => {
+      const wrapper = mount(UiInput, {
+        slots: { icon: '<svg data-test="lead" />' },
+      });
+      expect(wrapper.find('[data-test="lead"]').exists()).toBe(true);
+      expect(wrapper.find('input').attributes('class')).toContain('pl-10');
+    });
+
+    it('does not pad the input when no icon is passed', () => {
+      const wrapper = mount(UiInput);
+      expect(wrapper.find('input').attributes('class')).not.toContain('pl-10');
+    });
+  });
+
+  describe('label-append slot', () => {
+    it('renders alongside the label', () => {
+      const wrapper = mount(UiInput, {
+        props: { label: 'Password' },
+        slots: { 'label-append': '<a href="/reset">Forgot?</a>' },
+      });
+      expect(wrapper.find('label').text()).toContain('Password');
+      expect(wrapper.find('a').text()).toBe('Forgot?');
+    });
+  });
+
+  describe('hint accessibility', () => {
+    it('announces the hint only in the error state', () => {
+      const plain = mount(UiInput, { props: { hint: 'Min 8 chars' } });
+      expect(plain.find('p').attributes('role')).toBeUndefined();
+
+      const invalid = mount(UiInput, {
+        props: { hint: 'Too short', error: true },
+      });
+      expect(invalid.find('p').attributes('role')).toBe('alert');
+    });
+
+    it('keeps a caller-supplied aria-describedby alongside the hint id', () => {
+      const wrapper = mount(UiInput, {
+        props: { hint: 'Min 8 chars' },
+        attrs: { 'aria-describedby': 'page-error' },
+      });
+      const describedBy = wrapper.find('input').attributes('aria-describedby');
+      const hintId = wrapper.find('p').attributes('id');
+
+      expect(describedBy).toContain('page-error');
+      expect(describedBy).toContain(hintId);
+    });
+
+    it('passes a caller-supplied aria-describedby through when there is no hint', () => {
+      const wrapper = mount(UiInput, {
+        attrs: { 'aria-describedby': 'page-error' },
+      });
+      expect(wrapper.find('input').attributes('aria-describedby')).toBe(
+        'page-error',
+      );
+    });
+  });
 });

@@ -79,7 +79,7 @@ const getFileIcon = (filename: string) => {
              list-row pattern kept raw in bill/DocumentsList.vue. -->
         <button
           :aria-label="$t('common.remove')"
-          class="p-2 text-gray-600 dark:text-gray-400 hover:text-error-600 hover:bg-error-50 rounded-lg transition-colors duration-150"
+          class="p-2 text-gray-600 dark:text-gray-400 hover:text-error-600 dark:hover:text-error-400 hover:bg-error-50 rounded-lg transition-colors duration-150"
           :disabled="disabled"
           @click.stop="$emit('remove', index)"
         >

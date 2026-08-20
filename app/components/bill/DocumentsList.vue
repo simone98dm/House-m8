@@ -46,7 +46,7 @@ const { t: $t } = useI18n();
           >
             {{ document.filename }}
           </p>
-          <p class="text-xs text-gray-400 dark:text-gray-500">
+          <p class="text-xs text-gray-500 dark:text-gray-400">
             {{ $t('bills.details.uploadedBy') }}
             {{ formatDate(document.uploaded_at) }}
           </p>
@@ -65,7 +65,7 @@ const { t: $t } = useI18n();
         >
           <button
             type="button"
-            class="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+            class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
             :aria-label="`${$t('a11y.buttons.uploadDocument')} ${document.filename}`"
             @click="emit('download', document)"
           >
@@ -77,7 +77,7 @@ const { t: $t } = useI18n();
           </button>
           <button
             type="button"
-            class="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+            class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
             :aria-label="`${$t('a11y.buttons.viewDocument')} ${document.filename}`"
             @click="emit('view', document)"
           >
@@ -86,7 +86,7 @@ const { t: $t } = useI18n();
           <button
             v-if="canDelete"
             type="button"
-            class="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-error-600 hover:bg-error-50 transition-colors"
+            class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-error-600 dark:hover:text-error-400 hover:bg-error-50 transition-colors"
             :aria-label="`${$t('a11y.buttons.deleteDocument')} ${document.filename}`"
             @click="emit('delete', document)"
           >
@@ -102,7 +102,7 @@ const { t: $t } = useI18n();
       >
         <Icon
           name="heroicons:document"
-          class="w-5 h-5 text-gray-400 dark:text-gray-500"
+          class="w-5 h-5 text-gray-500 dark:text-gray-400"
           aria-hidden="true"
         />
       </div>

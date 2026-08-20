@@ -1,0 +1,141 @@
+/* ─── Design Tokens ───────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Raw palette */
+    --blue-50: #eff6ff;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+
+    --purple-50: #f5f3ff;
+    --purple-400: #a78bfa;
+    --purple-500: #8b5cf6;
+    --purple-600: #7c3aed;
+
+    --green-400: #34d399;
+    --green-500: #10b981;
+    --red-400: #f87171;
+    --red-500: #ef4444;
+    --yellow-400: #fbbf24;
+    --yellow-500: #f59e0b;
+    --orange-400: #fb923c;
+    /* Darker steps added for avatar backgrounds, which carry white text and
+       need 4.5:1 against it. The -400/-500 steps above are kept for fills and
+       borders that carry no text. */
+    --orange-700: #c2410c;
+    --green-700: #047857;
+    --red-700: #b91c1c;
+
+    /* Semantic — light */
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --surface-raised: #ffffff;
+    --surface-hover: #f8fafc;
+    --fg: #0f172a;
+    /* WCAG AA: #64748b (slate-500) read 4.34:1 on --bg (#f1f5f9), just under
+       the 4.5:1 floor for body text — this token backs muted text app-wide
+       (stat labels, footer copy, meta text), so the fix belongs here, not
+       at each call site. #5b6a80 clears ~5.0:1 on --bg while staying a
+       clearly lighter step than --fg (#0f172a), so the muted/full-ink
+       hierarchy still reads. */
+    --fg-muted: #5b6a80;
+    --fg-subtle: #94a3b8;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+
+    --primary: var(--blue-500);
+    --primary-hover: var(--blue-600);
+    --primary-subtle: var(--blue-50);
+    --primary-fg: #ffffff;
+
+    --secondary: var(--purple-500);
+    --secondary-hover: var(--purple-600);
+    --secondary-subtle: var(--purple-50);
+
+    --success: var(--green-500);
+    --success-subtle: #ecfdf5;
+    --success-fg: #065f46;
+    --danger: var(--red-500);
+    --danger-subtle: #fef2f2;
+    --danger-fg: #991b1b;
+    --warning: var(--yellow-500);
+    --warning-subtle: #fffbeb;
+    --warning-fg: #92400e;
+
+    /* Layout */
+    --sidebar-w: 64px;
+    --header-h: 64px;
+    --bottom-nav-h: 64px;
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md:
+      0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    --shadow-lg:
+      0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+
+    --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* ─── Type scale (rem, relative to fluid html root) ─────────
+       Single source of truth for content font sizes. Values shown as
+       the px they render at the 16px root floor. Use var(--text-*)
+       everywhere instead of hardcoded px. */
+    --text-2xs: 0.625rem; /* 10px */
+    --text-xs: 0.6875rem; /* 11px */
+    --text-sm: 0.75rem; /* 12px */
+    --text-base: 0.8125rem; /* 13px */
+    --text-md: 0.875rem; /* 14px */
+    --text-lg: 0.9375rem; /* 15px */
+    --text-xl: 1rem; /* 16px */
+    --text-2xl: 1.0625rem; /* 17px */
+    --text-3xl: 1.125rem; /* 18px */
+    --text-4xl: 1.25rem; /* 20px */
+    --text-5xl: 1.375rem; /* 22px */
+    --text-6xl: 1.75rem; /* 28px */
+  }
+
+  /* Dark mode */
+  .dark {
+    --bg: #0c0e1a;
+    --surface: #131629;
+    --surface-raised: #1a1e35;
+    --surface-hover: #1e2239;
+    --fg: #f1f5f9;
+    --fg-muted: #94a3b8;
+    /* WCAG AA: #64748b read 3.76:1 on --surface (#131629) and 4.04:1 on --bg,
+       both under the 4.5:1 floor. This token backs subtle text across every
+       dark-theme surface — 18 of the measured failures traced to it alone.
+       #7c8ba1 clears 5.16:1 on --surface and 5.55:1 on --bg while staying a
+       clearly dimmer step than --fg-muted (#94a3b8), so the subtle/muted
+       hierarchy still reads. */
+    --fg-subtle: #7c8ba1;
+    --border: #1e2339;
+    --border-strong: #2a2f4e;
+
+    --primary: var(--blue-400);
+    --primary-hover: #93c5fd;
+    --primary-subtle: #1a2540;
+    --primary-fg: #0c0e1a;
+
+    --secondary: var(--purple-400);
+    --secondary-hover: #c4b5fd;
+    --secondary-subtle: #1c1830;
+
+    --success-subtle: #052e1c;
+    --success-fg: var(--green-400);
+    --danger-subtle: #2d1515;
+    --danger-fg: var(--red-400);
+    --warning-subtle: #271c06;
+    --warning-fg: var(--yellow-400);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  }
+}

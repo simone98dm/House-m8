@@ -75,7 +75,7 @@ async function upgrade(
            quiet-secondary-action pattern kept raw elsewhere in the app. -->
       <button
         type="button"
-        class="text-xs text-gray-400 underline dark:text-gray-500"
+        class="text-xs text-gray-500 underline dark:text-gray-400"
         :disabled="isLoading"
         @click="
           upgrade(requiredPlan === 'pro' ? 'pro_monthly' : 'house_plus_monthly')

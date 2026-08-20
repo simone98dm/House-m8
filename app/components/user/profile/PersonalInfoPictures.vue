@@ -85,7 +85,7 @@ const handleDeletePicture = async (index: number) => {
       >
         <Icon
           name="heroicons:trash"
-          class="h-4 w-4 text-error-500"
+          class="h-4 w-4 text-error-500 dark:text-error-400"
           aria-hidden="true"
         />
         {{ idx + 1 }}

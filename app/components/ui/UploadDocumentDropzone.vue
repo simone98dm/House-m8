@@ -139,7 +139,7 @@ const handleDrop = (event: DragEvent) => {
           :class="{
             'text-primary-600': isDragging,
             'text-gray-600 dark:text-gray-300': !isDragging && !disabled,
-            'text-gray-400 dark:text-gray-500': disabled,
+            'text-gray-500 dark:text-gray-400': disabled,
           }"
           aria-hidden="true"
         />
