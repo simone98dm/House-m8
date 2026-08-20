@@ -15,7 +15,11 @@ const isStripeEnabled = isEnabled('stripe-integration');
             <div
               class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-secondary-600 to-primary-600 text-white"
             >
-              <Icon name="heroicons:home-modern" class="h-5 w-5" />
+              <Icon
+                name="heroicons:home-modern"
+                class="h-5 w-5"
+                aria-hidden="true"
+              />
             </div>
             <span class="text-xl font-black text-gray-950 dark:text-gray-100"
               >House M8</span
@@ -36,28 +40,28 @@ const isStripeEnabled = isEnabled('stripe-integration');
             <li>
               <a
                 href="#features"
-                class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                 >{{ t('landing.footer.features') }}</a
               >
             </li>
             <li>
               <a
                 href="#how-it-works"
-                class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                 >{{ t('landing.footer.howItWorks') }}</a
               >
             </li>
             <li v-if="isStripeEnabled">
               <a
                 href="#pricing"
-                class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                 >{{ t('landing.footer.pricing') }}</a
               >
             </li>
             <li>
               <a
                 href="#faq"
-                class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                 >{{ t('landing.footer.faq') }}</a
               >
             </li>
@@ -74,7 +78,7 @@ const isStripeEnabled = isEnabled('stripe-integration');
             <li>
               <a
                 href="https://github.com/simone98dm/house-m8-fe"
-                class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                 target="_blank"
                 rel="noopener noreferrer"
                 >{{ t('landing.footer.github') }}</a
@@ -94,14 +98,14 @@ const isStripeEnabled = isEnabled('stripe-integration');
               <li>
                 <NuxtLink
                   to="/privacy"
-                  class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                  class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                   >{{ t('landing.footer.privacyPolicy') }}</NuxtLink
                 >
               </li>
               <li>
                 <NuxtLink
                   to="/terms"
-                  class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                  class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                   >{{ t('landing.footer.termsOfService') }}</NuxtLink
                 >
               </li>
@@ -117,7 +121,7 @@ const isStripeEnabled = isEnabled('stripe-integration');
               <li>
                 <a
                   href="https://github.com/simone98dm/house-m8-fe"
-                  class="text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
+                  class="inline-flex min-h-6 items-center text-gray-600 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-gray-200"
                   target="_blank"
                   rel="noopener noreferrer"
                   >{{ t('landing.footer.github') }}</a

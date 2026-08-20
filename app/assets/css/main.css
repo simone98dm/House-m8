@@ -209,7 +209,13 @@
     --surface-raised: #ffffff;
     --surface-hover: #f8fafc;
     --fg: #0f172a;
-    --fg-muted: #64748b;
+    /* WCAG AA: #64748b (slate-500) read 4.34:1 on --bg (#f1f5f9), just under
+       the 4.5:1 floor for body text — this token backs muted text app-wide
+       (stat labels, footer copy, meta text), so the fix belongs here, not
+       at each call site. #5b6a80 clears ~5.0:1 on --bg while staying a
+       clearly lighter step than --fg (#0f172a), so the muted/full-ink
+       hierarchy still reads. */
+    --fg-muted: #5b6a80;
     --fg-subtle: #94a3b8;
     --border: #e2e8f0;
     --border-strong: #cbd5e1;
@@ -1388,6 +1394,19 @@
   flex-shrink: 0;
 }
 
+/* The layer's own `.app-footer__link` never sets `color`, so it inherits
+   `--app-footer-ink-muted` from `.app-footer__content` — but the base `a`
+   rule above (`color: var(--primary)`) matches the anchor directly, and an
+   element-matched rule always wins over an inherited one regardless of
+   specificity. That silently repainted the footer link bright blue
+   (3.36:1 on --bg, failing WCAG AA) instead of the intended muted tone.
+   Re-declaring it here at higher specificity restores the by-design
+   muted-by-default / full-ink-on-hover behavior already coded into the
+   layer's :hover / :focus-visible rules. */
+.app-layout .app-footer.app-footer-themed .app-footer__link {
+  color: var(--app-footer-ink-muted);
+}
+
 /* ─── Page Header ─────────────────────────────────────────── */
 /* Reserve header height so the ClientOnly+Teleport header (AppPageHeader)
    doesn't push page content down on hydration. Matches .page-header height. */
@@ -1753,6 +1772,56 @@
 
 .animate-slide-up.active {
   transform: translateY(-4px);
+}
+
+/* ─── WCAG AA Text-Contrast Overrides ─────────────────────────
+   These four Tailwind utility classes render at their configured
+   tailwind.config.ts step but measured below 4.5:1 in the backgrounds
+   they're actually used against across the app. Overridden here as plain
+   (unlayered) rules so they win on source order regardless of Tailwind's
+   own cascade-layer position, and scoped to the `text-*` class only —
+   `bg-*` / `border-*` on the same steps are untouched, so this can't shift
+   any other surface. Do not re-patch these at the call site; the whole
+   point is that every consumer of the class inherits the fix here. */
+.text-gray-400 {
+  /* gray-400 (#8e8e92) read 3.26:1 on white/light card surfaces.
+     DESIGN.md already names gray-500 (#6e6e73) as this app's "secondary
+     body text" token; reusing it here (5.07:1 on white) is a correction
+     back to documented intent, not a new value. */
+  color: #6e6e73;
+}
+
+.dark .dark\:text-gray-500 {
+  /* gray-500 (#6e6e73) is tuned for light surfaces; taken verbatim into
+     dark mode via `dark:text-gray-500` it read ~3.3-3.8:1 on dark cards
+     (bg-gray-800/900). Lightened to clear ~5-7:1 on this app's dark
+     surfaces without matching full --fg (dark) brightness.
+
+     Targets the escaped `dark:text-gray-500` class, NOT a bare
+     `text-gray-500`: the failing elements carry `text-gray-400
+     dark:text-gray-500`, so they never have the unprefixed class at all.
+     A `.dark .text-gray-500` rule would miss every one of them — losing
+     to Tailwind's own `.dark .dark\:text-gray-500` on specificity — while
+     silently recolouring the ~130 places that do use plain
+     `text-gray-500`, none of which were failing. */
+  color: #999da3;
+}
+
+.text-success-600 {
+  /* success-600 (#16a34a) read 3.15:1 on the success-50 banner background
+     it's paired with. success-700 (#15803d) clears 4.79:1 there. */
+  color: #15803d;
+}
+
+.text-primary-100\/80 {
+  /* Alpha-reduced text over a solid brand-color card is contrast-
+     ambiguous by construction — compositing 80%-opacity primary-100 over
+     solid primary-600 renders under 4.5:1 in practice even though some
+     contrast tools read the underlying opaque swatch instead. Swapping to
+     a solid (non-alpha) primary-50 removes the ambiguity outright and
+     clears ~4.75:1 on primary-600 while still reading as a muted label
+     next to the white metric below it. */
+  color: #eff6ff;
 }
 
 /* ─── Reduced Motion ──────────────────────────────────────── */
