@@ -112,6 +112,24 @@ export const getEmailStyles = () => `
   }
 `;
 
+const HTML_ENTITIES: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
+/**
+ * Escape a value so it renders as text inside an HTML email rather than as
+ * markup. Every template variable is user-reachable — a display name, a house
+ * name, a report summary — and these emails are delivered to third parties
+ * from our own domain, so unescaped markup here is a phishing vector, not a
+ * cosmetic bug.
+ */
+export const escapeHtml = (value: string): string =>
+  value.replace(/[&<>"']/g, (char) => HTML_ENTITIES[char] as string);
+
 /**
  * Wrap email content with base template
  */
@@ -125,7 +143,7 @@ export const wrapEmailTemplate = (
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>${title}</title>
+  <title>${escapeHtml(title)}</title>
   <style>
     ${getEmailStyles()}
   </style>
@@ -153,16 +171,19 @@ export const wrapEmailTemplate = (
 `;
 
 /**
- * Replace template variables with actual values
+ * Replace template variables with actual values.
+ *
+ * Values are HTML-escaped and substituted through a replacer function: passing
+ * the value as a replacement *string* would let `$&`, `$1` and friends inside
+ * it expand as replacement patterns, which is a second injection route that
+ * escaping alone does not close.
  */
 export const replaceTemplateVars = (
   template: string,
   vars: Record<string, string>,
-): string => {
-  let result = template;
-  Object.entries(vars).forEach(([key, value]) => {
+): string =>
+  Object.entries(vars).reduce((result, [key, value]) => {
     const regex = new RegExp(`{{${key}}}`, 'g');
-    result = result.replace(regex, value);
-  });
-  return result;
-};
+    const escaped = escapeHtml(value);
+    return result.replace(regex, () => escaped);
+  }, template);
