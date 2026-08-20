@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 0.9.0 (2026-08-20)
+
+
+### Features
+
+* import House m8 application codebase ([8c89d8f](https://github.com/simone98dm/House-m8/commit/8c89d8f60c2ff90efb8c3cd18890a75e38007f40))
+
+
+### Bug Fixes
+
+* update version number to 0.8.0 in package.json ([d6968c6](https://github.com/simone98dm/House-m8/commit/d6968c656d9cba915591230b2dc96b67c58315ac))
+* **a11y:** raise text contrast to WCAG AA on shared surfaces ([d714344](https://github.com/simone98dm/House-m8/commit/d71434465f2cf539667910e59942ec0088fd51fa))
+* **security:** escape template variables in email HTML ([ea64d5d](https://github.com/simone98dm/House-m8/commit/ea64d5d721e7e2f276e9020fb1a080469e07e291))
+* track server email templates excluded by the gitignore ([0c8ac79](https://github.com/simone98dm/House-m8/commit/0c8ac7999e27072fe63d4e96d0d893fff6a20d6b))
+
+
+### Chores
+
+* initial repository bootstrap ([6d425fc](https://github.com/simone98dm/House-m8/commit/6d425fc81fa8262f2309dfa799f1a966737f8b81))
+
 ## 1.8.0 (2026-08-19)
 
 
