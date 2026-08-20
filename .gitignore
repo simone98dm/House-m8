@@ -110,8 +110,11 @@ local.*
 # Misc
 # ===========================================
 graphify-out/
-marketing/
-templates/
+# Anchored to the repo root on purpose: unanchored, `templates/` matched
+# server/templates/ too and silently excluded the 12 email templates that
+# server/emails/index.ts imports, breaking `nuxt build` at the prerender step.
+/marketing/
+/templates/
 .scripts
 DESIGN.md
 CLAUDE.md
