@@ -7,6 +7,11 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  # Declaring a permissions block sets every scope NOT listed here to `none`.
+  # Without this line GITHUB_TOKEN has no package access at all and the
+  # @simone98dm/layer install 403s, regardless of the Actions-access grant on
+  # the package itself.
+  packages: read
 
 # A new push supersedes the previous run — no point finishing an analysis of code
 # that is already stale.
