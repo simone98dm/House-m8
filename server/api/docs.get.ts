@@ -7,6 +7,21 @@ export default defineEventHandler((event) => {
     throw createError({ statusCode: 404, statusMessage: 'Not found' });
   }
   setHeader(event, 'Content-Type', 'text/html; charset=utf-8');
+  // Page-specific CSP: only this dev-only page may load Scalar from jsdelivr.
+  setHeader(
+    event,
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+      "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+      "img-src 'self' data: https:",
+      "font-src 'self' data: https://cdn.jsdelivr.net",
+      "connect-src 'self'",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+    ].join('; '),
+  );
 
   return `<!doctype html>
 <html lang="en">

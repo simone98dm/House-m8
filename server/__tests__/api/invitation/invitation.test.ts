@@ -216,6 +216,23 @@ describe('POST /api/invitation/[token]/accept', () => {
     expect(result.data.house_id).toBe('h-1');
   });
 
+  it.each([
+    ['HOUSE_FULL', 'This house is full'],
+    ['duplicate key', 'already a member'],
+  ])('maps %s from acceptInvitation to 409', async (error, message) => {
+    const repos = vi.mocked(getRepositories)() as unknown as {
+      houses: { acceptInvitation: ReturnType<typeof vi.fn> };
+    };
+    repos.houses.acceptInvitation.mockResolvedValue({ data: null, error });
+
+    const { default: handler } =
+      await import('../../../api/invitation/[token]/accept.post');
+    await expect(handler(mockEvent)).rejects.toMatchObject({
+      statusCode: 409,
+      message: expect.stringContaining(message),
+    });
+  });
+
   it('throws 409 when user already belongs to another house', async () => {
     vi.mocked(getRepositories).mockReturnValue({
       houses: {

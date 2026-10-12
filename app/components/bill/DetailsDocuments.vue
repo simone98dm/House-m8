@@ -51,12 +51,12 @@ const { formatDate, getFileIcon } = useBillDetails();
          horizontally, not in this vertical icon-above-text stack. -->
     <button
       type="button"
-      class="mt-4 w-full border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:border-primary-400 hover:bg-primary-50/30 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500"
+      class="mt-4 w-full border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:border-primary-400 hover:bg-primary-50/30 transition-all cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-primary-500"
       :aria-label="$t('a11y.buttons.uploadDocument')"
       @click="emit('upload')"
     >
       <div
-        class="size-12 rounded-full bg-[var(--primary-subtle)] flex items-center justify-center text-[var(--primary-hover)] mb-3"
+        class="size-12 rounded-full bg-brand-subtle flex items-center justify-center text-brand-hover mb-3"
       >
         <Icon
           name="heroicons:arrow-up-tray"

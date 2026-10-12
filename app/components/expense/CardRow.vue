@@ -69,7 +69,7 @@ const {
            component for why this stays raw rather than becoming UiButton. -->
         <button
           type="button"
-          class="absolute inset-0 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset"
+          class="absolute inset-0 rounded-xl cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-inset"
           :aria-label="
             $t('expenses.card.viewDetailsLabel', {
               description: expense.description,
@@ -142,14 +142,14 @@ const {
           </template>
           <template v-else-if="userShare && isPaid">
             <span
-              class="bg-[var(--success-subtle)] text-[var(--success-fg)] px-2.5 py-0.5 rounded-full text-xs font-bold"
+              class="bg-ok-subtle text-ok-fg px-2.5 py-0.5 rounded-full text-xs font-bold"
             >
               {{ $t('expenses.card.settled') }}
             </span>
           </template>
           <template v-else-if="userShare && !isPaid">
             <span
-              class="bg-[var(--warning-subtle)] text-[var(--warning-fg)] px-2.5 py-0.5 rounded-full text-xs font-bold"
+              class="bg-warn-subtle text-warn-fg px-2.5 py-0.5 rounded-full text-xs font-bold"
             >
               {{ $t('expenses.status.pending') }}
             </span>

@@ -168,9 +168,15 @@ export class PostgresGdprRepository implements IGdprRepository {
       billsRes,
       commentsRes,
       requestsRes,
+      notesRes,
+      reportsRes,
     ] = await Promise.all([
+      // Explicit column list: never export password_hash or other secrets.
       this.pool.query(
-        `SELECT id, email, first_name, last_name, created_at, terms_accepted_at, consent_version
+        `SELECT id, email, first_name, last_name, created_at, terms_accepted_at, consent_version,
+                avatar_url, birthdate, bio, is_smoker, gender, birthplace, nationality,
+                occupation_type, study_field, job_title, languages, pets, telephone,
+                instagram, twitter, tiktok, linkedin, profile_pictures
            FROM users WHERE id = $1`,
         [userId],
       ),
@@ -203,6 +209,16 @@ export class PostgresGdprRepository implements IGdprRepository {
            WHERE user_id = $1 ORDER BY requested_at DESC`,
         [userId],
       ),
+      this.pool.query(
+        `SELECT id, house_id, message, dismiss_date, created_at FROM bulletin_notes
+           WHERE user_id = $1 ORDER BY created_at DESC`,
+        [userId],
+      ),
+      this.pool.query(
+        `SELECT id, house_id, description, created_at, read_at, solved_at FROM reports
+           WHERE created_by = $1 ORDER BY created_at DESC`,
+        [userId],
+      ),
     ]);
 
     const user = userRes.rows[0];
@@ -216,6 +232,24 @@ export class PostgresGdprRepository implements IGdprRepository {
         created_at: user.created_at,
         terms_accepted_at: user.terms_accepted_at ?? null,
         consent_version: user.consent_version ?? null,
+        avatar_url: user.avatar_url ?? null,
+        birthdate: user.birthdate ?? null,
+        bio: user.bio ?? null,
+        is_smoker: user.is_smoker ?? null,
+        gender: user.gender ?? null,
+        birthplace: user.birthplace ?? null,
+        nationality: user.nationality ?? null,
+        occupation_type: user.occupation_type ?? null,
+        study_field: user.study_field ?? null,
+        job_title: user.job_title ?? null,
+        languages: user.languages ?? null,
+        pets: user.pets ?? null,
+        telephone: user.telephone ?? null,
+        instagram: user.instagram ?? null,
+        twitter: user.twitter ?? null,
+        tiktok: user.tiktok ?? null,
+        linkedin: user.linkedin ?? null,
+        profile_pictures: user.profile_pictures ?? null,
       },
       houses: housesRes.rows,
       expenses: expensesRes.rows.map((r) => ({
@@ -236,6 +270,8 @@ export class PostgresGdprRepository implements IGdprRepository {
         active: r.active,
       })),
       comments_received: commentsRes.rows,
+      bulletin_notes: notesRes.rows,
+      reports: reportsRes.rows,
       gdpr_requests: requestsRes.rows,
     };
   }
@@ -244,6 +280,8 @@ export class PostgresGdprRepository implements IGdprRepository {
     pseudonymized: number;
     tokensCleared: number;
     invitationsCleared: number;
+    resetTokensCleared: number;
+    gdprRequestsCleared: number;
   }> {
     const pending = await this.getPendingDeletions();
     let pseudonymized = 0;
@@ -252,19 +290,35 @@ export class PostgresGdprRepository implements IGdprRepository {
       if (ok) pseudonymized++;
     }
 
-    const [tokensRes, invitationsRes] = await Promise.all([
-      this.pool.query(
-        `DELETE FROM email_verification_tokens WHERE expires_at < NOW() AND verified = FALSE`,
-      ),
-      this.pool.query(
-        `DELETE FROM house_invitations WHERE expires_at < NOW() AND used = FALSE`,
-      ),
-    ]);
+    // Rate-limit counters are only meaningful inside their window.
+    await this.pool.query(
+      `DELETE FROM rate_limits WHERE window_start < NOW() - INTERVAL '2 hours'`,
+    );
+
+    const [tokensRes, invitationsRes, resetRes, requestsRes] =
+      await Promise.all([
+        this.pool.query(
+          `DELETE FROM email_verification_tokens WHERE expires_at < NOW() AND verified = FALSE`,
+        ),
+        this.pool.query(
+          `DELETE FROM house_invitations WHERE expires_at < NOW() AND used = FALSE`,
+        ),
+        this.pool.query(
+          `DELETE FROM password_reset_tokens WHERE expires_at < NOW() OR used_at IS NOT NULL`,
+        ),
+        this.pool.query(
+          `DELETE FROM gdpr_requests
+         WHERE status IN ('completed', 'cancelled')
+           AND COALESCE(completed_at, requested_at) < NOW() - INTERVAL '12 months'`,
+        ),
+      ]);
 
     return {
       pseudonymized,
       tokensCleared: tokensRes.rowCount ?? 0,
       invitationsCleared: invitationsRes.rowCount ?? 0,
+      resetTokensCleared: resetRes.rowCount ?? 0,
+      gdprRequestsCleared: requestsRes.rowCount ?? 0,
     };
   }
 }

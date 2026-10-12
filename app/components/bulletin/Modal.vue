@@ -66,7 +66,7 @@ onMounted(() => {
         v-model="message"
         rows="4"
         required
-        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm transition-all focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm transition-all focus:border-primary-600 focus:outline-hidden focus:ring-2 focus:ring-primary-600/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         :placeholder="t('bulletin.modal.messagePlaceholder')"
       />
     </div>
@@ -89,7 +89,7 @@ onMounted(() => {
         v-model="dismissDate"
         type="date"
         :min="minDate"
-        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm transition-all focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm transition-all focus:border-primary-600 focus:outline-hidden focus:ring-2 focus:ring-primary-600/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
       />
       <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
         {{ t('bulletin.modal.dismissDateHelp') }}

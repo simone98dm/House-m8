@@ -93,6 +93,7 @@ async function handleConsentAccepted() {
       <!-- Sibling of <main> inside the flex column: main grows, so the footer
            sits at the bottom of short pages and after the content on long
            ones. It never overlaps and never creates its own scroll area. -->
+      <LegalLinks class="py-2" />
       <AppFooter class="app-footer-themed" />
     </div>
 

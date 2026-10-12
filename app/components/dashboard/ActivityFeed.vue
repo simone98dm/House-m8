@@ -103,7 +103,7 @@ const avatarVariant = (expense: Expense) => {
                 {{ expense.description }}
               </span>
             </td>
-            <td style="color: var(--fg-muted); font-size: var(--text-sm)">
+            <td style="color: var(--fg-muted); font-size: var(--fs-sm)">
               {{ formatDate(expense.date || expense.created_at) }}
             </td>
             <td>

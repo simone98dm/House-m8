@@ -327,8 +327,10 @@ export class PostgresBillRepository implements IBillRepository {
     const result = await repoQuery(async () => {
       const r = await this.pool.query<{ exists: boolean }>(
         `SELECT EXISTS(
-          SELECT 1 FROM bills
-          WHERE id = $1 AND created_by = $2
+          SELECT 1 FROM bills b
+          JOIN house_members hm
+            ON hm.house_id = b.house_id AND hm.user_id = b.created_by AND hm.left_at IS NULL
+          WHERE b.id = $1 AND b.created_by = $2
         )`,
         [billId, userId],
       );

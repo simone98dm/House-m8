@@ -73,12 +73,12 @@ export const useHouses = () => {
     }
   };
 
-  const addMember = async (
+  const inviteMember = async (
     houseId: string,
     email: string,
-  ): Promise<ApiResponse<HouseMember>> => {
+  ): Promise<ApiResponse<{ invited: boolean }>> => {
     try {
-      const result = await api.fetch<{ data: HouseMember }>(
+      const result = await api.fetch<{ data: { invited: boolean } }>(
         `${baseUrl}/${houseId}/members`,
         {
           method: 'POST',
@@ -91,7 +91,8 @@ export const useHouses = () => {
       const err = error as { data?: { message?: string }; message?: string };
       return {
         data: null,
-        error: err?.data?.message || err?.message || 'Failed to add member',
+        error:
+          err?.data?.message || err?.message || 'Failed to send invitation',
       };
     }
   };
@@ -133,27 +134,6 @@ export const useHouses = () => {
       return {
         data: null,
         error: err?.data?.message || err?.message || 'Failed to fetch members',
-      };
-    }
-  };
-
-  const joinHouse = async (
-    houseId: string,
-  ): Promise<ApiResponse<{ message: string }>> => {
-    try {
-      const result = await api.fetch<{ data: { message: string } }>(
-        `${baseUrl}/${houseId}/join`,
-        {
-          method: 'POST',
-        },
-        true,
-      );
-      return { data: result.data, error: null };
-    } catch (error) {
-      const err = error as { data?: { message?: string }; message?: string };
-      return {
-        data: null,
-        error: err?.data?.message || err?.message || 'Failed to join house',
       };
     }
   };
@@ -326,10 +306,9 @@ export const useHouses = () => {
     getHouseWithMembers,
     getCurrentUserHouse,
     createHouse,
-    addMember,
+    inviteMember,
     removeMember,
     getHouseMembers,
-    joinHouse,
     leaveHouse,
     generateInvitation,
     getHouseFromToken,

@@ -19,7 +19,7 @@ const { size = 16 } = defineProps<Props>();
     stroke="currentColor"
     stroke-width="2"
     aria-hidden="true"
-    style="flex-shrink: 0; margin-top: 1px"
+    style="shrink: 0; margin-top: 1px"
   >
     <path
       stroke-linecap="round"

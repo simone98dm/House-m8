@@ -76,7 +76,7 @@ watch(
         v-if="show"
         ref="dialogRef"
         role="dialog"
-        class="modal-backdrop fixed top-0 right-0 left-0 inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm"
+        class="modal-backdrop fixed top-0 right-0 left-0 inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-xs"
         aria-modal="true"
         :aria-labelledby="title || $slots.header ? modalId : undefined"
         @click.self="emit('close')"

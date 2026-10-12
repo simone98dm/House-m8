@@ -62,8 +62,8 @@ const hasNoInformation = computed(
     <UserProfileInfoField
       v-if="user.birthdate"
       icon="heroicons:cake"
-      icon-bg-class="bg-[var(--danger-subtle)]"
-      icon-color-class="text-[var(--danger-fg)]"
+      icon-bg-class="bg-danger-subtle"
+      icon-color-class="text-danger-fg"
       :label="$t('profile.personal.birthdate')"
       :value="formatDate(user.birthdate)"
     />
@@ -72,7 +72,7 @@ const hasNoInformation = computed(
       v-if="user.gender"
       icon="heroicons:user"
       icon-bg-class="bg-[var(--secondary-subtle)]"
-      icon-color-class="text-[var(--secondary-hover)]"
+      icon-color-class="text-[color:var(--secondary-hover)]"
       :label="$t('profile.personal.gender')"
       :value="getGenderDisplay(user.gender)"
       value-class="capitalize"
@@ -81,8 +81,8 @@ const hasNoInformation = computed(
     <UserProfileInfoField
       v-if="user.birthplace"
       icon="heroicons:map-pin"
-      icon-bg-class="bg-[var(--primary-subtle)]"
-      icon-color-class="text-[var(--primary-hover)]"
+      icon-bg-class="bg-brand-subtle"
+      icon-color-class="text-brand-hover"
       :label="$t('profile.personal.birthplace')"
       :value="user.birthplace"
     />
@@ -90,8 +90,8 @@ const hasNoInformation = computed(
     <UserProfileInfoField
       v-if="user.nationality"
       icon="heroicons:flag"
-      icon-bg-class="bg-[var(--success-subtle)]"
-      icon-color-class="text-[var(--success-fg)]"
+      icon-bg-class="bg-ok-subtle"
+      icon-color-class="text-ok-fg"
       :label="$t('profile.personal.nationality')"
       :value="user.nationality"
     />
@@ -99,8 +99,8 @@ const hasNoInformation = computed(
     <UserProfileInfoField
       v-if="user.occupation_type"
       icon="heroicons:briefcase"
-      icon-bg-class="bg-[var(--warning-subtle)]"
-      icon-color-class="text-[var(--warning-fg)]"
+      icon-bg-class="bg-warn-subtle"
+      icon-color-class="text-warn-fg"
       :label="$t('profile.personal.occupationType')"
       :value="getOccupationDisplay(user)"
       value-class="capitalize"
@@ -110,14 +110,14 @@ const hasNoInformation = computed(
       v-if="user.languages && user.languages.length > 0"
       icon="heroicons:language"
       icon-bg-class="bg-[var(--secondary-subtle)]"
-      icon-color-class="text-[var(--secondary-hover)]"
+      icon-color-class="text-[color:var(--secondary-hover)]"
       :label="$t('profile.personal.languages')"
     >
       <div class="mt-1 flex flex-wrap gap-1">
         <span
           v-for="language in user.languages"
           :key="language"
-          class="inline-block rounded-full bg-[var(--secondary-subtle)] px-2.5 py-0.5 text-xs font-bold text-[var(--secondary-hover)]"
+          class="inline-block rounded-full bg-[var(--secondary-subtle)] px-2.5 py-0.5 text-xs font-bold text-[color:var(--secondary-hover)]"
         >
           {{ language }}
         </span>
@@ -127,8 +127,8 @@ const hasNoInformation = computed(
     <UserProfileInfoField
       v-if="user.is_smoker !== undefined && user.is_smoker !== null"
       icon="heroicons:no-symbol"
-      icon-bg-class="bg-[var(--warning-subtle)]"
-      icon-color-class="text-[var(--warning-fg)]"
+      icon-bg-class="bg-warn-subtle"
+      icon-color-class="text-warn-fg"
       :label="$t('profile.personal.smoker')"
       :value="user.is_smoker ? $t('common.yes') : $t('common.no')"
     />
@@ -136,8 +136,8 @@ const hasNoInformation = computed(
     <UserProfileInfoField
       v-if="user.pets"
       icon="heroicons:heart"
-      icon-bg-class="bg-[var(--danger-subtle)]"
-      icon-color-class="text-[var(--danger-fg)]"
+      icon-bg-class="bg-danger-subtle"
+      icon-color-class="text-danger-fg"
       :label="$t('profile.personal.pets')"
     >
       <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -148,8 +148,8 @@ const hasNoInformation = computed(
     <UserProfileInfoField
       v-if="user.preferred_currency"
       icon="heroicons:currency-dollar"
-      icon-bg-class="bg-[var(--success-subtle)]"
-      icon-color-class="text-[var(--success-fg)]"
+      icon-bg-class="bg-ok-subtle"
+      icon-color-class="text-ok-fg"
       :label="$t('profile.personal.preferredCurrency')"
       :value="user.preferred_currency"
     />

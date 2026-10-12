@@ -8,9 +8,9 @@ import { logger } from '~~/server/utils/logger';
 
 const updateBillSchema = z.object({
   description: z.string().min(1).max(500).optional(),
-  monthly_cost: z.number().positive().optional(),
-  payment_period: z.number().int().positive().optional(),
-  next_due_date: z.string().optional(),
+  monthly_cost: z.number().positive().max(1_000_000).optional(),
+  payment_period: z.number().int().positive().max(120).optional(),
+  next_due_date: z.string().date().optional(),
   active: z.boolean().optional(),
 });
 

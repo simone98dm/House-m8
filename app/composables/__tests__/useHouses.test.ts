@@ -157,39 +157,32 @@ describe('useHouses', () => {
     });
   });
 
-  describe('addMember', () => {
-    it('adds member successfully', async () => {
+  describe('inviteMember', () => {
+    it('sends an invitation and returns the generic confirmation', async () => {
       const { useHouses } = await import('~/composables/useHouses');
-      const mockMember = {
-        id: 'm-1',
-        house_id: 'h-1',
-        user_id: 'u-2',
-        role: 'member',
-        joined_at: '2024-01-01',
-        is_active: true,
-      };
-      mockFetch.mockResolvedValue({ data: mockMember });
+      mockFetch.mockResolvedValue({ data: { invited: true } });
 
-      const { addMember } = useHouses();
-      const result = await addMember('h-1', 'user2@example.com');
+      const { inviteMember } = useHouses();
+      const result = await inviteMember('h-1', 'user2@example.com');
 
       expect(mockFetch).toHaveBeenCalledWith(
         '/api/houses/h-1/members',
         { method: 'POST', body: { email: 'user2@example.com' } },
         true,
       );
-      expect(result.data).toEqual(mockMember);
+      expect(result.data).toEqual({ invited: true });
+      expect(result.error).toBeNull();
     });
 
-    it('handles add member error', async () => {
+    it('handles invite error', async () => {
       const { useHouses } = await import('~/composables/useHouses');
-      mockFetch.mockRejectedValue(new Error('User not found'));
+      mockFetch.mockRejectedValue(new Error('Forbidden'));
 
-      const { addMember } = useHouses();
-      const result = await addMember('h-1', 'invalid@example.com');
+      const { inviteMember } = useHouses();
+      const result = await inviteMember('h-1', 'invalid@example.com');
 
       expect(result.data).toBeNull();
-      expect(result.error).toBe('User not found');
+      expect(result.error).toBe('Forbidden');
     });
   });
 
@@ -242,30 +235,6 @@ describe('useHouses', () => {
 
       expect(result.data).toBeNull();
       expect(result.error).toBe('Fetch failed');
-    });
-  });
-
-  describe('joinHouse', () => {
-    it('joins house successfully', async () => {
-      const { useHouses } = await import('~/composables/useHouses');
-      mockFetch.mockResolvedValue({ data: { message: 'Joined' } });
-
-      const { joinHouse } = useHouses();
-      const result = await joinHouse('h-1');
-
-      expect(result.data).toEqual({ message: 'Joined' });
-      expect(result.error).toBeNull();
-    });
-
-    it('handles join error', async () => {
-      const { useHouses } = await import('~/composables/useHouses');
-      mockFetch.mockRejectedValue(new Error('Already a member'));
-
-      const { joinHouse } = useHouses();
-      const result = await joinHouse('h-1');
-
-      expect(result.data).toBeNull();
-      expect(result.error).toBe('Already a member');
     });
   });
 

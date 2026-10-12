@@ -85,7 +85,7 @@ const handleDownload = async () => {
             <select
               id="report-month"
               v-model="selectedMonth"
-              class="rounded-lg border border-gray-200 dark:border-gray-700 bg-[var(--surface)] px-3 py-1.5 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-tertiary-500"
+              class="rounded-lg border border-gray-200 dark:border-gray-700 bg-surface px-3 py-1.5 text-sm text-gray-900 dark:text-gray-100 focus:outline-hidden focus:ring-2 focus:ring-tertiary-500"
             >
               <option
                 v-for="opt in monthOptions"
@@ -106,7 +106,7 @@ const handleDownload = async () => {
             <select
               id="report-year"
               v-model="selectedYear"
-              class="rounded-lg border border-gray-200 dark:border-gray-700 bg-[var(--surface)] px-3 py-1.5 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-tertiary-500"
+              class="rounded-lg border border-gray-200 dark:border-gray-700 bg-surface px-3 py-1.5 text-sm text-gray-900 dark:text-gray-100 focus:outline-hidden focus:ring-2 focus:ring-tertiary-500"
             >
               <option
                 v-for="opt in currentYearOptions"

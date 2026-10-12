@@ -31,16 +31,15 @@ const cardClasses = computed(() => {
   };
 
   const variantClasses = {
-    default: 'bg-[var(--surface)] shadow-md hover:shadow-lg',
-    elevated:
-      'bg-[var(--surface)] shadow-lg hover:shadow-xl hover:-translate-y-0.5',
+    default: 'bg-surface shadow-md hover:shadow-lg',
+    elevated: 'bg-surface shadow-lg hover:shadow-xl hover:-translate-y-0.5',
     outlined:
-      'bg-[var(--surface)] border border-gray-400/[0.15] dark:border-gray-700 hover:border-primary-600/20 dark:hover:border-primary-400/30',
+      'bg-surface border border-gray-400/[0.15] dark:border-gray-700 hover:border-primary-600/20 dark:hover:border-primary-400/30',
     // Bare surface tone only — no border/shadow of its own. For callers that
     // need to supply their own chrome (border color, shadow steps) via a
     // passthrough `class`, since mixing a baked-in Tailwind utility with an
     // overriding one on the same element has no reliable winner.
-    plain: 'bg-[var(--surface)]',
+    plain: 'bg-surface',
   };
 
   const paddingClasses = {

@@ -26,7 +26,7 @@ const {
     }"
   >
     <div
-      class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/60 dark:via-gray-600/60 to-transparent"
+      class="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/60 dark:via-gray-600/60 to-transparent"
     />
   </div>
 </template>

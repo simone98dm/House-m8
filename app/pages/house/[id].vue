@@ -51,11 +51,11 @@ const {
 
   <UiCard v-else-if="error" class="text-center">
     <div
-      class="inline-flex items-center justify-center size-12 rounded-full bg-[var(--danger-subtle)] mb-3"
+      class="inline-flex items-center justify-center size-12 rounded-full bg-danger-subtle mb-3"
     >
       <Icon
         name="heroicons:exclamation-triangle"
-        class="w-6 h-6 text-[var(--danger-fg)]"
+        class="w-6 h-6 text-danger-fg"
         aria-hidden="true"
       />
     </div>
@@ -71,11 +71,11 @@ const {
 
   <UiCard v-else-if="house && !canViewHouse" class="text-center">
     <div
-      class="inline-flex items-center justify-center size-12 rounded-full bg-[var(--danger-subtle)] mb-3"
+      class="inline-flex items-center justify-center size-12 rounded-full bg-danger-subtle mb-3"
     >
       <Icon
         name="heroicons:lock-closed"
-        class="w-6 h-6 text-[var(--danger-fg)]"
+        class="w-6 h-6 text-danger-fg"
         aria-hidden="true"
       />
     </div>

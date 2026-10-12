@@ -1,0 +1,24 @@
+/* ─── Cards ───────────────────────────────────────────────── */
+@layer components {
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .card-body {
+    padding: 20px;
+  }
+}

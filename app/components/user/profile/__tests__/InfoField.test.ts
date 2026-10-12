@@ -6,8 +6,8 @@ const G = { mocks: { $t: (k: string) => k }, stubs: { Icon: true } };
 
 const baseProps = {
   icon: 'heroicons:cake',
-  iconBgClass: 'bg-[var(--danger-subtle)]',
-  iconColorClass: 'text-[var(--danger-fg)]',
+  iconBgClass: 'bg-danger-subtle',
+  iconColorClass: 'text-danger-fg',
   label: 'Birthdate',
   value: 'Jan 1, 1990',
 };
@@ -35,8 +35,8 @@ describe('InfoField', () => {
       props: baseProps,
       global: G,
     });
-    expect(wrapper.html()).toContain('bg-[var(--danger-subtle)]');
-    expect(wrapper.html()).toContain('text-[var(--danger-fg)]');
+    expect(wrapper.html()).toContain('bg-danger-subtle');
+    expect(wrapper.html()).toContain('text-danger-fg');
   });
 
   it('applies an optional valueClass to the default value paragraph', async () => {

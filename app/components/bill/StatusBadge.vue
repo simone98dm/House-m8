@@ -7,7 +7,7 @@ defineProps<{ active: boolean }>();
     :class="[
       'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider',
       active
-        ? 'bg-[var(--success-subtle)] text-[var(--success-fg)]'
+        ? 'bg-ok-subtle text-ok-fg'
         : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400',
     ]"
   >

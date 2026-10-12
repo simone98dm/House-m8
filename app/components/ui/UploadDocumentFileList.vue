@@ -55,7 +55,7 @@ const getFileIcon = (filename: string) => {
         class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
       >
         <div
-          class="w-10 h-10 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0"
+          class="w-10 h-10 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center shrink-0"
         >
           <Icon
             :name="getFileIcon(file.name)"

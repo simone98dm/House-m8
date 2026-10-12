@@ -8,6 +8,14 @@
     {
       "path": "/api/cron/gdpr-cleanup",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/bills-reminder",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/monthly-reports",
+      "schedule": "0 5 1 * *"
     }
   ]
 }

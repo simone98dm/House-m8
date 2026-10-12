@@ -1,3 +1,4 @@
+import { toSafeErrorMessage } from './utils';
 import type { Pool } from 'pg';
 import type {
   IReferralRepository,
@@ -26,7 +27,7 @@ export class PostgresReferralRepository implements IReferralRepository {
       );
       return { data: result.rows[0] ?? null, error: null };
     } catch (err) {
-      return { data: null, error: (err as Error).message };
+      return { data: null, error: toSafeErrorMessage(err) };
     }
   }
 
@@ -42,7 +43,7 @@ export class PostgresReferralRepository implements IReferralRepository {
       );
       return { data: result.rows, error: null };
     } catch (err) {
-      return { data: null, error: (err as Error).message };
+      return { data: null, error: toSafeErrorMessage(err) };
     }
   }
 
@@ -54,7 +55,7 @@ export class PostgresReferralRepository implements IReferralRepository {
       );
       return { data: undefined, error: null };
     } catch (err) {
-      return { data: null, error: (err as Error).message };
+      return { data: null, error: toSafeErrorMessage(err) };
     }
   }
 

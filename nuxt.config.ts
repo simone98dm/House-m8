@@ -1,3 +1,5 @@
+import tailwindcss from '@tailwindcss/vite';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -11,7 +13,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/icon',
     '@nuxt/test-utils',
-    '@nuxtjs/tailwindcss',
     '@nuxtjs/i18n',
     '@pinia/nuxt',
     '@nuxt/image',
@@ -23,6 +24,24 @@ export default defineNuxtConfig({
     classSuffix: '',
     preference: 'system',
     fallback: 'light',
+  },
+
+  // Privacy: never fetch icons from api.iconify.design (visitor IP leak);
+  // heroicons/mdi/logos are installed locally via @iconify-json/*.
+  icon: { fallbackToApi: false },
+
+  // Privacy: @nuxt/fonts comes from the shared layer. The only font is
+  // self-hosted (_fonts.scss); disable every remote provider so nothing
+  // is ever fetched from Google/Bunny/etc.
+  fonts: {
+    providers: {
+      google: false,
+      googleicons: false,
+      bunny: false,
+      fontshare: false,
+      fontsource: false,
+      adobe: false,
+    },
   },
 
   runtimeConfig: {
@@ -45,7 +64,7 @@ export default defineNuxtConfig({
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
   },
 
-  css: ['~/assets/css/main.scss'],
+  css: ['~/assets/css/main.css'],
 
   app: {
     head: {
@@ -148,7 +167,7 @@ export default defineNuxtConfig({
         'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
         'Content-Security-Policy': [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+          "script-src 'self' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data: https: blob:",
           "font-src 'self' data:",
@@ -167,11 +186,8 @@ export default defineNuxtConfig({
     // and `/` additionally renders auth-dependent content — see
     // docs/OPTIMIZATION_PLAN.md Phase 5 handover for the full reasoning.
     '/privacy': { prerender: true },
+    '/cookies': { prerender: true },
     '/terms': { prerender: true },
-  },
-
-  tailwindcss: {
-    cssPath: '~/assets/css/main.scss',
   },
 
   i18n: {
@@ -204,6 +220,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    plugins: [tailwindcss()],
     optimizeDeps: {
       include: [
         '@intlify/core',

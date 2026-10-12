@@ -1,3 +1,4 @@
+import { toSafeErrorMessage } from './utils';
 import type { Pool } from 'pg';
 import type {
   IMonthlyReportRepository,
@@ -28,7 +29,7 @@ export class PostgresMonthlyReportRepository implements IMonthlyReportRepository
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -47,7 +48,7 @@ export class PostgresMonthlyReportRepository implements IMonthlyReportRepository
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -80,7 +81,7 @@ export class PostgresMonthlyReportRepository implements IMonthlyReportRepository
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }

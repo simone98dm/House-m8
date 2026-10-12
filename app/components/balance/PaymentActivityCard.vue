@@ -50,9 +50,9 @@ const payPercent = computed(() => {
           class="w-full h-2 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden"
         >
           <div
-            class="h-full rounded-full bg-success-500 animate-expand-width"
+            class="h-full rounded-full bg-success-500 origin-left animate-expand-width"
             :style="{
-              '--target-width': receivePercent + '%',
+              width: receivePercent + '%',
               animationDelay: '100ms',
             }"
           />
@@ -77,9 +77,9 @@ const payPercent = computed(() => {
           class="w-full h-2 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden"
         >
           <div
-            class="h-full rounded-full bg-error-500 animate-expand-width"
+            class="h-full rounded-full bg-error-500 origin-left animate-expand-width"
             :style="{
-              '--target-width': payPercent + '%',
+              width: payPercent + '%',
               animationDelay: '200ms',
             }"
           />

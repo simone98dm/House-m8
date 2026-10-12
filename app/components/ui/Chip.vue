@@ -45,7 +45,7 @@ const chipClasses = computed(() => {
   // properties (assets/css/_tokens.scss) via arbitrary-value classes rather than raw
   // Tailwind color-100/700 pairs — those vars already flip under `.dark`,
   // so no separate dark: classes are needed here (matches the Card.vue
-  // `bg-[var(--surface)]` precedent). The previous hardcoded pairs had no
+  // `bg-surface` precedent). The previous hardcoded pairs had no
   // dark: coverage at all for secondary/success/warning/danger.
   const variantClasses = {
     default: selected
@@ -53,19 +53,19 @@ const chipClasses = computed(() => {
       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-2 border-transparent',
     primary: selected
       ? 'bg-primary-600 text-white border-2 border-primary-800'
-      : 'bg-[var(--primary-subtle)] text-[var(--primary-hover)] border-2 border-transparent',
+      : 'bg-brand-subtle text-brand-hover border-2 border-transparent',
     secondary: selected
       ? 'bg-secondary-600 text-white border-2 border-secondary-800'
-      : 'bg-[var(--secondary-subtle)] text-[var(--secondary-hover)] border-2 border-transparent',
+      : 'bg-[var(--secondary-subtle)] text-[color:var(--secondary-hover)] border-2 border-transparent',
     success: selected
       ? 'bg-success-600 text-white border-2 border-success-700'
-      : 'bg-[var(--success-subtle)] text-[var(--success-fg)] border-2 border-transparent',
+      : 'bg-ok-subtle text-ok-fg border-2 border-transparent',
     warning: selected
       ? 'bg-warning-600 text-white border-2 border-warning-700'
-      : 'bg-[var(--warning-subtle)] text-[var(--warning-fg)] border-2 border-transparent',
+      : 'bg-warn-subtle text-warn-fg border-2 border-transparent',
     danger: selected
       ? 'bg-error-600 text-white border-2 border-error-700'
-      : 'bg-[var(--danger-subtle)] text-[var(--danger-fg)] border-2 border-transparent',
+      : 'bg-danger-subtle text-danger-fg border-2 border-transparent',
   };
 
   return [

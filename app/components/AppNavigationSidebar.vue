@@ -133,17 +133,17 @@ const userInitials = computed(() => {
 .sidebar-logo {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-control);
   background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   font-weight: 700;
-  font-size: var(--text-md);
+  font-size: var(--fs-md);
   letter-spacing: -0.5px;
   margin-bottom: 20px;
-  flex-shrink: 0;
+  shrink: 0;
   text-decoration: none;
 }
 .sidebar-logo:hover {
@@ -166,7 +166,7 @@ const userInitials = computed(() => {
   justify-content: center;
   width: 48px;
   height: 44px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-control);
   color: var(--fg-muted);
   transition:
     background var(--transition),
@@ -193,11 +193,11 @@ const userInitials = computed(() => {
   transform: translateY(-50%);
   background: var(--fg);
   color: var(--surface);
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   font-weight: 500;
   white-space: nowrap;
   padding: 5px 10px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition);
@@ -228,14 +228,14 @@ const userInitials = computed(() => {
   border-radius: 50%;
   background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
   color: #fff;
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   text-decoration: none;
-  flex-shrink: 0;
+  shrink: 0;
 }
 .sidebar-avatar:hover {
   text-decoration: none;
@@ -245,7 +245,7 @@ const userInitials = computed(() => {
 .theme-toggle {
   width: 48px;
   height: 44px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-control);
   display: flex;
   align-items: center;
   justify-content: center;

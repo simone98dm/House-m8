@@ -13,7 +13,7 @@ describe('UiButton', () => {
   it('renders primary variant by default', async () => {
     const wrapper = await mountSuspended(UiButton);
     expect(wrapper.find('button').attributes('class')).toContain(
-      'bg-gradient-to-br',
+      'bg-linear-to-br',
     );
   });
 

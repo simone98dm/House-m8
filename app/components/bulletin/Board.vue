@@ -68,7 +68,7 @@ const handleCreateNote = (payload: CreateBulletinNotePayload) => {
           style="
             text-align: center;
             color: var(--fg-muted);
-            font-size: var(--text-base);
+            font-size: var(--fs-base);
             padding: 24px 0;
           "
         >
@@ -98,7 +98,7 @@ const handleCreateNote = (payload: CreateBulletinNotePayload) => {
               border: none;
               cursor: pointer;
               opacity: 0.5;
-              font-size: var(--text-xl);
+              font-size: var(--fs-xl);
               line-height: 1;
               padding: 0;
             "
@@ -154,7 +154,7 @@ $postit-colors: (
 
 .bulletin-board {
   background: #faf9f0;
-  border-radius: var(--radius);
+  border-radius: var(--radius-control);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -167,14 +167,14 @@ $postit-colors: (
 }
 
 .sticky-note {
-  border-radius: var(--radius);
+  border-radius: var(--radius-control);
   padding: 12px 14px;
-  font-size: var(--text-base);
+  font-size: var(--fs-base);
   line-height: 1.55;
   box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.2);
 
   .note-author {
-    font-size: var(--text-xs);
+    font-size: var(--fs-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;

@@ -36,7 +36,7 @@ const inputId = computed(() => id ?? generatedId);
  *
  * The two had drifted: the select carried rounded-lg against the input's
  * rounded-xl, a solid gray-300 border against the input's 15% ghost border
- * (DESIGN.md), and a primary-500 focus ring offset by 1px against the input's
+ * (DESIGN.md), and a primary-500 focus ring-3 offset by 1px against the input's
  * primary-600 at offset 0. Side by side in the same form — profile, house
  * edit, expense edit — the two controls read as belonging to different design
  * systems. Any change here belongs in both files.
@@ -51,7 +51,7 @@ const selectClasses = computed(() => {
     'text-sm',
     'transition-all',
     'duration-150',
-    'focus:outline-none',
+    'focus:outline-hidden',
     'focus:ring-2',
     'focus:ring-offset-0',
   ];

@@ -41,7 +41,7 @@ vi.mock('~~/server/utils/jwt', () => ({
 
 vi.mock('~~/server/utils/postgres', () => ({
   getPostgresPool: vi.fn(() => ({
-    query: vi.fn().mockResolvedValue({ rows: [{ revoked_at: null }] }),
+    query: vi.fn().mockResolvedValue({ rowCount: 1, rows: [] }),
   })),
 }));
 
@@ -50,7 +50,16 @@ describe('POST /api/auth/refresh', () => {
     typeof import('../../../api/auth/refresh.post').default
   >[0];
 
-  beforeEach(() => vi.clearAllMocks());
+  const rotation = (rowCount: number) => {
+    const query = vi.fn().mockResolvedValue({ rowCount, rows: [] });
+    vi.mocked(getPostgresPool).mockReturnValue({ query } as never);
+    return query;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    rotation(1);
+  });
 
   it('throws 401 when no refresh token in cookies', async () => {
     vi.mocked(getRefreshToken).mockReturnValue(null);
@@ -75,6 +84,7 @@ describe('POST /api/auth/refresh', () => {
     vi.mocked(verifyToken).mockResolvedValue({
       userId: 'u-1',
       email: 'test@test.com',
+      jti: 'jti-ok',
     });
     vi.mocked(generateAccessToken).mockResolvedValue('new-access');
     vi.mocked(generateRefreshToken).mockResolvedValue('new-refresh');
@@ -98,9 +108,7 @@ describe('POST /api/auth/refresh', () => {
       email: 'test@test.com',
       jti: 'jti-123',
     });
-    vi.mocked(getPostgresPool).mockReturnValue({
-      query: vi.fn().mockResolvedValue({ rows: [{ revoked_at: new Date() }] }),
-    } as any);
+    rotation(0);
 
     const { default: handler } = await import('../../../api/auth/refresh.post');
     await expect(handler(mockEvent)).rejects.toMatchObject({ statusCode: 401 });
@@ -114,9 +122,7 @@ describe('POST /api/auth/refresh', () => {
       email: 'test@test.com',
       jti: 'jti-456',
     });
-    vi.mocked(getPostgresPool).mockReturnValue({
-      query: vi.fn().mockResolvedValue({ rows: [] }),
-    } as any);
+    rotation(0);
 
     const { default: handler } = await import('../../../api/auth/refresh.post');
     await expect(handler(mockEvent)).rejects.toMatchObject({ statusCode: 401 });
@@ -129,11 +135,7 @@ describe('POST /api/auth/refresh', () => {
       email: 'test@test.com',
       jti: 'jti-789',
     });
-    const mockQuery = vi
-      .fn()
-      .mockResolvedValueOnce({ rows: [{ revoked_at: null }] })
-      .mockResolvedValueOnce({ rows: [] });
-    vi.mocked(getPostgresPool).mockReturnValue({ query: mockQuery } as any);
+    const mockQuery = rotation(1);
     vi.mocked(generateAccessToken).mockResolvedValue('new-access');
     vi.mocked(generateRefreshToken).mockResolvedValue('new-refresh');
     vi.mocked(setAuthCookies).mockReturnValue(undefined);
@@ -141,5 +143,35 @@ describe('POST /api/auth/refresh', () => {
     const { default: handler } = await import('../../../api/auth/refresh.post');
     const result = await handler(mockEvent);
     expect(result).toEqual({ status: 'success' });
+    // Check and revoke are a single statement, so a replayed token loses.
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    expect(mockQuery.mock.calls[0]![0]).toContain('revoked_at IS NULL');
+  });
+
+  it('gives a concurrent replay of the same token nothing', async () => {
+    vi.mocked(getRefreshToken).mockReturnValue('valid-token');
+    vi.mocked(verifyToken).mockResolvedValue({
+      userId: 'u-1',
+      email: 'test@test.com',
+      jti: 'jti-race',
+    });
+    rotation(0); // the other request already revoked it
+
+    const { default: handler } = await import('../../../api/auth/refresh.post');
+    await expect(handler(mockEvent)).rejects.toMatchObject({ statusCode: 401 });
+    expect(generateRefreshToken).not.toHaveBeenCalled();
+  });
+
+  it('throws 401 and does not issue tokens when the refresh token has no jti', async () => {
+    vi.mocked(getRefreshToken).mockReturnValue('valid-token');
+    vi.mocked(verifyToken).mockResolvedValue({
+      userId: 'u-1',
+      email: 'test@test.com',
+    });
+
+    const { default: handler } = await import('../../../api/auth/refresh.post');
+    await expect(handler(mockEvent)).rejects.toMatchObject({ statusCode: 401 });
+    expect(generateRefreshToken).not.toHaveBeenCalled();
+    expect(clearAuthCookies).toHaveBeenCalledWith(mockEvent);
   });
 });

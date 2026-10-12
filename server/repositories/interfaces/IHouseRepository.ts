@@ -219,6 +219,18 @@ export interface IHouseRepository {
   registerFailedCodeAttempt(code: string): Promise<void>;
 
   /**
+   * Count a failed code redemption against the user (5 per hour, persisted in
+   * rate_limits under `redeem-fail:<userId>`).
+   */
+  registerFailedRedeemAttempt(userId: string): Promise<void>;
+
+  /**
+   * True once the user has used up their failed-redemption allowance for the
+   * current hour.
+   */
+  isRedeemBlocked(userId: string): Promise<boolean>;
+
+  /**
    * Check if house is at capacity
    */
   isAtCapacity(houseId: string): Promise<boolean>;

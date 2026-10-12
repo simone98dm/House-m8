@@ -16,7 +16,7 @@ const { t } = useI18n();
 
 <template>
   <div
-    class="rounded-xl border border-gray-200 dark:border-gray-700 bg-[var(--surface)] p-8 text-center shadow-sm"
+    class="rounded-xl border border-gray-200 dark:border-gray-700 bg-surface p-8 text-center shadow-sm"
   >
     <div
       class="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-primary-600/10"

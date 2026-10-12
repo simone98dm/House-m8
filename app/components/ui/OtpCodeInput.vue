@@ -143,7 +143,7 @@ const onFocus = (e: FocusEvent) => {
   border: 1.5px solid var(--border);
   background: var(--surface-high);
   color: var(--fg);
-  font-size: var(--text-2xl);
+  font-size: var(--fs-2xl);
   font-weight: 700;
   text-align: center;
   letter-spacing: 0;
@@ -180,7 +180,7 @@ const onFocus = (e: FocusEvent) => {
   .otp-input {
     width: 36px;
     height: 44px;
-    font-size: var(--text-xl);
+    font-size: var(--fs-xl);
   }
 }
 </style>

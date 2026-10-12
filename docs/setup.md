@@ -207,7 +207,7 @@ For cron jobs, add to `vercel.json`:
 ```json
 {
   "crons": [
-    { "path": "/api/cron/bill-reminders", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/bills-reminder", "schedule": "0 9 * * *" },
     { "path": "/api/cron/monthly-reports", "schedule": "0 0 1 * *" }
   ]
 }

@@ -71,7 +71,7 @@ const changeSummary = computed(() =>
            below states the same change as one sentence; announcing both would
            read the roles twice. -->
       <div
-        class="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-[var(--surface-raised)] px-4 py-3 dark:border-gray-700"
+        class="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-surface-raised px-4 py-3 dark:border-gray-700"
         aria-hidden="true"
       >
         <span

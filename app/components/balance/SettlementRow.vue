@@ -37,7 +37,7 @@ const toInitials = computed(() => {
   >
     <div class="flex items-center gap-3 min-w-0">
       <div
-        class="size-10 rounded-full bg-[var(--danger-subtle)] flex items-center justify-center text-[var(--danger-fg)] font-bold text-sm shrink-0"
+        class="size-10 rounded-full bg-danger-subtle flex items-center justify-center text-danger-fg font-bold text-sm shrink-0"
         aria-hidden="true"
       >
         {{ fromInitials }}
@@ -65,7 +65,7 @@ const toInitials = computed(() => {
       />
 
       <div
-        class="size-10 rounded-full bg-[var(--primary-subtle)] flex items-center justify-center text-[var(--primary-hover)] font-bold text-sm shrink-0"
+        class="size-10 rounded-full bg-brand-subtle flex items-center justify-center text-brand-hover font-bold text-sm shrink-0"
         aria-hidden="true"
       >
         {{ toInitials }}

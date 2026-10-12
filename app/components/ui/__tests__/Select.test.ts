@@ -109,13 +109,13 @@ describe('Select Component', () => {
   describe('Styling', () => {
     it('should apply base input classes', () => {
       const baseClasses =
-        'w-full px-3 py-2 rounded border focus:outline-none transition';
+        'w-full px-3 py-2 rounded border focus:outline-hidden transition';
       expect(baseClasses).toContain('w-full');
       expect(baseClasses).toContain('px-3');
       expect(baseClasses).toContain('py-2');
       expect(baseClasses).toContain('rounded');
       expect(baseClasses).toContain('border');
-      expect(baseClasses).toContain('focus:outline-none');
+      expect(baseClasses).toContain('focus:outline-hidden');
       expect(baseClasses).toContain('transition');
     });
 

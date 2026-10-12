@@ -10,7 +10,7 @@ defineProps<Props>();
 
 <template>
   <div
-    class="flex flex-col items-center text-center py-16 px-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-[var(--surface)] animate-fade-in"
+    class="flex flex-col items-center text-center py-16 px-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-surface animate-fade-in"
   >
     <span
       class="p-4 rounded-full bg-primary-50 dark:bg-primary-900/20 mb-4"

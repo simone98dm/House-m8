@@ -101,7 +101,7 @@ async function downloadPdf() {
 
 <template>
   <div
-    class="rounded-xl border border-gray-200 bg-[var(--surface)] p-5 dark:border-gray-700"
+    class="rounded-xl border border-gray-200 bg-surface p-5 dark:border-gray-700"
   >
     <div class="mb-4 flex items-start justify-between">
       <div>

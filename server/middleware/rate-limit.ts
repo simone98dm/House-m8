@@ -1,86 +1,114 @@
 // server/middleware/rate-limit.ts
 //
-// Rate-limit strategy:
-//   - IP key:    uses socket peer address (not X-Forwarded-For) to prevent header spoofing
-//   - Email key: /api/auth/signin additionally keys on submitted email so per-account
-//                brute-force is blocked regardless of source IP cycling
-//   - Combined key is `ip:email` for signin, `ip` for all other auth endpoints
+// Throttles write requests to sensitive endpoints coming from the same source.
+// Two stages per key, inside a fixed window:
+//   1. slow   after SLOW_AFTER hits each further request is delayed, growing
+//             by DELAY_STEP_MS per hit up to MAX_DELAY_MS
+//   2. block  after MAX_REQUESTS hits the request is refused with 429 and a
+//             Retry-After header until the window resets
 //
-// TODO: replace in-process Map with Redis/Vercel KV for multi-instance deployments
+// Counters live in Postgres (rate_limits table) so they are shared across
+// serverless instances.
+//
+// Keys:
+//   - `ip:<route>:<ip>`           every limited route, per client IP and route
+//   - `signin:<email hash>:<ip>`  /api/auth/signin only: guesses against one
+//                                 account from one address
+//
+// No key is built from the email alone: that would let anyone lock a victim's
+// address out from elsewhere. Caps on mail sent to one inbox live where the
+// mail is sent (sign-up resend, password reset and invite cooldowns).
+import type { H3Event } from 'h3';
+import consola from 'consola';
+import { hitRateLimit } from '../utils/rate-limit-store';
+import { hashToken } from '../utils/tokens';
 
-interface RateLimitEntry {
-  count: number;
-  resetAt: number;
+interface LimitedRoute {
+  name: string;
+  pattern: RegExp;
 }
 
-const store = new Map<string, RateLimitEntry>();
-
-const RATE_LIMITED_PREFIXES = [
-  '/api/auth/signin',
-  '/api/auth/password-reset',
-  '/api/auth/refresh',
-  '/api/auth/register',
-  '/api/invitation/redeem',
+const LIMITED_ROUTES: LimitedRoute[] = [
+  { name: 'signin', pattern: /^\/api\/auth\/signin/ },
+  { name: 'password-reset', pattern: /^\/api\/auth\/password-reset/ },
+  { name: 'refresh', pattern: /^\/api\/auth\/refresh/ },
+  { name: 'register', pattern: /^\/api\/auth\/register/ },
+  { name: 'confirm', pattern: /^\/api\/auth\/confirm/ },
+  { name: 'redeem', pattern: /^\/api\/invitation\/redeem/ },
+  { name: 'email-change', pattern: /^\/api\/users\/me\/email/ },
+  {
+    name: 'invite',
+    pattern: /^\/api\/houses\/[^/]+\/(invitation\/generate|members\/?$)/,
+  },
 ];
 
-const WINDOW_MS = 60_000; // 1 minute
+const WINDOW_SECONDS = 60;
+const SLOW_AFTER = 5;
 const MAX_REQUESTS = 10;
+const DELAY_STEP_MS = 500;
+const MAX_DELAY_MS = 2000;
 
-function pruneExpired(): void {
-  const now = Date.now();
-  for (const [key, entry] of store.entries()) {
-    if (now > entry.resetAt) store.delete(key);
+// Reads are never throttled: GET /api/houses/:id/members shares its path with
+// the limited POST, and every limited endpoint is a write.
+const UNLIMITED_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function checkLimit(event: H3Event, key: string): Promise<void> {
+  let count: number;
+  try {
+    count = await hitRateLimit(key, WINDOW_SECONDS);
+  } catch (error) {
+    // Fail open: a database outage must not take authentication down too.
+    consola.error('Rate limit store unavailable, allowing request', error);
+    return;
   }
-}
 
-function checkLimit(key: string, event: import('h3').H3Event): void {
-  const now = Date.now();
-  if (store.size > 10_000) pruneExpired();
-
-  const entry = store.get(key) ?? { count: 0, resetAt: now + WINDOW_MS };
-  if (now > entry.resetAt) {
-    entry.count = 0;
-    entry.resetAt = now + WINDOW_MS;
-  }
-  entry.count++;
-  store.set(key, entry);
-
-  if (entry.count > MAX_REQUESTS) {
-    setResponseHeader(event, 'Retry-After', 60);
+  if (count > MAX_REQUESTS) {
+    setResponseHeader(event, 'Retry-After', WINDOW_SECONDS);
     throw createError({
       statusCode: 429,
       statusMessage: 'Too many requests. Please try again later.',
     });
   }
+
+  if (count > SLOW_AFTER) {
+    await sleep(Math.min((count - SLOW_AFTER) * DELAY_STEP_MS, MAX_DELAY_MS));
+  }
+}
+
+async function readEmail(event: H3Event): Promise<string> {
+  try {
+    const body = await readBody(event);
+    return typeof body?.email === 'string'
+      ? body.email.toLowerCase().trim()
+      : '';
+  } catch {
+    return '';
+  }
 }
 
 export default defineEventHandler(async (event) => {
-  const path = event.path ?? '';
-  if (!RATE_LIMITED_PREFIXES.some((prefix) => path.startsWith(prefix))) return;
+  if (UNLIMITED_METHODS.has(event.method)) return;
 
-  // Use socket peer address — cannot be spoofed via headers.
-  // On Vercel/behind a reverse-proxy the peer is the proxy itself; that is
-  // acceptable since it still provides a shared throttle across all clients.
+  const path = (event.path ?? '').split('?')[0] ?? '';
+  const route = LIMITED_ROUTES.find((r) => r.pattern.test(path));
+  if (!route) return;
+
+  // On Vercel the client address is the first x-forwarded-for hop / x-real-ip
+  // set by the platform. This trusts the hosting proxy to overwrite those
+  // headers; off-proxy deployments fall back to the socket peer.
   const ip =
-    event.node.req.socket?.remoteAddress ?? getRequestIP(event) ?? 'unknown';
+    getRequestIP(event, { xForwardedFor: true }) ??
+    event.node.req.socket?.remoteAddress ??
+    'unknown';
 
-  // For sign-in and register, also throttle per submitted email to block
-  // per-account brute-force / mailbombing from distributed IPs.
-  if (
-    path.startsWith('/api/auth/signin') ||
-    path.startsWith('/api/auth/register')
-  ) {
-    try {
-      const body = await readBody(event);
-      const email =
-        typeof body?.email === 'string' ? body.email.toLowerCase().trim() : '';
-      if (email) {
-        checkLimit(`email:${email}`, event);
-      }
-    } catch {
-      // If body already consumed or parse fails, fall through to IP-only limit
-    }
+  // IP first: a blocked source never reaches the second counter.
+  await checkLimit(event, `ip:${route.name}:${ip}`);
+
+  if (route.name === 'signin') {
+    const email = await readEmail(event);
+    // Hashed so the key has a fixed size whatever the client submits.
+    if (email) await checkLimit(event, `signin:${hashToken(email)}:${ip}`);
   }
-
-  checkLimit(`ip:${ip}`, event);
 });

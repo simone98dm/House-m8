@@ -5,12 +5,12 @@
 <template>
   <div class="flex flex-col items-center justify-center py-16 text-center">
     <div
-      class="size-20 rounded-full bg-[var(--success-subtle)] flex items-center justify-center mb-5 animate-bounce-in-scale"
+      class="size-20 rounded-full bg-ok-subtle flex items-center justify-center mb-5 animate-bounce-in-scale"
       aria-hidden="true"
     >
       <Icon
         name="heroicons:check-circle"
-        class="size-10 text-[var(--success-fg)] animate-bounce-subtle"
+        class="size-10 text-ok-fg animate-bounce-subtle"
         style="animation-delay: 400ms; animation-fill-mode: both"
         aria-hidden="true"
       />

@@ -246,7 +246,7 @@ describe('Notification Component', () => {
       expect(title).toBe('Close notification');
     });
 
-    it('should have focus ring on close button', () => {
+    it('should have focus ring-3 on close button', () => {
       const focusClasses =
         'focus:ring-2 focus:ring-gray-500 focus:ring-offset-2';
       expect(focusClasses).toContain('focus:ring-2');

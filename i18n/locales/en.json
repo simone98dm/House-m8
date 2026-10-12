@@ -33,12 +33,14 @@
       "reports": "Reports",
       "pricing": "Pricing",
       "privacy": "Privacy Policy",
-      "terms": "Terms of Service"
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
     },
     "descriptions": {
       "pricing": "Simple, transparent pricing for shared living. Start free, upgrade when you need more.",
       "privacy": "House M8 Privacy Policy — how we collect, use, and protect your personal data.",
-      "terms": "House M8 Terms of Service — the rules for using the app."
+      "terms": "House M8 Terms of Service — the rules for using the app.",
+      "cookies": "House M8 Cookie Policy — the cookies and browser storage the app uses, and how to manage them."
     }
   },
   "common": {
@@ -629,6 +631,7 @@
       "email": "Email",
       "emailPlaceholder": "you{'@'}example.com",
       "emailHint": "This is the address you sign in with.",
+      "emailLockedHint": "This is the address you sign in with. It can't be changed from this form.",
       "emailTaken": "That email address is already in use.",
       "title": "Personal Information",
       "gender": "Gender",
@@ -896,6 +899,8 @@
     "inviteByEmailLabel": "Invite by email",
     "inviteByEmailPlaceholder": "Invite by email…",
     "inviteByEmailSubmit": "Send invite",
+    "inviteSentTitle": "Invitation sent",
+    "inviteSentDesc": "If this email can receive invitations, we sent a link and a code to join the house. They join once they accept.",
     "removeMemberTitle": "Remove member",
     "removeMemberMessage": "{name} will lose access to this house immediately. This can't be undone — they'll need a new invitation to rejoin.",
     "removeMemberConfirm": "Remove member",
@@ -1282,8 +1287,35 @@
   "legal": {
     "incompleteNotice": {
       "title": "This document is incomplete",
-      "privacyBody": "This privacy policy is a template that has not been finalized. Fields shown in brackets — the controller's company name, address, email, and hosting provider — are placeholders, not real data.",
       "termsBody": "These terms of service are a template that has not been finalized. The field shown in brackets — the competent court's city — is a placeholder, not real data."
+    },
+    "storage": {
+      "firstParty": "First party",
+      "purpose": {
+        "accessToken": "Keeps you signed in (authentication token, not readable by scripts).",
+        "refreshToken": "Renews your sign-in without asking for your password again.",
+        "oauthState": "Security check while signing in with Google (prevents forged requests).",
+        "authRedirect": "Remembers the page you wanted to open so we can take you back after sign-in.",
+        "locale": "Remembers the language you chose.",
+        "colorMode": "Remembers your light or dark theme choice."
+      },
+      "duration": {
+        "minutes15": "15 minutes",
+        "minutes10": "10 minutes",
+        "sessionOr7Days": "Browser session, or 7 days if you choose \"remember me\"",
+        "tab": "Until you close the tab (removed after use)",
+        "days365": "365 days",
+        "untilCleared": "Until you clear site data"
+      },
+      "category": {
+        "necessary": "Necessary",
+        "preferences": "Preferences"
+      },
+      "kind": {
+        "cookie": "Cookie",
+        "localStorage": "Local storage",
+        "sessionStorage": "Session storage"
+      }
     }
   },
   "landing": {
@@ -1295,7 +1327,8 @@
       "goToDashboard": "Go to Dashboard",
       "profile": "Profile",
       "logIn": "Log In",
-      "signUpFree": "Sign Up Free"
+      "signUpFree": "Sign Up Free",
+      "sectionsLabel": "Page sections"
     },
     "footer": {
       "tagline": "Making shared living simple, transparent, and fair for everyone.",
@@ -1304,7 +1337,6 @@
       "howItWorks": "How it Works",
       "pricing": "Pricing",
       "faq": "FAQ",
-      "company": "Company",
       "github": "GitHub",
       "legal": "Legal",
       "privacyPolicy": "Privacy Policy",
@@ -1312,38 +1344,30 @@
       "connect": "Connect",
       "a11y": {
         "productLinks": "Product links",
-        "companyLinks": "Company links",
         "legalLinks": "Legal links",
         "connectLinks": "Connect links"
-      }
+      },
+      "cookiePolicy": "Cookie Policy"
     },
     "hero": {
-      "badge": "One place for bills, balances, contracts, and house coordination",
-      "headline": "Shared Living,",
-      "headlineAccent": "Simplified Finances.",
-      "subtitle": "Track expenses, split bills instantly, and never argue about who owes what again. The easiest way to manage your house budget.",
+      "headline": "Know what you owe.",
+      "headlineAccent": "Nobody has to chase.",
+      "subtitle": "House M8 keeps shared expenses, bills and balances current for everyone in the house. Add an expense once; the split, the reminders and the settle-up plan are done for you.",
       "ctaAuthenticated": "Open Dashboard",
       "ctaGuest": "Get Started Free",
       "ctaSecondary": "Explore Features",
-      "mock": {
-        "dashboard": "Dashboard",
-        "expenses": "Expenses",
-        "roommates": "Roommates",
-        "totalBalance": "Total Balance",
-        "youAreOwed": "You are owed",
-        "balanceAmount": "$142.50",
-        "addExpense": "Add Expense",
-        "recentActivity": "Recent Activity",
-        "internetBill": "Internet Bill",
-        "paidBySarah": "Paid by Sarah • Yesterday",
-        "youOwe": "You owe $25.00",
-        "weeklyGroceries": "Weekly Groceries",
-        "paidByYou": "Paid by You • Today",
-        "youAreOwedAmount": "You are owed $82.50"
+      "ledger": {
+        "label": "Your balance",
+        "owe": "You owe Marco €47.00",
+        "oweDue": "before Friday",
+        "settle": "Settle up",
+        "owed": "Sarah owes you €82.50",
+        "owedNote": "groceries and internet",
+        "bill": "Electricity · €64.00",
+        "billDue": "due 28 Oct, split 4 ways"
       }
     },
     "features": {
-      "eyebrow": "Features",
       "title": "Everything you need to manage shared living",
       "subtitle": "Designed specifically for roommates, partners, and friends living together.",
       "problem": {
@@ -1361,7 +1385,7 @@
           "title": "Late payments damage friendships",
           "description": "One delayed payment becomes a month of tension."
         },
-        "cta": "There's a better way — here's how House M8 solves every one of these →"
+        "cta": "There is a better way. Here is how House M8 handles each of these."
       },
       "cards": {
         "smartSplitting": {
@@ -1398,14 +1422,6 @@
       "ownerContact": {
         "title": "Direct Owner Contact",
         "description": "Report maintenance issues, billing problems, or contract concerns directly to property owners. Streamlined communication for faster resolutions."
-      },
-      "mock": {
-        "reportIssue": "Report Issue",
-        "issueType": "Issue Type",
-        "maintenance": "Maintenance",
-        "description": "Description",
-        "placeholder": "Describe the issue...",
-        "sendReport": "Send Report"
       }
     },
     "seo": {
@@ -1497,5 +1513,39 @@
         }
       }
     }
+  },
+  "cookiePolicy": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Last updated: {date}",
+    "whatTitle": "What are cookies?",
+    "whatBody": "Cookies are small text files that a website stores on your device. Similar technologies, such as local storage and session storage, work in the same way. This policy covers both and refers to them together as \"cookies\".",
+    "usedTitle": "Cookies used by House M8",
+    "usedIntro": "House M8 only uses technical cookies and preference storage, all set by House M8 itself (first party). We do not use analytics, advertising or profiling cookies, and we do not load third-party trackers.",
+    "table": {
+      "caption": "Cookies and browser storage used by House M8",
+      "name": "Name",
+      "provider": "Provider",
+      "type": "Type",
+      "category": "Category",
+      "purpose": "Purpose",
+      "duration": "Duration"
+    },
+    "noConsentTitle": "Why there is no cookie banner",
+    "noConsentBody": "Technical cookies, and preference choices you make yourself (language, theme), do not require your prior consent. This follows article 122 of the Italian Privacy Code (Legislative Decree 196/2003) and the Italian Data Protection Authority (Garante) guidelines on cookies of 10 June 2021. If we ever add cookies that need consent, we will ask for it first and update this page.",
+    "thirdPartyTitle": "Third-party services",
+    "thirdPartyBody": "If you sign in with Google, you are redirected to the Google website. Google may set its own cookies on its own domain, under its own policy; House M8 does not control it.",
+    "manageTitle": "How to delete or block cookies",
+    "manageBody": "You can delete or block cookies from your browser settings. Blocking necessary cookies will prevent you from signing in. Official instructions:",
+    "browsers": {
+      "chrome": "Google Chrome",
+      "firefox": "Mozilla Firefox",
+      "safari": "Apple Safari",
+      "edge": "Microsoft Edge"
+    },
+    "clearTitle": "Resetting your preferences",
+    "clearBody": "Your language and theme choices are stored only in your browser. Deleting the site data for House M8 in your browser removes them, and the defaults apply again.",
+    "contactTitle": "Contact",
+    "contactBody": "For questions about this policy, write to {email}. See also the {privacyLink}.",
+    "privacyLinkText": "Privacy Policy"
   }
 }

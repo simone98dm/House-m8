@@ -46,10 +46,10 @@ async function subscribe(priceKey: string) {
       <!-- bg-white dark:bg-gray-800 bypassed the --surface token, so this
            card rendered a neutral-grey #2c2c2e island on the navy #0c0e1a
            page background in dark instead of the design system's dark
-           surface (#131629). bg-[var(--surface)] inverts automatically per
+           surface (#131629). bg-surface inverts automatically per
            theme, matching UiCard and DESIGN.md's documented pattern. -->
       <div
-        class="rounded-2xl border border-gray-200 bg-[var(--surface)] p-6 dark:border-gray-700"
+        class="rounded-2xl border border-gray-200 bg-surface p-6 dark:border-gray-700"
       >
         <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">
           {{ $t('pricing.free.name') }}
@@ -145,7 +145,7 @@ async function subscribe(priceKey: string) {
 
       <!-- Same --surface fix as the Free card above — see comment there. -->
       <div
-        class="rounded-2xl border border-gray-200 bg-[var(--surface)] p-6 dark:border-gray-700"
+        class="rounded-2xl border border-gray-200 bg-surface p-6 dark:border-gray-700"
       >
         <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">
           House+

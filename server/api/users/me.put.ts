@@ -12,13 +12,6 @@ const profileUpdateSchema = z
   .object({
     first_name: z.string().min(1).max(50),
     last_name: z.string().min(1).max(50),
-    // The sign-in identity. Normalised to lower case so a case-only change
-    // can't slip past the UNIQUE index and create a second effective account.
-    email: z
-      .string()
-      .email()
-      .max(255)
-      .transform((value) => value.trim().toLowerCase()),
     preferred_currency: z.enum(['USD', 'EUR']),
     avatar_url: z.string().url().max(500).nullable(),
     birthdate: z.string().max(20).nullable(),
@@ -54,30 +47,10 @@ export default defineEventHandler(async (event) => {
 
   const repos = getRepositories();
 
-  // Claiming an address that already belongs to someone else is a client
-  // error, not a server one — and it must not report WHICH account holds it.
-  if (updates.email && updates.email !== user.email.toLowerCase()) {
-    const { data: existing } = await repos.users.getByEmail(updates.email);
-    if (existing && existing.id !== user.id) {
-      throw createError({
-        statusCode: 409,
-        message: 'That email address is already in use',
-      });
-    }
-  }
-
+  // `email` is intentionally not updatable here (see POST /api/users/me/email).
   const { data, error } = await repos.users.update(user.id, updates);
 
   if (error) {
-    // The uniqueness check above races: two requests can both pass it. The
-    // UNIQUE index is the real guard, so translate its violation rather than
-    // reporting a 500.
-    if (/duplicate key|unique/i.test(error)) {
-      throw createError({
-        statusCode: 409,
-        message: 'That email address is already in use',
-      });
-    }
     throw createError({
       statusCode: 500,
       message: error,

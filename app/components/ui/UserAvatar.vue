@@ -38,7 +38,7 @@ const userAvatarSize = computed(() => {
   <div
     :class="[
       userAvatarSize,
-      'bg-gradient-to-br from-primary-400 to-secondary-600 rounded-full flex items-center justify-center text-white select-none',
+      'bg-linear-to-br from-primary-400 to-secondary-600 rounded-full flex items-center justify-center text-white select-none',
     ]"
     :role="ariaLabel ? 'img' : undefined"
     :aria-label="ariaLabel"

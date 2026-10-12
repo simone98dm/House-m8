@@ -85,7 +85,7 @@ const billIconBg = (bill: Bill): string => {
     return 'bg-error-50 dark:bg-error-900/40';
   if (desc.includes('garden') || desc.includes('clean'))
     return 'bg-accent-50 dark:bg-accent-900/40';
-  return 'bg-[var(--surface-raised)]';
+  return 'bg-surface-raised';
 };
 </script>
 
@@ -110,7 +110,7 @@ const billIconBg = (bill: Bill): string => {
         style="
           text-align: center;
           color: var(--fg-muted);
-          font-size: var(--text-base);
+          font-size: var(--fs-base);
           padding: 24px 0;
         "
       >
@@ -182,12 +182,12 @@ const billIconBg = (bill: Bill): string => {
 .bill-icon {
   width: 34px;
   height: 34px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-control);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  font-size: var(--text-xl);
+  shrink: 0;
+  font-size: var(--fs-xl);
 }
 
 .bill-info {
@@ -196,19 +196,19 @@ const billIconBg = (bill: Bill): string => {
 }
 
 .bill-name {
-  font-size: var(--text-md);
+  font-size: var(--fs-md);
   font-weight: 500;
   color: var(--fg);
 }
 
 .bill-due {
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--fg-muted);
   margin-top: 1px;
 }
 
 .bill-amount {
-  font-size: var(--text-md);
+  font-size: var(--fs-md);
   font-weight: 600;
   color: var(--fg);
   font-variant-numeric: tabular-nums;
@@ -225,7 +225,7 @@ const billIconBg = (bill: Bill): string => {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--fg-muted);
 }
 </style>

@@ -27,40 +27,33 @@ describe('Privacy Page', () => {
     const wrapper = await mountSuspended(PrivacyPage, { global: G });
     const text = wrapper.text();
     expect(text).toContain('Privacy Policy');
-    expect(text).toContain('Data Controller');
-    expect(text).toContain('Sub-processors');
+    expect(text).toContain('Data controller');
+    expect(text).toContain('Recipients and processors');
     expect(text).toContain('Your rights');
+    expect(text).toContain('Simone Dal Mas');
   });
 
   it('renders the privacy contact mailto link', async () => {
     const wrapper = await mountSuspended(PrivacyPage, { global: G });
-    const mailLink = wrapper.find('a[href="mailto:privacy@housem8.app"]');
+    const mailLink = wrapper.find('a[href="mailto:simone.dalmas@outlook.it"]');
     expect(mailLink.exists()).toBe(true);
   });
 
-  it('renders the cookie table with named cookies', async () => {
+  it('links to the cookie policy instead of duplicating a cookie table', async () => {
     const wrapper = await mountSuspended(PrivacyPage, { global: G });
-    const text = wrapper.text();
-    expect(text).toContain('house_m8_access_token');
-    expect(text).toContain('house_m8_refresh_token');
+    expect(wrapper.html()).toContain('/cookies');
+    expect(wrapper.text()).not.toContain('house_m8_access_token');
   });
 
-  it('characterizes unfilled template placeholders shipped in the content', async () => {
-    // These look like copy that was never filled in before going live. The
-    // owner decided to keep them visible (see the incomplete-document notice
-    // below) rather than invent legal values that don't exist yet.
+  it('has no placeholders for VAT, address, PEC or DPO', async () => {
     const wrapper = await mountSuspended(PrivacyPage, { global: G });
     const text = wrapper.text();
-    expect(text).toContain('[GO-LIVE DATE]');
-    expect(text).toContain('[Company name / full name]');
-    expect(text).toContain('[Hosting provider]');
+    expect(text).not.toMatch(/\b(VAT|PEC|DPO)\b|\[address\]|\[Company/i);
   });
 
-  it('renders a visible notice that the document is incomplete', async () => {
+  it('has no unresolved placeholders or incomplete notice', async () => {
     const wrapper = await mountSuspended(PrivacyPage, { global: G });
-    const note = wrapper.find('[role="note"]');
-    expect(note.exists()).toBe(true);
-    expect(note.text()).toContain('legal.incompleteNotice.title');
-    expect(note.text()).toContain('legal.incompleteNotice.privacyBody');
+    expect(wrapper.text()).not.toContain('[[DA COMPLETARE');
+    expect(wrapper.find('[role="note"]').exists()).toBe(false);
   });
 });

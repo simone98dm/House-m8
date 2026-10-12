@@ -36,7 +36,7 @@ describe('StatusBadge', () => {
     });
     // Dark-mode-safe token class (see app/assets/css/_tokens.scss --success-subtle),
     // replacing the old bg-success-100 which had no dark: coverage.
-    expect(wrapper.html()).toContain('bg-[var(--success-subtle)]');
+    expect(wrapper.html()).toContain('bg-ok-subtle');
   });
 
   it('applies gray classes when not active', async () => {

@@ -36,7 +36,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const isFirstSubscription = !subscription?.stripe_subscription_id;
+  // trial_used_at survives cancellation, so cancel + resubscribe gets no new trial.
+  const isFirstSubscription = !subscription?.trial_used_at;
 
   const session = await stripe.checkout.sessions.create({
     customer: customerId,

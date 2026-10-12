@@ -96,11 +96,9 @@ const roleLabel = (role: string) => {
 };
 
 const roleBadgeClass = (role: string) => {
-  if (role === 'owner')
-    return 'bg-[var(--warning-subtle)] text-[var(--warning-fg)]';
-  if (role === 'admin')
-    return 'bg-[var(--success-subtle)] text-[var(--success-fg)]';
-  return 'bg-[var(--primary-subtle)] text-[var(--primary-hover)]';
+  if (role === 'owner') return 'bg-warn-subtle text-warn-fg';
+  if (role === 'admin') return 'bg-ok-subtle text-ok-fg';
+  return 'bg-brand-subtle text-brand-hover';
 };
 
 const toggleRoleMenu = (userId: string, event: Event) => {
@@ -204,7 +202,7 @@ watch(
 
 <template>
   <div
-    class="overflow-hidden rounded-xl border border-gray-200 bg-[var(--surface)] shadow-sm dark:border-gray-700"
+    class="overflow-hidden rounded-xl border border-gray-200 bg-surface shadow-sm dark:border-gray-700"
   >
     <div
       class="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-gray-700"
@@ -253,7 +251,7 @@ watch(
         type="email"
         required
         :placeholder="t('houseProfile.inviteByEmailPlaceholder')"
-        class="min-w-0 flex-1 rounded-lg border border-gray-200 bg-[var(--surface)] px-3 py-1.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600 dark:border-gray-700 dark:text-gray-100"
+        class="min-w-0 flex-1 rounded-lg border border-gray-200 bg-surface px-3 py-1.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-primary-600 focus:outline-hidden focus:ring-1 focus:ring-primary-600 dark:border-gray-700 dark:text-gray-100"
       />
       <UiButton
         type="submit"
@@ -266,11 +264,7 @@ watch(
       </UiButton>
     </form>
 
-    <p
-      v-if="actionError"
-      role="alert"
-      class="px-5 pt-3 text-sm text-[var(--danger-fg)]"
-    >
+    <p v-if="actionError" role="alert" class="px-5 pt-3 text-sm text-danger-fg">
       {{ actionError }}
     </p>
 
@@ -408,7 +402,7 @@ watch(
               name: `${member.user?.first_name ?? ''} ${member.user?.last_name ?? ''}`.trim(),
             })
           "
-          class="shrink-0 rounded-full p-1.5 text-gray-500 hover:bg-[var(--danger-subtle)] hover:text-[var(--danger-fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-gray-400"
+          class="shrink-0 rounded-full p-1.5 text-gray-500 hover:bg-danger-subtle hover:text-danger-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-gray-400"
           @click="requestMemberRemoval(member.user_id, $event)"
         >
           <Icon

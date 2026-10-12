@@ -1,4 +1,4 @@
-import type { Pool } from 'pg';
+import type { Pool, PoolClient } from 'pg';
 import type {
   IHouseRepository,
   House,
@@ -13,7 +13,37 @@ import type {
   PaginationParams,
 } from '../interfaces/IBaseRepository';
 import { randomUUID, randomInt } from 'node:crypto';
+import consola from 'consola';
 import { repoQuery } from './utils';
+
+const REDEEM_FAIL_LIMIT = 5;
+const PG_UNIQUE_VIOLATION = '23505';
+
+const isUniqueViolation = (err: unknown): boolean =>
+  (err as { code?: unknown } | null)?.code === PG_UNIQUE_VIOLATION;
+
+/**
+ * Lock the house row, then throw HOUSE_FULL if active members already reach
+ * max_members. Must run inside the caller's transaction so concurrent joins
+ * serialize on the house row.
+ */
+async function assertHouseHasCapacity(
+  client: PoolClient,
+  houseId: string,
+): Promise<void> {
+  const r = await client.query<{ max_members: number; current: string }>(
+    `SELECT h.max_members,
+            (SELECT COUNT(*) FROM house_members
+              WHERE house_id = h.id AND left_at IS NULL) AS current
+       FROM houses h WHERE h.id = $1 FOR UPDATE`,
+    [houseId],
+  );
+  const row = r.rows[0];
+  if (!row) throw new Error('House not found');
+  if (Number.parseInt(row.current, 10) >= row.max_members) {
+    throw new Error('HOUSE_FULL');
+  }
+}
 
 export class PostgresHouseRepository implements IHouseRepository {
   constructor(private readonly pool: Pool) {}
@@ -435,13 +465,15 @@ export class PostgresHouseRepository implements IHouseRepository {
         await client.query('BEGIN');
 
         const inviteResult = await client.query<HouseInvitation>(
-          'SELECT * FROM house_invitations WHERE token = $1 AND used = false',
+          'SELECT * FROM house_invitations WHERE token = $1 AND used = false AND code_used_at IS NULL FOR UPDATE',
           [token],
         );
 
         if (inviteResult.rows.length === 0)
           throw new Error('Invalid or already used invitation');
         const invitation = inviteResult.rows[0]!;
+
+        await assertHouseHasCapacity(client, invitation.house_id);
 
         await client.query(
           `INSERT INTO house_members (house_id, user_id, role, joined_at)
@@ -451,7 +483,8 @@ export class PostgresHouseRepository implements IHouseRepository {
 
         const updateResult = await client.query<HouseInvitation>(
           `UPDATE house_invitations
-           SET used = true, used_by = $1, used_at = NOW()
+           SET used = true, used_by = $1, used_at = NOW(),
+               code_used_at = COALESCE(code_used_at, NOW())
            WHERE id = $2
            RETURNING *`,
           [userId, invitation.id],
@@ -478,18 +511,19 @@ export class PostgresHouseRepository implements IHouseRepository {
       const codeExpiresAt = new Date();
       codeExpiresAt.setHours(codeExpiresAt.getHours() + 24); // 24h independent of token expiry
 
-      let code: string | null = null;
       let attempts = 0;
       const maxAttempts = 10;
 
       // Retry on unique-index collision (extremely rare with 10^6 space)
-      while (!code && attempts < maxAttempts) {
+      while (attempts < maxAttempts) {
         const candidate = String(randomInt(0, 1_000_000)).padStart(6, '0');
-        const result = await this.pool.query<{
-          code: string;
-          code_expires_at: string;
-        }>(
-          `UPDATE house_invitations
+        let result: { rows: Array<{ code: string; code_expires_at: string }> };
+        try {
+          result = await this.pool.query<{
+            code: string;
+            code_expires_at: string;
+          }>(
+            `UPDATE house_invitations
            SET code = $2,
                code_expires_at = $3,
                code_used_at = NULL,
@@ -497,10 +531,17 @@ export class PostgresHouseRepository implements IHouseRepository {
                code_locked_until = NULL
            WHERE id = $1
            RETURNING code, code_expires_at`,
-          [invitationId, candidate, codeExpiresAt.toISOString()],
-        );
+            [invitationId, candidate, codeExpiresAt.toISOString()],
+          );
+        } catch (err) {
+          // Candidate collided with the unique code index: try another one.
+          if (isUniqueViolation(err)) {
+            attempts++;
+            continue;
+          }
+          throw err;
+        }
         if (result.rows[0]) {
-          code = result.rows[0].code;
           return result.rows[0];
         }
         attempts++;
@@ -546,13 +587,17 @@ export class PostgresHouseRepository implements IHouseRepository {
         ) {
           throw new Error('CODE_LOCKED');
         }
-        if (invitation.code_used_at) throw new Error('CODE_USED');
+        // The link and the code are the same invitation: using either spends both.
+        if (invitation.code_used_at || invitation.used)
+          throw new Error('CODE_USED');
         if (
           !invitation.code_expires_at ||
           new Date(invitation.code_expires_at) < new Date()
         ) {
           throw new Error('CODE_EXPIRED');
         }
+
+        await assertHouseHasCapacity(client, invitation.house_id);
 
         await client.query(
           `INSERT INTO house_members (house_id, user_id, role, joined_at)
@@ -562,7 +607,7 @@ export class PostgresHouseRepository implements IHouseRepository {
 
         const updateResult = await client.query<HouseInvitation>(
           `UPDATE house_invitations
-           SET code_used_at = NOW(), used_by = $2
+           SET code_used_at = NOW(), used = true, used_at = NOW(), used_by = $2
            WHERE id = $1
            RETURNING *`,
           [invitation.id, userId],
@@ -597,6 +642,31 @@ export class PostgresHouseRepository implements IHouseRepository {
       .catch(() => {
         // Silent fail — anti-enumeration: callers don't need to know if code exists
       });
+  }
+
+  async registerFailedRedeemAttempt(userId: string): Promise<void> {
+    try {
+      await this.pool.query(
+        `INSERT INTO rate_limits (key, count, window_start)
+         VALUES ($1, 1, NOW())
+         ON CONFLICT (key) DO UPDATE SET
+           count = CASE WHEN rate_limits.window_start < NOW() - INTERVAL '1 hour' THEN 1 ELSE rate_limits.count + 1 END,
+           window_start = CASE WHEN rate_limits.window_start < NOW() - INTERVAL '1 hour' THEN NOW() ELSE rate_limits.window_start END
+         RETURNING count`,
+        [`redeem-fail:${userId}`],
+      );
+    } catch (error) {
+      consola.error('registerFailedRedeemAttempt failed', error);
+    }
+  }
+
+  async isRedeemBlocked(userId: string): Promise<boolean> {
+    const r = await this.pool.query<{ count: number }>(
+      `SELECT count FROM rate_limits
+       WHERE key = $1 AND window_start >= NOW() - INTERVAL '1 hour'`,
+      [`redeem-fail:${userId}`],
+    );
+    return (r.rows[0]?.count ?? 0) >= REDEEM_FAIL_LIMIT;
   }
 
   async isAtCapacity(houseId: string): Promise<boolean> {

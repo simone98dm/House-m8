@@ -1,3 +1,4 @@
+import { toSafeErrorMessage } from './utils';
 /**
  * PostgreSQL Report Repository Implementation
  */
@@ -63,7 +64,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -142,7 +143,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: [],
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
         total: 0,
         limit,
         offset,
@@ -227,7 +228,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: [],
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
         total: 0,
         limit,
         offset,
@@ -254,7 +255,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -279,7 +280,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -297,7 +298,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -321,7 +322,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -346,7 +347,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -365,7 +366,7 @@ export class PostgresReportRepository implements IReportRepository {
     } catch (error) {
       return {
         data: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -374,7 +375,10 @@ export class PostgresReportRepository implements IReportRepository {
     try {
       const result = await this.pool.query<{ exists: boolean }>(
         `SELECT EXISTS(
-          SELECT 1 FROM reports WHERE id = $1 AND created_by = $2
+          SELECT 1 FROM reports r
+          JOIN house_members hm
+            ON hm.house_id = r.house_id AND hm.user_id = r.created_by AND hm.left_at IS NULL
+          WHERE r.id = $1 AND r.created_by = $2
         ) as exists`,
         [reportId, userId],
       );

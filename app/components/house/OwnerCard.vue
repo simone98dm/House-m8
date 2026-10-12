@@ -27,7 +27,7 @@ const formattedJoinDate = computed(() =>
 
 <template>
   <div
-    class="overflow-hidden rounded-xl border border-gray-200 bg-[var(--surface)] shadow-sm dark:border-gray-700"
+    class="overflow-hidden rounded-xl border border-gray-200 bg-surface shadow-sm dark:border-gray-700"
   >
     <div
       class="flex items-center gap-2 border-b border-gray-100 px-5 py-4 dark:border-gray-700"

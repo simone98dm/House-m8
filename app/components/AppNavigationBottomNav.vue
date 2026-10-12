@@ -78,10 +78,10 @@ const { allNavItems, isActive, resolvedPath } = useAppNavItems(
   flex: 1 1 0;
   min-width: 0;
   padding: 8px 4px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-control);
   color: var(--fg-subtle);
   text-decoration: none;
-  font-size: var(--text-2xs);
+  font-size: var(--fs-2xs);
   font-weight: 500;
   transition: color var(--transition);
   cursor: pointer;

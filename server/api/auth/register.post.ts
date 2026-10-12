@@ -34,42 +34,44 @@ export default defineEventHandler(async (event) => {
   try {
     const authProvider = getAuthProvider();
 
+    const sendConfirmationLink = async (userId: string) => {
+      const verificationToken = await authProvider.createEmailVerificationToken(
+        userId,
+        email,
+      );
+      if (!verificationToken) return;
+      sendRegistrationEmail({
+        email,
+        userName: email,
+        confirmationLink: `${baseUrl}/auth/confirm?token=${verificationToken.token}`,
+      }).catch(() => {
+        // Silent fail — email is best-effort
+      });
+    };
+
     let user;
     try {
       user = await authProvider.signUpEmailOnly(email);
     } catch {
-      // Email already registered — return identical response (anti-enumeration).
-      // Do NOT resend the verification email.
-      return { success: true, message: SUCCESS_MESSAGE };
+      user = null;
     }
 
     if (!user) {
-      // Unexpected null without throw — treat identically to enumeration guard
+      // Email already registered. If the account never confirmed, resend the
+      // link so the sign-up isn't a dead end; a confirmed account gets nothing.
+      // The response is identical either way (anti-enumeration).
+      const unconfirmed = await authProvider.getUnconfirmedUserByEmail(email);
+      if (unconfirmed) await sendConfirmationLink(unconfirmed.id);
       return { success: true, message: SUCCESS_MESSAGE };
     }
 
-    const repos = getRepositories();
-    await repos.users.update(user.id, {
+    await getRepositories().users.update(user.id, {
       is_first_access: true,
       terms_accepted_at: new Date().toISOString(),
       consent_version: '1.0',
     });
 
-    const verificationToken = await authProvider.createEmailVerificationToken(
-      user.id,
-      email,
-    );
-
-    if (verificationToken) {
-      const confirmationUrl = `${baseUrl}/auth/confirm?token=${verificationToken.token}`;
-      sendRegistrationEmail({
-        email,
-        userName: email,
-        confirmationLink: confirmationUrl,
-      }).catch(() => {
-        // Silent fail — email is best-effort
-      });
-    }
+    await sendConfirmationLink(user.id);
 
     return { success: true, message: SUCCESS_MESSAGE };
   } catch (error) {

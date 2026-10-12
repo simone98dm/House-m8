@@ -224,7 +224,7 @@ const submit = async () => {
 }
 
 .confirm-body {
-  font-size: var(--text-md);
+  font-size: var(--fs-md);
   color: var(--fg-muted);
   line-height: 1.65;
   margin-bottom: 28px;
@@ -232,7 +232,7 @@ const submit = async () => {
 }
 
 .confirm-redirect {
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--fg-subtle);
 }
 

@@ -59,7 +59,8 @@ vi.mock('~~/server/emails', () => ({
   sendNewReportNotification: vi.fn().mockResolvedValue(undefined),
 }));
 
-const MOCK_HOUSE_ID = '00000000-0000-0000-0000-000000000001';
+// Zod 4 uuid() enforces RFC 4122 version/variant bits, so the id must be a real v4.
+const MOCK_HOUSE_ID = '11111111-1111-4111-8111-111111111111';
 const MOCK_USER_ID = '00000000-0000-0000-0000-000000000002';
 
 const mockReport = {

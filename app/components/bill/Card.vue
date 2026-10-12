@@ -65,11 +65,11 @@ const isDueSoon = computed(() => !isOverdue.value && daysUntilDue.value <= 7);
     <div class="p-5 flex items-center justify-between">
       <div class="flex items-center gap-4 flex-1 min-w-0">
         <div
-          class="size-14 shrink-0 rounded-xl bg-[var(--primary-subtle)] flex items-center justify-center"
+          class="size-14 shrink-0 rounded-xl bg-brand-subtle flex items-center justify-center"
         >
           <Icon
             :name="billIcon(bill)"
-            class="w-6 h-6 text-[var(--primary-hover)]"
+            class="w-6 h-6 text-brand-hover"
             aria-hidden="true"
           />
         </div>
@@ -110,7 +110,7 @@ const isDueSoon = computed(() => !isOverdue.value && daysUntilDue.value <= 7);
 
           <span
             v-if="bill.payment_period > 1"
-            class="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[var(--secondary-subtle)] text-[var(--secondary-hover)]"
+            class="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[var(--secondary-subtle)] text-[color:var(--secondary-hover)]"
           >
             <Icon
               name="heroicons:arrow-path"

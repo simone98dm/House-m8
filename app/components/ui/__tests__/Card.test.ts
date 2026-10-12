@@ -26,9 +26,7 @@ describe('UiCard', () => {
     const wrapper = await mountSuspended(UiCard, {
       props: { variant: 'outlined' },
     });
-    expect(wrapper.find('div').attributes('class')).toContain(
-      'bg-[var(--surface)]',
-    );
+    expect(wrapper.find('div').attributes('class')).toContain('bg-surface');
   });
 
   it('applies no-padding class', async () => {

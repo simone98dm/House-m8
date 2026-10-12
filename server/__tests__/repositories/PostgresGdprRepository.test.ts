@@ -113,3 +113,78 @@ describe('PostgresGdprRepository.cancelDeletion', () => {
     expect(clientQuery).toHaveBeenCalledWith('ROLLBACK');
   });
 });
+
+describe('PostgresGdprRepository.runScheduledCleanup', () => {
+  it('purges expired/used reset tokens and closed privacy requests older than 12 months', async () => {
+    const query = vi.fn(async (sql: string) => {
+      if (sql.includes('pseudonymize_user')) return { rows: [] };
+      if (sql.includes('password_reset_tokens')) return { rowCount: 3 };
+      if (sql.includes('FROM gdpr_requests')) return { rowCount: 2 };
+      return { rowCount: 1, rows: [] };
+    });
+    const repo = new PostgresGdprRepository({ query } as unknown as Pool);
+    vi.spyOn(repo, 'getPendingDeletions').mockResolvedValue([]);
+
+    const result = await repo.runScheduledCleanup();
+
+    const sqls = query.mock.calls.map((c) => String(c[0]));
+    expect(
+      sqls.some(
+        (s) =>
+          s.includes('DELETE FROM password_reset_tokens') &&
+          s.includes('used_at IS NOT NULL'),
+      ),
+    ).toBe(true);
+    expect(
+      sqls.some(
+        (s) =>
+          s.includes('DELETE FROM gdpr_requests') &&
+          s.includes("status IN ('completed', 'cancelled')") &&
+          s.includes("INTERVAL '12 months'"),
+      ),
+    ).toBe(true);
+    expect(result).toMatchObject({
+      resetTokensCleared: 3,
+      gdprRequestsCleared: 2,
+    });
+  });
+});
+
+describe('PostgresGdprRepository.exportUserData', () => {
+  it('exports profile columns, notes and reports and never selects password_hash', async () => {
+    const userRow = {
+      id: 'u-1',
+      email: 'a@b.com',
+      first_name: 'A',
+      last_name: 'B',
+      created_at: 'x',
+      bio: 'hello',
+      telephone: '+39 1',
+      languages: ['it'],
+    };
+    const query = vi.fn(async (sql: string) => {
+      if (sql.includes('FROM users WHERE id')) return { rows: [userRow] };
+      if (sql.includes('FROM bulletin_notes')) {
+        return { rows: [{ id: 'n-1', message: 'hi' }] };
+      }
+      if (sql.includes('FROM reports')) return { rows: [{ id: 'r-1' }] };
+      return { rows: [] };
+    });
+    const repo = new PostgresGdprRepository({ query } as unknown as Pool);
+
+    const data = await repo.exportUserData('u-1');
+
+    expect(data.user.bio).toBe('hello');
+    expect(data.user.telephone).toBe('+39 1');
+    expect(data.user.languages).toEqual(['it']);
+    expect(data.user.birthdate).toBeNull();
+    expect(data.bulletin_notes).toEqual([{ id: 'n-1', message: 'hi' }]);
+    expect(data.reports).toEqual([{ id: 'r-1' }]);
+    expect(JSON.stringify(data)).not.toContain('password_hash');
+    const userSql = query.mock.calls
+      .map(([s]) => s as string)
+      .find((s) => s.includes('FROM users WHERE id'))!;
+    expect(userSql).not.toContain('password_hash');
+    expect(userSql).not.toContain('SELECT *');
+  });
+});
