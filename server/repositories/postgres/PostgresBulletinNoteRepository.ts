@@ -224,8 +224,10 @@ export class PostgresBulletinNoteRepository implements IBulletinNoteRepository {
     const result = await repoQuery(async () => {
       const r = await this.pool.query<{ exists: boolean }>(
         `SELECT EXISTS(
-          SELECT 1 FROM bulletin_notes
-          WHERE id = $1 AND user_id = $2
+          SELECT 1 FROM bulletin_notes n
+          JOIN house_members hm
+            ON hm.house_id = n.house_id AND hm.user_id = n.user_id AND hm.left_at IS NULL
+          WHERE n.id = $1 AND n.user_id = $2
         )`,
         [noteId, userId],
       );

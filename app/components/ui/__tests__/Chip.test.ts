@@ -22,7 +22,7 @@ describe('UiChip', () => {
       props: { label: 'Tag', variant: 'primary' },
     });
     expect(wrapper.find('span').attributes('class')).toContain(
-      'bg-[var(--primary-subtle)]',
+      'bg-brand-subtle',
     );
   });
 
@@ -30,9 +30,7 @@ describe('UiChip', () => {
     const wrapper = await mountSuspended(UiChip, {
       props: { label: 'OK', variant: 'success' },
     });
-    expect(wrapper.find('span').attributes('class')).toContain(
-      'bg-[var(--success-subtle)]',
-    );
+    expect(wrapper.find('span').attributes('class')).toContain('bg-ok-subtle');
   });
 
   it('renders danger variant', async () => {
@@ -40,7 +38,7 @@ describe('UiChip', () => {
       props: { label: 'Error', variant: 'danger' },
     });
     expect(wrapper.find('span').attributes('class')).toContain(
-      'bg-[var(--danger-subtle)]',
+      'bg-danger-subtle',
     );
   });
 

@@ -62,10 +62,10 @@ const formatMemberDate = (dateString: string) => formatShort(dateString);
     <UiCard v-if="memberInfo">
       <template #header>
         <div class="flex items-center gap-2">
-          <div class="p-2 rounded-lg bg-[var(--warning-subtle)]">
+          <div class="p-2 rounded-lg bg-warn-subtle">
             <Icon
               name="heroicons:home-modern"
-              class="h-5 w-5 text-[var(--warning-fg)]"
+              class="h-5 w-5 text-warn-fg"
               aria-hidden="true"
             />
           </div>
@@ -78,11 +78,11 @@ const formatMemberDate = (dateString: string) => formatShort(dateString);
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div
-            class="flex size-12 items-center justify-center rounded-full bg-[var(--warning-subtle)] shrink-0"
+            class="flex size-12 items-center justify-center rounded-full bg-warn-subtle shrink-0"
           >
             <Icon
               name="heroicons:calendar"
-              class="h-6 w-6 text-[var(--warning-fg)]"
+              class="h-6 w-6 text-warn-fg"
               aria-hidden="true"
             />
           </div>
@@ -100,8 +100,8 @@ const formatMemberDate = (dateString: string) => formatShort(dateString);
           :class="[
             'rounded-full px-3 py-1 text-xs font-bold',
             memberInfo.role === 'owner'
-              ? 'bg-[var(--warning-subtle)] text-[var(--warning-fg)]'
-              : 'bg-[var(--primary-subtle)] text-[var(--primary-hover)]',
+              ? 'bg-warn-subtle text-warn-fg'
+              : 'bg-brand-subtle text-brand-hover',
           ]"
         >
           {{

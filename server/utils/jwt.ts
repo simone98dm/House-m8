@@ -190,6 +190,20 @@ export async function getUserFromToken(
 }
 
 /**
+ * A refresh token is active only if its jti has a row in refresh_tokens
+ * that has not been revoked (sign-out / password reset revoke rows).
+ */
+export async function isRefreshTokenActive(jti: string): Promise<boolean> {
+  const pool = getPostgresPool();
+  const result = await pool.query(
+    'SELECT revoked_at FROM refresh_tokens WHERE jti = $1',
+    [jti],
+  );
+  const row = result.rows[0];
+  return Boolean(row) && !row.revoked_at;
+}
+
+/**
  * Refresh access token using refresh token
  */
 export async function refreshAccessToken(
@@ -199,7 +213,7 @@ export async function refreshAccessToken(
   if (!refreshToken) return null;
 
   const payload = await verifyToken(refreshToken, 'refresh');
-  if (!payload) return null;
+  if (!payload?.jti || !(await isRefreshTokenActive(payload.jti))) return null;
 
   // Generate new access token
   const newAccessToken = await generateAccessToken(

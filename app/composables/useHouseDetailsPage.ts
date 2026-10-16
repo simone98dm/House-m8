@@ -18,6 +18,7 @@ export function useHouseDetailsPage() {
   const housesStore = useHousesStore();
   const billsStore = useBillsStore();
   const userStore = useUserStore();
+  const notificationStore = useNotificationStore();
 
   const houseId = computed(() => route.params.id as string);
 
@@ -238,18 +239,23 @@ export function useHouseDetailsPage() {
     await loadHouseDetails();
   };
 
-  // Handle inviting a member by email (second path to the invitation-link flow)
+  // Handle inviting a member by email (sends an invitation; the invitee is not added until they accept)
   const handleInviteMember = async (email: string) => {
     if (!house.value) return;
     memberActionError.value = '';
     try {
       inviteLoading.value = true;
-      const result = await housesComposable.addMember(house.value.id, email);
+      const result = await housesComposable.inviteMember(house.value.id, email);
       if (result.error) {
         memberActionError.value = result.error;
         return;
       }
-      await loadHouseDetails();
+      // The invitee joins only after accepting, so the member list is unchanged.
+      notificationStore.success(
+        'houseProfile.inviteSentTitle',
+        'houseProfile.inviteSentDesc',
+        { i18n: true },
+      );
     } finally {
       inviteLoading.value = false;
     }

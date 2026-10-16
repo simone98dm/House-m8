@@ -11,7 +11,7 @@
     height="18"
     viewBox="0 0 24 24"
     aria-hidden="true"
-    style="flex-shrink: 0"
+    style="shrink: 0"
   >
     <path
       fill="#4285F4"

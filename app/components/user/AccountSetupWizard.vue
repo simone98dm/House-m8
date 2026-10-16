@@ -188,14 +188,14 @@ const onWizardFinish = async () => {
 }
 
 .wizard-step-title {
-  font-size: var(--text-xl);
+  font-size: var(--fs-xl);
   font-weight: 700;
   color: var(--fg);
   margin-bottom: 6px;
 }
 
 .wizard-step-subtitle {
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--fg-muted);
   margin-bottom: 20px;
   line-height: 1.55;
@@ -208,13 +208,13 @@ const onWizardFinish = async () => {
 }
 
 .wizard-field-hint {
-  font-size: var(--text-xs);
+  font-size: var(--fs-xs);
   color: var(--fg-subtle);
   margin-top: -6px;
 }
 
 .wizard-error {
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--danger);
   margin-top: 10px;
   padding: 8px 12px;
@@ -230,7 +230,7 @@ const onWizardFinish = async () => {
 }
 
 .wizard-skip-hint {
-  font-size: var(--text-xs);
+  font-size: var(--fs-xs);
   color: var(--fg-subtle);
   text-align: center;
   margin-top: 12px;

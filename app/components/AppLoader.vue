@@ -12,7 +12,7 @@ const showLoader = computed(() => {
   <Transition name="modal">
     <div
       v-if="showLoader"
-      class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 dark:bg-black/40 backdrop-blur-sm"
+      class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 dark:bg-black/40 backdrop-blur-xs"
       role="status"
       aria-live="polite"
       aria-busy="true"

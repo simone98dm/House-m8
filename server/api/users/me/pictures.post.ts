@@ -125,9 +125,11 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: unknown) {
     const errorObj = error as { statusCode?: number; message?: string };
+    // Only errors raised here (they carry a statusCode) keep their message.
     throw createError({
       statusCode: errorObj.statusCode || 500,
-      message: errorObj.message || 'Failed to upload picture',
+      message:
+        (errorObj.statusCode && errorObj.message) || 'Failed to upload picture',
     });
   }
 });

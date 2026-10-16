@@ -14,7 +14,6 @@ const {
   totalUnpaidAmount,
   nextMonthBillsTotal,
   activeBillsCount,
-  greeting,
   isInitialLoading,
   showCreateHouse,
   handleCreateHouse,
@@ -22,6 +21,26 @@ const {
   handleCreateNote,
   handleDeleteNote,
 } = useDashboardPage();
+
+const { formatAmount } = useCurrency();
+
+const summaryFacts = computed(() => [
+  {
+    label: t('home.nextMonthTotal'),
+    value: formatAmount(
+      nextMonthBillsTotal.value,
+      house.value?.currency ?? 'EUR',
+    ),
+  },
+  {
+    label: t('bills.summary.activeBills'),
+    value: String(activeBillsCount.value),
+  },
+  {
+    label: t('home.pendingExpenses'),
+    value: String(pendingExpenses.value.length),
+  },
+]);
 </script>
 
 <template>
@@ -31,7 +50,7 @@ const {
        always rendered the skeleton branch while the client — whose stores are
        already populated by hydration time — rendered the real branch. Vue
        reported three "Hydration node mismatch" warnings on this page for
-       exactly that reason: `div.greeting`, `div.stat-grid` and `div.dash-grid`
+       exactly that reason: the summary block and `div.dash-grid`
        served, comment/fragment placeholders expected.
 
        The fallback renders on the server and the branch below only ever runs on
@@ -39,22 +58,14 @@ const {
   <ClientOnly>
     <template #fallback>
       <AppPageHeader>
-        <UiSkeleton
-          :width="160"
-          :height="20"
-          rounded="rounded-[var(--radius)]"
-        />
+        <UiSkeleton :width="160" :height="20" rounded="rounded-control" />
       </AppPageHeader>
       <DashboardSkeleton />
     </template>
 
     <template v-if="isInitialLoading">
       <AppPageHeader>
-        <UiSkeleton
-          :width="160"
-          :height="20"
-          rounded="rounded-[var(--radius)]"
-        />
+        <UiSkeleton :width="160" :height="20" rounded="rounded-control" />
       </AppPageHeader>
       <DashboardSkeleton />
     </template>
@@ -89,61 +100,21 @@ const {
       />
 
       <template v-if="house">
-        <div class="greeting">
-          <div>
-            <h2>{{ greeting }}</h2>
-            <p>
-              {{ t('home.pendingExpenses') }}: {{ pendingExpenses.length }} ·
-              {{ t('home.upcomingBills') }}: {{ upcomingBills.length }}
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="stat-grid"
-          role="region"
-          :aria-label="t('home.dashboardOverview')"
+        <UiSummary
+          class="mb-6"
+          :label="t('home.outstanding')"
+          :facts="summaryFacts"
         >
-          <DashboardStatCard
-            variant="blue"
-            icon="heroicons:wallet"
-            :label="t('home.outstanding')"
-          >
-            <template #value>
-              <UiCurrency
-                :amount="totalUnpaidAmount"
-                :currency-code="house.currency"
-              />
-            </template>
-          </DashboardStatCard>
-
-          <DashboardStatCard
-            variant="purple"
-            icon="heroicons:chart-bar"
-            :label="t('home.nextMonthTotal')"
-          >
-            <template #value>
-              <UiCurrency
-                :amount="nextMonthBillsTotal"
-                :currency-code="house.currency"
-              />
-            </template>
-          </DashboardStatCard>
-
-          <DashboardStatCard
-            variant="orange"
-            icon="heroicons:document-text"
-            :label="t('bills.summary.activeBills')"
-            :value="String(activeBillsCount)"
+          <UiCurrency
+            :amount="totalUnpaidAmount"
+            :currency-code="house.currency"
           />
-
-          <DashboardStatCard
-            variant="green"
-            icon="heroicons:clock"
-            :label="t('home.pendingExpenses')"
-            :value="String(pendingExpenses.length)"
-          />
-        </div>
+          <template v-if="totalUnpaidAmount > 0" #action>
+            <UiButton variant="primary" size="sm" to="/balance">
+              {{ t('expenses.card.settleUp') }}
+            </UiButton>
+          </template>
+        </UiSummary>
 
         <div class="dash-grid">
           <div class="dash-left">

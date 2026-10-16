@@ -47,9 +47,10 @@ describe('Subscription Page', () => {
     originalLocation = window.location;
     // ponytail: happy-dom's window.location isn't directly assignable;
     // redefine it per-test so we can assert on href without real navigation.
+    // href must stay a valid URL: Nuxt's prefetch scheduler uses it as a base.
     Object.defineProperty(window, 'location', {
       configurable: true,
-      value: { ...originalLocation, href: '' },
+      value: { ...originalLocation, href: originalLocation.href },
     });
   });
 
@@ -130,7 +131,7 @@ describe('Subscription Page', () => {
     const wrapper = await mountSuspended(SubscriptionPage, { global: G });
     await wrapper.find('button').trigger('click');
     await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(window.location.href).toBe('');
+    expect(window.location.href).toBe(originalLocation.href);
   });
 
   it('bug: isPortalLoading is stuck true forever if openBillingPortal rejects', async () => {

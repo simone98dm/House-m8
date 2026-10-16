@@ -133,7 +133,7 @@ defineExpose({ resetForm });
           :maxlength="MAX_CHARS"
           :placeholder="t('reports.form.descriptionPlaceholder')"
           :disabled="isLoading"
-          class="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all resize-none disabled:opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-500"
+          class="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-hidden transition-all resize-none disabled:opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-500"
           :class="{
             'border-error-400 focus:ring-error-500/20': descriptionError,
           }"

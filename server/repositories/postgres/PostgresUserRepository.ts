@@ -102,7 +102,7 @@ export class PostgresUserRepository implements IUserRepository {
       const result = await this.pool.query<User>(
         `INSERT INTO users (id, email, first_name, last_name, avatar_url, is_first_access)
          VALUES ($1, $2, $3, $4, $5, $6)
-         RETURNING *`,
+         RETURNING ${USER_COLUMNS}`,
         [
           userId,
           data.email || '',
@@ -139,7 +139,7 @@ export class PostgresUserRepository implements IUserRepository {
         `UPDATE users
          SET ${updates.join(', ')}
          WHERE id = $${paramCount}
-         RETURNING *`,
+         RETURNING ${USER_COLUMNS}`,
         values,
       );
 

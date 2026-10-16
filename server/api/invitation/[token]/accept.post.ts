@@ -71,6 +71,18 @@ export default defineEventHandler(async (event) => {
 
     // Accept invitation (adds member and marks invitation as used)
     const acceptResult = await repos.houses.acceptInvitation(token, user.id);
+    if (acceptResult.error === 'HOUSE_FULL') {
+      throw createError({
+        statusCode: 409,
+        message: 'This house is full',
+      });
+    }
+    if (acceptResult.error === 'duplicate key') {
+      throw createError({
+        statusCode: 409,
+        message: 'You are already a member of a house',
+      });
+    }
     if (acceptResult.error) {
       throw createError({
         statusCode: 500,

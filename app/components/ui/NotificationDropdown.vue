@@ -178,7 +178,7 @@ const getTypeIcon = (type: string) => {
             >
               <div class="flex items-start space-x-3">
                 <div
-                  class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+                  class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
                   :class="getTypeStyle(notification.type)"
                   aria-hidden="true"
                 >
@@ -197,7 +197,7 @@ const getTypeIcon = (type: string) => {
                       {{ notification.title }}
                     </p>
                     <span
-                      class="text-xs text-gray-500 dark:text-gray-400 ml-2 flex-shrink-0"
+                      class="text-xs text-gray-500 dark:text-gray-400 ml-2 shrink-0"
                     >
                       {{ formatHistoryTime(notification.timestamp) }}
                     </span>

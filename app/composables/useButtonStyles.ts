@@ -30,13 +30,13 @@ export const useButtonStyles = () => {
     fullWidth,
   }: ButtonStyleOptions): string => {
     const baseClasses =
-      'flex items-center justify-center rounded-full font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95';
+      'flex items-center justify-center rounded-full font-semibold transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-offset-2 active:scale-95';
 
     const variantClasses: Record<ButtonVariant, string> = {
       primary: outline
         ? 'border border-primary-600/20 dark:border-primary-400/30 text-primary-600 dark:text-primary-400 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/20 focus:ring-primary-500 dark:focus:ring-primary-400'
         : // DESIGN.md: "Use the glow shadow for primary interactive states"
-          'bg-gradient-to-br from-primary-700 to-primary-600 text-white hover:opacity-90 focus:ring-primary-600 focus:shadow-glow shadow-md hover:shadow-lg',
+          'bg-linear-to-br from-primary-700 to-primary-600 text-white hover:opacity-90 focus:ring-primary-600 focus:shadow-glow shadow-md hover:shadow-lg',
       secondary: outline
         ? 'border border-gray-400/20 text-gray-700 dark:text-gray-200 bg-transparent hover:bg-surface-high dark:hover:bg-gray-700 focus:ring-gray-400'
         : 'bg-surface-high dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-surface-highest dark:hover:bg-gray-600 focus:ring-gray-400 shadow-sm',

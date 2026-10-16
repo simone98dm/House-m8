@@ -86,7 +86,6 @@ class PostgresUserRepository implements IUserRepository {
 | POST | `/api/auth/signin` | User login |
 | POST | `/api/auth/signout` | User logout |
 | POST | `/api/auth/refresh` | Refresh JWT token |
-| GET | `/api/auth/verify-email` | Verify email address |
 | POST | `/api/auth/confirm` | Confirm email verification |
 | POST | `/api/auth/password-reset/request` | Request password reset |
 | POST | `/api/auth/password-reset/confirm` | Confirm password reset |
@@ -115,7 +114,6 @@ class PostgresUserRepository implements IUserRepository {
 | GET | `/api/houses/[id]/members` | Get house members |
 | POST | `/api/houses/[id]/members` | Add house member |
 | DELETE | `/api/houses/[id]/members/[user_id]` | Remove house member |
-| POST | `/api/houses/[id]/join` | Join house |
 | POST | `/api/houses/[id]/leave` | Leave house |
 | POST | `/api/houses/[id]/invitation/generate` | Generate invitation |
 | POST | `/api/houses/[id]/invitation/accept` | Accept invitation |

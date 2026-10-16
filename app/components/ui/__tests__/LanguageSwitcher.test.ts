@@ -52,12 +52,6 @@ describe('LanguageSwitcher Component', () => {
       const currentLocale = 'en';
       expect(currentLocale).toBe('en');
     });
-
-    it('should update when locale changes', () => {
-      let currentLocale = 'en';
-      currentLocale = 'it';
-      expect(currentLocale).toBe('it');
-    });
   });
 
   describe('Language Switching', () => {
@@ -127,7 +121,7 @@ describe('LanguageSwitcher Component', () => {
   describe('Styling', () => {
     it('should apply form styling classes', () => {
       const classes =
-        'block w-full px-4 py-2.5 pr-10 text-sm font-medium text-gray-900 bg-white border-2 border-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300 transition-colors';
+        'block w-full px-4 py-2.5 pr-10 text-sm font-medium text-gray-900 bg-white border-2 border-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300 transition-colors';
       expect(classes).toContain('block');
       expect(classes).toContain('w-full');
       expect(classes).toContain('px-4');
@@ -141,7 +135,7 @@ describe('LanguageSwitcher Component', () => {
       expect(classes).toContain('rounded-lg');
       expect(classes).toContain('appearance-none');
       expect(classes).toContain('cursor-pointer');
-      expect(classes).toContain('focus:outline-none');
+      expect(classes).toContain('focus:outline-hidden');
       expect(classes).toContain('focus:ring-2');
       expect(classes).toContain('focus:ring-blue-500');
       expect(classes).toContain('focus:border-blue-500');

@@ -1,13 +1,11 @@
 /**
  * Owns the /auth/confirm page's verification flow: magic-link token
- * verification (POST via useAuth) and hash-based OAuth/signup confirmation
- * (POST /api/auth/confirm via useApi). Extracted from confirm.vue so the
+ * verification (POST via useAuth). Extracted from confirm.vue so the
  * page's script stays focused on rendering the four resulting states.
  */
 export function useEmailConfirmation() {
   const { t } = useI18n();
   const route = useRoute();
-  const api = useApi();
   const auth = useAuth();
 
   const loading = ref(true);
@@ -19,16 +17,6 @@ export function useEmailConfirmation() {
   onUnmounted(() => {
     if (redirectTimer) clearTimeout(redirectTimer);
   });
-
-  const parseHashParams = (hash: string) => {
-    const params: Record<string, string> = {};
-    const hashString = hash.replace('#', '');
-    hashString.split('&').forEach((pair) => {
-      const [key, value] = pair.split('=');
-      if (key && value) params[key] = decodeURIComponent(value);
-    });
-    return params;
-  };
 
   /**
    * Magic-link branch: POST /api/auth/confirm {token}
@@ -63,54 +51,6 @@ export function useEmailConfirmation() {
     }
   };
 
-  const handleEmailConfirmation = async (
-    accessToken: string,
-    refreshToken: string,
-    confirmationType?: string,
-    tokenMetadata?: {
-      expires_in?: string;
-      token_type?: string;
-      provider?: string;
-      scope?: string;
-    },
-  ) => {
-    try {
-      const response = (await api.fetch('/api/auth/confirm', {
-        method: 'POST',
-        body: {
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          type: confirmationType,
-          expires_in: tokenMetadata?.expires_in
-            ? Number.parseInt(tokenMetadata.expires_in)
-            : undefined,
-          token_type: tokenMetadata?.token_type,
-          provider: tokenMetadata?.provider,
-          scope: tokenMetadata?.scope,
-        },
-      })) as { success: boolean; message?: string };
-
-      if (response.success) {
-        confirmed.value = true;
-        const isOAuth = confirmationType !== 'signup';
-        const redirectPath = isOAuth ? '/' : '/auth/login?confirmed=true';
-        redirectTimer = setTimeout(() => navigateTo(redirectPath), 2000);
-      } else {
-        error.value = response.message || t('auth.confirmation.failed');
-      }
-    } catch (err) {
-      if (err && typeof err === 'object' && 'data' in err) {
-        error.value =
-          (err.data as { statusMessage?: string }).statusMessage ||
-          t('auth.confirmation.failed');
-      } else {
-        error.value = t('auth.confirmation.failed');
-      }
-    } finally {
-      loading.value = false;
-    }
-  };
-
   onMounted(async () => {
     try {
       const token = route.query.token as string;
@@ -119,32 +59,8 @@ export function useEmailConfirmation() {
         return;
       }
 
-      const hashParams = route.hash ? parseHashParams(route.hash) : route.query;
-      const {
-        access_token,
-        refresh_token,
-        type,
-        expires_in,
-        token_type,
-        provider,
-        scope,
-      } = hashParams;
-      if (access_token && refresh_token) {
-        await handleEmailConfirmation(
-          access_token as string,
-          refresh_token as string,
-          type as string,
-          {
-            expires_in: expires_in as string,
-            token_type: token_type as string,
-            provider: provider as string,
-            scope: scope as string,
-          },
-        );
-      } else {
-        error.value = t('auth.confirmation.invalidLink');
-        loading.value = false;
-      }
+      error.value = t('auth.confirmation.invalidLink');
+      loading.value = false;
     } catch {
       error.value = t('auth.confirmation.failed');
       loading.value = false;

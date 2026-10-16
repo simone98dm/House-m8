@@ -38,11 +38,11 @@ describe('AppLoader Component', () => {
   describe('Styling', () => {
     it('should have correct overlay classes', () => {
       const overlayClasses =
-        'fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm';
+        'fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-xs';
       expect(overlayClasses).toContain('fixed inset-0');
       expect(overlayClasses).toContain('z-[9999]');
       expect(overlayClasses).toContain('bg-black/20');
-      expect(overlayClasses).toContain('backdrop-blur-sm');
+      expect(overlayClasses).toContain('backdrop-blur-xs');
     });
 
     it('should have correct spinner classes', () => {

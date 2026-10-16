@@ -75,7 +75,7 @@ const handleTabKeydown = (event: KeyboardEvent) => {
 
     <div class="hidden md:flex items-center justify-between gap-4">
       <div
-        class="flex gap-1 bg-[var(--surface)] rounded-xl p-1 shadow-sm border border-gray-100 dark:border-gray-700"
+        class="flex gap-1 bg-surface rounded-xl p-1 shadow-sm border border-gray-100 dark:border-gray-700"
         role="tablist"
         :aria-label="$t('expenses.filterTitle')"
         @keydown="handleTabKeydown"
@@ -112,7 +112,7 @@ const handleTabKeydown = (event: KeyboardEvent) => {
           :value="searchQuery"
           type="search"
           :placeholder="$t('expenses.searchPlaceholder')"
-          class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-[var(--surface)] text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all shadow-sm"
+          class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-hidden transition-all shadow-sm"
           :aria-label="$t('expenses.searchPlaceholder')"
           @input="
             emit('search-change', ($event.target as HTMLInputElement).value)
@@ -132,7 +132,7 @@ const handleTabKeydown = (event: KeyboardEvent) => {
         :value="searchQuery"
         type="search"
         :placeholder="$t('expenses.searchPlaceholder')"
-        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-[var(--surface)] text-base text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all shadow-sm"
+        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface text-base text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-hidden transition-all shadow-sm"
         :aria-label="$t('expenses.searchPlaceholder')"
         @input="
           emit('search-change', ($event.target as HTMLInputElement).value)

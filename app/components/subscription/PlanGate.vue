@@ -23,7 +23,7 @@ const hasAccess = computed(() => {
             <slot />
           </div>
           <div
-            class="absolute inset-0 flex items-center justify-center rounded-lg bg-white/70 backdrop-blur-sm dark:bg-gray-900/70"
+            class="absolute inset-0 flex items-center justify-center rounded-lg bg-white/70 backdrop-blur-xs dark:bg-gray-900/70"
           >
             <div class="flex flex-col items-center gap-2 text-center">
               <span class="text-2xl" aria-hidden="true">🔒</span>

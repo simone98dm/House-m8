@@ -67,17 +67,13 @@ const showOccupationDetails = computed(
 
 const buildUpdateData = (f: typeof form.value): Partial<User> => {
   const data: Partial<User> = {};
-  // Identity fields. Sent only when actually changed: `email` is the sign-in
-  // identity and the server does a uniqueness lookup for it, so there is no
-  // reason to re-submit the user's own current address on every save.
+  // `email` is deliberately never sent: changing the sign-in address needs
+  // password re-auth + confirmation via POST /api/users/me/email.
   const firstName = f.first_name.trim();
   const lastName = f.last_name.trim();
-  const email = f.email.trim();
   if (firstName && firstName !== props.user.first_name)
     data.first_name = firstName;
   if (lastName && lastName !== props.user.last_name) data.last_name = lastName;
-  if (email && email.toLowerCase() !== (props.user.email ?? '').toLowerCase())
-    data.email = email;
   if (f.birthdate) data.birthdate = f.birthdate;
   if (f.gender)
     data.gender = f.gender as 'male' | 'female' | 'other' | 'prefer_not_to_say';
@@ -147,11 +143,11 @@ const handleCancel = () => {
         id="email"
         v-model="form.email"
         type="email"
-        required
+        disabled
         autocomplete="email"
         :label="$t('profile.personal.email')"
         :placeholder="$t('profile.personal.emailPlaceholder')"
-        :hint="$t('profile.personal.emailHint')"
+        :hint="$t('profile.personal.emailLockedHint')"
       />
     </fieldset>
 

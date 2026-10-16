@@ -20,11 +20,11 @@ defineProps<Props>();
   >
     <div v-if="user.telephone" class="flex items-start gap-3">
       <div
-        class="flex size-10 items-center justify-center rounded-lg bg-[var(--success-subtle)] shrink-0"
+        class="flex size-10 items-center justify-center rounded-lg bg-ok-subtle shrink-0"
       >
         <Icon
           name="heroicons:phone"
-          class="h-5 w-5 text-[var(--success-fg)]"
+          class="h-5 w-5 text-ok-fg"
           aria-hidden="true"
         />
       </div>
@@ -61,7 +61,7 @@ defineProps<Props>();
 
     <div v-if="user.twitter" class="flex items-start gap-3">
       <div
-        class="flex size-10 items-center justify-center rounded-lg bg-[var(--primary-subtle)] shrink-0"
+        class="flex size-10 items-center justify-center rounded-lg bg-brand-subtle shrink-0"
       >
         <Icon name="logos:twitter" class="h-5 w-5" aria-hidden="true" />
       </div>
@@ -82,7 +82,7 @@ defineProps<Props>();
 
     <div v-if="user.linkedin" class="flex items-start gap-3">
       <div
-        class="flex size-10 items-center justify-center rounded-lg bg-[var(--primary-subtle)] shrink-0"
+        class="flex size-10 items-center justify-center rounded-lg bg-brand-subtle shrink-0"
       >
         <Icon name="logos:linkedin-icon" class="h-5 w-5" aria-hidden="true" />
       </div>

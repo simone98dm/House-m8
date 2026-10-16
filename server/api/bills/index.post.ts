@@ -10,8 +10,8 @@ const createBillSchema = z.object({
   house_id: z.string().uuid(),
   description: z.string().min(1).max(500),
   monthly_cost: z.number().positive().max(1_000_000),
-  payment_period: z.number().int().positive().optional().default(1),
-  next_due_date: z.string().min(1, 'next_due_date is required'),
+  payment_period: z.number().int().positive().max(120).optional().default(1),
+  next_due_date: z.string().date(),
 });
 
 export default defineEventHandler(async (event) => {

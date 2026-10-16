@@ -205,30 +205,6 @@ paths:
                   message:
                     type: string
 
-  /api/auth/verify-email:
-    get:
-      tags: [Authentication]
-      summary: Verify email address via one-time token
-      security: []
-      parameters:
-        - name: token
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Email verified
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-
   /api/auth/password-reset/request:
     post:
       tags: [Authentication]
@@ -706,38 +682,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
-
-  /api/houses/{id}/join:
-    post:
-      tags: [Houses]
-      summary: Join a house using an invitation token
-      parameters:
-        - $ref: '#/components/parameters/HouseId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [token]
-              properties:
-                token:
-                  type: string
-      responses:
-        '200':
-          description: Joined house
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-        '400':
-          $ref: '#/components/responses/BadRequest'
 
   /api/houses/{id}/leave:
     post:
@@ -1828,7 +1772,7 @@ paths:
   # ─── CRON ────────────────────────────────────────────────────────────────────
 
   /api/cron/bills-reminder:
-    post:
+    get:
       tags: [Cron]
       summary: Send bill payment reminder emails (x-cron-secret required)
       security: []
@@ -1852,7 +1796,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 
   /api/cron/monthly-reports:
-    post:
+    get:
       tags: [Cron]
       summary: Generate monthly expense reports for all active houses (x-cron-secret required)
       security: []

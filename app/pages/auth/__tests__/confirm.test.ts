@@ -127,64 +127,16 @@ describe('Confirm Email Page', () => {
     expect(wrapper.find('.confirm-icon-wrap.danger').exists()).toBe(true);
   });
 
-  it('calls handleEmailConfirmation when hash has access_token', async () => {
+  it('does not post client-supplied OAuth tokens from the URL hash', async () => {
     mockRoute = {
       query: {},
       hash: '#access_token=acc&refresh_token=ref&type=signup',
     };
-    mockFetch.mockResolvedValue({ success: true });
-    await mountSuspended(ConfirmPage, { global: G });
-    expect(mockFetch).toHaveBeenCalledWith(
-      '/api/auth/confirm',
-      expect.objectContaining({ method: 'POST' }),
-    );
-  });
-
-  it('redirects to / on OAuth confirmation (non-signup type)', async () => {
-    mockRoute = {
-      query: {},
-      hash: '#access_token=acc&refresh_token=ref&type=recovery',
-    };
-    mockFetch.mockResolvedValue({ success: true });
-    await mountSuspended(ConfirmPage, { global: G });
-    await vi.runAllTimersAsync();
-    expect(navigateToMock).toHaveBeenCalledWith('/');
-  });
-
-  it('redirects to /auth/login?confirmed=true on signup type', async () => {
-    mockRoute = {
-      query: {},
-      hash: '#access_token=acc&refresh_token=ref&type=signup',
-    };
-    mockFetch.mockResolvedValue({ success: true });
-    await mountSuspended(ConfirmPage, { global: G });
-    await vi.runAllTimersAsync();
-    expect(navigateToMock).toHaveBeenCalledWith('/auth/login?confirmed=true');
-  });
-
-  it('shows error when handleEmailConfirmation fails with data.statusMessage', async () => {
-    mockRoute = {
-      query: {},
-      hash: '#access_token=acc&refresh_token=ref&type=signup',
-    };
-    mockFetch.mockRejectedValue({ data: { statusMessage: 'Auth failed' } });
     const wrapper = await mountSuspended(ConfirmPage, { global: G });
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toContain('Auth failed');
-  });
-
-  it('shows error when email confirmation response has no success', async () => {
-    mockRoute = {
-      query: {},
-      hash: '#access_token=acc&refresh_token=ref&type=signup',
-    };
-    mockFetch.mockResolvedValue({
-      success: false,
-      message: 'Confirmation failed',
-    });
-    const wrapper = await mountSuspended(ConfirmPage, { global: G });
-    await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toContain('Confirmation failed');
+    expect(mockFetch).not.toHaveBeenCalled();
+    expect(mockConfirmWithToken).not.toHaveBeenCalled();
+    expect(wrapper.find('.confirm-icon-wrap.danger').exists()).toBe(true);
   });
 
   it('error-state buttons navigate to login and register', async () => {

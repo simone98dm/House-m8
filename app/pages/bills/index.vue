@@ -81,44 +81,16 @@ onMounted(() => {
   </AppPageHeader>
 
   <UiContainer class="flex flex-col">
-    <div role="region" aria-labelledby="bills-forecast-heading">
-      <div
-        class="relative overflow-hidden rounded-xl bg-primary-600 p-6 sm:p-8 text-white shadow-xl shadow-primary-600/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4"
-      >
-        <div
-          class="absolute -right-8 -top-8 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none"
-          aria-hidden="true"
-        />
-
-        <div class="relative z-10">
-          <p
-            class="text-primary-50 font-medium text-sm mb-1 uppercase tracking-wider"
-          >
-            {{ $t('bills.summary.monthlyTotal') }}
-          </p>
-          <h2 id="bills-forecast-heading" class="text-4xl font-bold text-white">
-            <UiCurrency
-              :amount="totalMonthlyBills"
-              :currency-code="currentHouse?.currency || 'EUR'"
-            />
-          </h2>
-          <p class="mt-3 text-sm text-white">
-            {{ $t('bills.summary.activeBills') }}: {{ activeBills.length }}
-          </p>
-        </div>
-
-        <div
-          class="hidden sm:block opacity-20 relative z-10"
-          aria-hidden="true"
-        >
-          <Icon
-            name="heroicons:banknotes"
-            class="w-24 h-24"
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-    </div>
+    <UiSummary
+      class="mb-4"
+      :label="$t('bills.summary.monthlyTotal')"
+      :detail="`${$t('bills.summary.activeBills')}: ${activeBills.length}`"
+    >
+      <UiCurrency
+        :amount="totalMonthlyBills"
+        :currency-code="currentHouse?.currency || 'EUR'"
+      />
+    </UiSummary>
 
     <!-- aria-label (not aria-labelledby) because BillListHeader doesn't
          forward an `id` prop to its <h3> — Vue's attribute fallthrough would

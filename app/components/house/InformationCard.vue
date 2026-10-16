@@ -23,7 +23,7 @@ const { getCurrencyName } = useCurrency();
 
 <template>
   <div
-    class="rounded-xl border border-gray-200 bg-[var(--surface)] shadow-sm dark:border-gray-700"
+    class="rounded-xl border border-gray-200 bg-surface shadow-sm dark:border-gray-700"
   >
     <div
       class="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-gray-700"

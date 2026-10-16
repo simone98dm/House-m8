@@ -3,9 +3,7 @@ import {
   verifyAuthCompat,
   ensureHouseAdmin,
 } from '~~/server/utils/repository-auth';
-import { getRepositories } from '~~/server/repositories/factory';
-import { sendMemberInviteEmail } from '~~/server/emails';
-import consola from 'consola';
+import { createHouseInvite } from '~~/server/utils/house-invitations';
 
 const generateSchema = z
   .object({
@@ -30,76 +28,13 @@ export default defineEventHandler(async (event) => {
     const inviteeEmail =
       parsed.success && parsed.data?.email ? parsed.data.email : null;
 
-    const repos = getRepositories();
-
-    const result = await repos.houses.createInvitation(
+    const invite = await createHouseInvite({
       houseId,
-      inviteeEmail ?? '',
-      user.id,
-    );
+      inviter: { id: user.id, email: user.email },
+      inviteeEmail,
+    });
 
-    if (result.error || !result.data) {
-      throw createError({
-        statusCode: 500,
-        message: result.error || 'Failed to generate invitation',
-      });
-    }
-
-    const invitation = result.data;
-
-    // Attach 6-digit code alongside the token
-    const codeResult = await repos.houses.attachInviteCode(invitation.id);
-
-    const code = codeResult.data?.code ?? null;
-    const codeExpiresAt = codeResult.data?.code_expires_at ?? null;
-
-    if (codeResult.error) {
-      consola.warn(
-        '[generate.post] attachInviteCode failed:',
-        codeResult.error,
-      );
-    }
-
-    // Send invite email with both link and code if inviteeEmail is provided
-    if (inviteeEmail && code && codeExpiresAt) {
-      const config = useRuntimeConfig();
-      const baseUrl = config.public.baseUrl || 'http://localhost:3000';
-
-      // Fetch inviter name
-      const { data: inviterUser } = await repos.users.getById(user.id);
-      const inviterName = inviterUser?.first_name
-        ? `${inviterUser.first_name} ${inviterUser.last_name || ''}`.trim()
-        : user.email;
-
-      const { data: house } = await repos.houses.getById(houseId);
-      const houseName = house?.name ?? 'the house';
-
-      const inviteLink = `${baseUrl}/house/join/${invitation.token}`;
-      const codeExpiresAtFormatted = new Date(codeExpiresAt).toLocaleString(
-        'en-GB',
-        { dateStyle: 'medium', timeStyle: 'short' },
-      );
-
-      sendMemberInviteEmail({
-        email: inviteeEmail,
-        inviterName,
-        houseName,
-        inviteLink,
-        code,
-        codeExpiresAt: codeExpiresAtFormatted,
-      }).catch((err) => {
-        consola.warn('[generate.post] sendMemberInviteEmail failed:', err);
-      });
-    }
-
-    return {
-      data: {
-        token: invitation.token,
-        expires_at: invitation.expires_at,
-        code,
-        code_expires_at: codeExpiresAt,
-      },
-    };
+    return { data: invite };
   } catch (error: unknown) {
     if (error && typeof error === 'object' && 'statusCode' in error) {
       throw error;

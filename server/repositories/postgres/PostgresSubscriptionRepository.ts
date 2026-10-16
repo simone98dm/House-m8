@@ -1,3 +1,4 @@
+import { toSafeErrorMessage } from './utils';
 import type { Pool } from 'pg';
 import type {
   ISubscriptionRepository,
@@ -19,7 +20,7 @@ export class PostgresSubscriptionRepository implements ISubscriptionRepository {
       );
       return { data: result.rows[0] ?? null, error: null };
     } catch (err) {
-      return { data: null, error: (err as Error).message };
+      return { data: null, error: toSafeErrorMessage(err) };
     }
   }
 
@@ -33,7 +34,7 @@ export class PostgresSubscriptionRepository implements ISubscriptionRepository {
       );
       return { data: result.rows[0] ?? null, error: null };
     } catch (err) {
-      return { data: null, error: (err as Error).message };
+      return { data: null, error: toSafeErrorMessage(err) };
     }
   }
 
@@ -43,8 +44,8 @@ export class PostgresSubscriptionRepository implements ISubscriptionRepository {
   ): Promise<RepositoryResponse<Subscription>> {
     try {
       const result = await this.pool.query<Subscription>(
-        `INSERT INTO subscriptions (user_id, stripe_customer_id, stripe_subscription_id, plan, billing_period, status, trial_ends_at, current_period_end)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `INSERT INTO subscriptions (user_id, stripe_customer_id, stripe_subscription_id, plan, billing_period, status, trial_ends_at, current_period_end, trial_used_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          ON CONFLICT (user_id) DO UPDATE SET
            stripe_customer_id = COALESCE(EXCLUDED.stripe_customer_id, subscriptions.stripe_customer_id),
            stripe_subscription_id = COALESCE(EXCLUDED.stripe_subscription_id, subscriptions.stripe_subscription_id),
@@ -53,6 +54,7 @@ export class PostgresSubscriptionRepository implements ISubscriptionRepository {
            status = EXCLUDED.status,
            trial_ends_at = EXCLUDED.trial_ends_at,
            current_period_end = EXCLUDED.current_period_end,
+           trial_used_at = COALESCE(subscriptions.trial_used_at, EXCLUDED.trial_used_at),
            updated_at = NOW()
          RETURNING *`,
         [
@@ -64,11 +66,12 @@ export class PostgresSubscriptionRepository implements ISubscriptionRepository {
           data.status,
           data.trial_ends_at ?? null,
           data.current_period_end ?? null,
+          data.trial_used_at ?? null,
         ],
       );
       return { data: result.rows[0]!, error: null };
     } catch (err) {
-      return { data: null, error: (err as Error).message };
+      return { data: null, error: toSafeErrorMessage(err) };
     }
   }
 
@@ -83,7 +86,7 @@ export class PostgresSubscriptionRepository implements ISubscriptionRepository {
       );
       return { data: undefined, error: null };
     } catch (err) {
-      return { data: null, error: (err as Error).message };
+      return { data: null, error: toSafeErrorMessage(err) };
     }
   }
 }

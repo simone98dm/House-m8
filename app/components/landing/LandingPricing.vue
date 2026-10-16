@@ -68,7 +68,7 @@ const proPlanFeatures = computed(() => [
             >
               <Icon
                 name="heroicons:check-circle"
-                class="h-5 w-5 flex-shrink-0 text-success-700 dark:text-success-500"
+                class="h-5 w-5 shrink-0 text-success-700 dark:text-success-500"
                 aria-hidden="true"
               />
               {{ feature }}
@@ -111,7 +111,7 @@ const proPlanFeatures = computed(() => [
             >
               <Icon
                 name="heroicons:check-circle"
-                class="h-5 w-5 flex-shrink-0 text-success-700 dark:text-success-500"
+                class="h-5 w-5 shrink-0 text-success-700 dark:text-success-500"
                 aria-hidden="true"
               />
               {{ feature }}

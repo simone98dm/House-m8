@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path.startsWith('/api/')) return;
 
   const isAuthPage = to.path.startsWith('/auth/');
-  const publicPaths = ['/', '/privacy', '/terms', '/pricing'];
+  const publicPaths = ['/', '/privacy', '/terms', '/cookies', '/pricing'];
   const isPublicPage = publicPaths.includes(to.path);
 
   const consumeStoredRedirect = (currentPath?: string) => {

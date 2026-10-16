@@ -55,10 +55,10 @@ const { t: $t } = useI18n();
     :aria-label="$t('expenses.summary.ariaLabel')"
   >
     <div
-      class="bg-[var(--surface)] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 flex items-center gap-4"
+      class="bg-surface rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 flex items-center gap-4"
     >
       <div
-        class="size-10 rounded-lg flex items-center justify-center bg-[var(--primary-subtle)] text-[var(--primary-hover)] shrink-0"
+        class="size-10 rounded-lg flex items-center justify-center bg-brand-subtle text-brand-hover shrink-0"
       >
         <Icon name="heroicons:banknotes" class="w-5 h-5" aria-hidden="true" />
       </div>
@@ -77,10 +77,10 @@ const { t: $t } = useI18n();
     </div>
 
     <div
-      class="bg-[var(--surface)] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 flex items-center gap-4"
+      class="bg-surface rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 flex items-center gap-4"
     >
       <div
-        class="size-10 rounded-lg flex items-center justify-center bg-[var(--warning-subtle)] text-[var(--warning-fg)] shrink-0"
+        class="size-10 rounded-lg flex items-center justify-center bg-warn-subtle text-warn-fg shrink-0"
       >
         <Icon name="heroicons:clock" class="w-5 h-5" aria-hidden="true" />
       </div>
@@ -101,10 +101,10 @@ const { t: $t } = useI18n();
     </div>
 
     <div
-      class="bg-[var(--surface)] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 flex items-center gap-4"
+      class="bg-surface rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 flex items-center gap-4"
     >
       <div
-        class="size-10 rounded-lg flex items-center justify-center bg-[var(--success-subtle)] text-[var(--success-fg)] shrink-0"
+        class="size-10 rounded-lg flex items-center justify-center bg-ok-subtle text-ok-fg shrink-0"
       >
         <Icon name="heroicons:chart-bar" class="w-5 h-5" aria-hidden="true" />
       </div>

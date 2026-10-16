@@ -43,7 +43,7 @@ const isProcessing = (tx: SettlementTransaction) =>
 
     <div
       v-if="transactions.length > 0"
-      class="rounded-xl border border-gray-200 dark:border-gray-700 bg-[var(--surface)] shadow-sm overflow-hidden divide-y divide-gray-100 dark:divide-gray-700"
+      class="rounded-xl border border-gray-200 dark:border-gray-700 bg-surface shadow-sm overflow-hidden divide-y divide-gray-100 dark:divide-gray-700"
     >
       <BalanceSettlementRow
         v-for="tx in transactions"

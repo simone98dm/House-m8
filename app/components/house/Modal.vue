@@ -120,7 +120,7 @@ onMounted(() => {
           id="currency"
           v-model="selectedCurrency"
           :disabled="loading"
-          class="w-full px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-900 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+          class="w-full px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-900 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-hidden transition-all dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
         >
           <option
             v-for="option in currencyOptions"

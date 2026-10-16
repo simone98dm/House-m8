@@ -21,12 +21,16 @@ import {
   setAuthCookies,
   clearAuthCookies,
   refreshAccessToken,
+  getRefreshToken,
   verifyToken,
 } from '../../utils/jwt';
+import { hashToken } from '../../utils/tokens';
 import { sendPasswordResetEmail } from '~~/server/emails';
 import consola from 'consola';
 
 const SALT_ROUNDS = 12;
+const RESEND_COOLDOWN_MINUTES = 15;
+const RESET_COOLDOWN_MINUTES = 5;
 
 /**
  * PostgreSQL authentication provider
@@ -169,9 +173,58 @@ export class PostgresAuthProvider implements IAuthProvider {
     }
   }
 
-  async confirmEmailVerificationToken(
-    token: string,
-  ): Promise<{ userId: string; email: string } | null> {
+  /**
+   * An unconfirmed account that is due a fresh verification link. Returns null
+   * while a link was issued in the last RESEND_COOLDOWN_MINUTES, so repeated
+   * sign-up requests cannot flood one inbox.
+   */
+  async getUnconfirmedUserByEmail(email: string): Promise<AuthUser | null> {
+    try {
+      const result = await this.pool.query(
+        `SELECT id, email, email_confirmed_at, created_at
+         FROM users u
+         WHERE u.email = $1 AND u.email_confirmed_at IS NULL
+           AND NOT EXISTS (
+             SELECT 1 FROM email_verification_tokens t
+             WHERE t.user_id = u.id
+               AND t.created_at > NOW() - INTERVAL '${RESEND_COOLDOWN_MINUTES} minutes'
+           )`,
+        [email],
+      );
+      return result.rows[0] ?? null;
+    } catch (error) {
+      consola.error(
+        'PostgresAuthProvider.getUnconfirmedUserByEmail error:',
+        error,
+      );
+      return null;
+    }
+  }
+
+  async verifyPassword(
+    userId: string,
+    password: string,
+  ): Promise<'valid' | 'invalid' | 'no_password'> {
+    try {
+      const result = await this.pool.query(
+        `SELECT password_hash FROM users WHERE id = $1`,
+        [userId],
+      );
+      const passwordHash = result.rows[0]?.password_hash;
+      if (!passwordHash) return 'no_password';
+      return (await compare(password, passwordHash)) ? 'valid' : 'invalid';
+    } catch (error) {
+      consola.error('PostgresAuthProvider.verifyPassword error:', error);
+      return 'invalid';
+    }
+  }
+
+  async confirmEmailVerificationToken(token: string): Promise<{
+    userId: string;
+    email: string;
+    isEmailChange: boolean;
+  } | null> {
+    const tokenHash = hashToken(token);
     const client = await this.pool.connect();
     try {
       await client.query('BEGIN');
@@ -180,7 +233,7 @@ export class PostgresAuthProvider implements IAuthProvider {
         `SELECT user_id, email
          FROM email_verification_tokens
          WHERE token = $1 AND expires_at > NOW() AND used_at IS NULL`,
-        [token],
+        [tokenHash],
       );
 
       if (tokenResult.rows.length === 0) {
@@ -190,6 +243,13 @@ export class PostgresAuthProvider implements IAuthProvider {
 
       const { user_id, email } = tokenResult.rows[0];
 
+      const currentResult = await client.query(
+        `SELECT email FROM users WHERE id = $1 FOR UPDATE`,
+        [user_id],
+      );
+      const currentEmail: string = currentResult.rows[0]?.email ?? '';
+      const isEmailChange = currentEmail.toLowerCase() !== email.toLowerCase();
+
       await client.query(
         `UPDATE users
          SET email_confirmed_at = NOW(), email = $2, updated_at = NOW()
@@ -197,13 +257,27 @@ export class PostgresAuthProvider implements IAuthProvider {
         [user_id, email],
       );
 
+      if (isEmailChange) {
+        // The sign-in identity changed: end every session and void any other
+        // pending link, so nothing issued for the old address stays usable.
+        await client.query(
+          'UPDATE refresh_tokens SET revoked_at = NOW() WHERE user_id = $1 AND revoked_at IS NULL',
+          [user_id],
+        );
+        await client.query(
+          `DELETE FROM email_verification_tokens
+           WHERE user_id = $1 AND used_at IS NULL AND token <> $2`,
+          [user_id, tokenHash],
+        );
+      }
+
       await client.query(
         `UPDATE email_verification_tokens SET used_at = NOW() WHERE token = $1`,
-        [token],
+        [tokenHash],
       );
 
       await client.query('COMMIT');
-      return { userId: user_id, email };
+      return { userId: user_id, email, isEmailChange };
     } catch (error) {
       await client.query('ROLLBACK');
       consola.error(
@@ -270,11 +344,18 @@ export class PostgresAuthProvider implements IAuthProvider {
 
   async signOut(event: H3Event): Promise<void> {
     try {
-      const tokenPayload = await getUserFromToken(event);
-      if (tokenPayload?.userId) {
+      // The access token may have expired; fall back to the refresh cookie
+      let userId = (await getUserFromToken(event))?.userId;
+      if (!userId) {
+        const refreshToken = getRefreshToken(event);
+        userId = refreshToken
+          ? (await verifyToken(refreshToken, 'refresh'))?.userId
+          : undefined;
+      }
+      if (userId) {
         await this.pool.query(
           'UPDATE refresh_tokens SET revoked_at = NOW() WHERE user_id = $1 AND revoked_at IS NULL',
-          [tokenPayload.userId],
+          [userId],
         );
       }
       clearAuthCookies(event);
@@ -296,14 +377,15 @@ export class PostgresAuthProvider implements IAuthProvider {
         `INSERT INTO email_verification_tokens (id, user_id, token, email, expires_at, created_at)
          VALUES ($1, $2, $3, $4, $5, NOW())
          RETURNING id, user_id, token, email, expires_at, created_at`,
-        [randomUUID(), userId, token, email, expiresAt],
+        [randomUUID(), userId, hashToken(token), email, expiresAt],
       );
 
       if (result.rows.length === 0) return null;
 
       const tokenData = result.rows[0];
       return {
-        token: tokenData.token,
+        // Only the hash is stored; callers need the raw token for the link
+        token,
         user_id: tokenData.user_id,
         email: tokenData.email,
         expires_at: tokenData.expires_at,
@@ -393,6 +475,18 @@ export class PostgresAuthProvider implements IAuthProvider {
 
       const user = userResult.rows[0];
       const userId = user.id;
+
+      // One reset email per address per cooldown; the caller still gets the
+      // same generic answer.
+      const recent = await this.pool.query(
+        `SELECT 1 FROM password_reset_tokens
+         WHERE user_id = $1
+           AND created_at > NOW() - INTERVAL '${RESET_COOLDOWN_MINUTES} minutes'
+         LIMIT 1`,
+        [userId],
+      );
+      if (recent.rows.length > 0) return true;
+
       const userName =
         `${user.first_name || ''} ${user.last_name || ''}`.trim() ||
         email.split('@')[0] ||
@@ -405,7 +499,7 @@ export class PostgresAuthProvider implements IAuthProvider {
       await this.pool.query(
         `INSERT INTO password_reset_tokens (id, user_id, token, expires_at, created_at)
          VALUES ($1, $2, $3, $4, NOW())`,
-        [randomUUID(), userId, token, expiresAt],
+        [randomUUID(), userId, hashToken(token), expiresAt],
       );
 
       // Send password reset email
@@ -434,6 +528,7 @@ export class PostgresAuthProvider implements IAuthProvider {
   }
 
   async resetPassword(token: string, newPassword: string): Promise<boolean> {
+    const tokenHash = hashToken(token);
     const client = await this.pool.connect();
     try {
       await client.query('BEGIN');
@@ -443,7 +538,7 @@ export class PostgresAuthProvider implements IAuthProvider {
         `SELECT user_id 
          FROM password_reset_tokens 
          WHERE token = $1 AND expires_at > NOW() AND used_at IS NULL`,
-        [token],
+        [tokenHash],
       );
 
       if (tokenResult.rows.length === 0) {
@@ -469,15 +564,22 @@ export class PostgresAuthProvider implements IAuthProvider {
         `UPDATE password_reset_tokens
          SET used_at = NOW()
          WHERE token = $1`,
-        [token],
+        [tokenHash],
       );
-
-      await client.query('COMMIT');
 
       await client.query(
         'UPDATE refresh_tokens SET revoked_at = NOW() WHERE user_id = $1 AND revoked_at IS NULL',
         [userId],
       );
+
+      // A reset is how a user recovers a compromised account: a pending
+      // email-change link requested by the intruder must not outlive it.
+      await client.query(
+        'DELETE FROM email_verification_tokens WHERE user_id = $1 AND used_at IS NULL',
+        [userId],
+      );
+
+      await client.query('COMMIT');
 
       return true;
     } catch (error) {
@@ -521,7 +623,7 @@ export class PostgresAuthProvider implements IAuthProvider {
         },
       });
 
-      if (!userInfo.email) {
+      if (!userInfo.email || userInfo.verified_email !== true) {
         return null;
       }
 

@@ -31,8 +31,6 @@ describe('useAuth', () => {
       const { useAuth } = await import('~/composables/useAuth');
       const mockResponse = {
         user: { id: '1', email: 'test@example.com' },
-        access_token: 'tok',
-        refresh_token: 'ref',
       };
       mockFetch.mockResolvedValue(mockResponse);
 

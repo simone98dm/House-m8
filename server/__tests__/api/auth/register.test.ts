@@ -81,6 +81,7 @@ describe('POST /api/auth/register', () => {
     readValidatedBodyMock.mockResolvedValue(validBody);
     vi.mocked(getAuthProvider).mockReturnValue({
       signUpEmailOnly: vi.fn().mockResolvedValue(null),
+      getUnconfirmedUserByEmail: vi.fn().mockResolvedValue(null),
       createEmailVerificationToken: vi.fn().mockResolvedValue(null),
     } as unknown as ReturnType<typeof getAuthProvider>);
 
@@ -97,6 +98,7 @@ describe('POST /api/auth/register', () => {
     readValidatedBodyMock.mockResolvedValue(validBody);
     vi.mocked(getAuthProvider).mockReturnValue({
       signUpEmailOnly: vi.fn().mockRejectedValue(new Error('already exists')),
+      getUnconfirmedUserByEmail: vi.fn().mockResolvedValue(null),
     } as unknown as ReturnType<typeof getAuthProvider>);
 
     const { default: handler } =
@@ -105,6 +107,36 @@ describe('POST /api/auth/register', () => {
 
     expect(result).toMatchObject({ success: true });
     expect(sendRegistrationEmail).not.toHaveBeenCalled();
+  });
+
+  it('resends the link for an existing unconfirmed account with an identical response', async () => {
+    const { sendRegistrationEmail } = await import('~~/server/emails');
+    readValidatedBodyMock.mockResolvedValue(validBody);
+    const createToken = vi.fn().mockResolvedValue({ token: 'fresh-tok' });
+    vi.mocked(getAuthProvider).mockReturnValue({
+      signUpEmailOnly: vi.fn().mockResolvedValue(null),
+      getUnconfirmedUserByEmail: vi.fn().mockResolvedValue(mockUser),
+      createEmailVerificationToken: createToken,
+    } as unknown as ReturnType<typeof getAuthProvider>);
+
+    const { default: handler } =
+      await import('../../../api/auth/register.post');
+    const resent = await handler(mockEvent);
+
+    expect(createToken).toHaveBeenCalledWith('u-1', 'new@user.com');
+    expect(sendRegistrationEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        confirmationLink: 'http://localhost:3000/auth/confirm?token=fresh-tok',
+      }),
+    );
+
+    vi.mocked(getAuthProvider).mockReturnValue({
+      signUpEmailOnly: vi.fn().mockResolvedValue(mockUser),
+      createEmailVerificationToken: vi.fn().mockResolvedValue(null),
+    } as unknown as ReturnType<typeof getAuthProvider>);
+    expect(JSON.stringify(resent)).toBe(
+      JSON.stringify(await handler(mockEvent)),
+    );
   });
 
   it('throws 404 when new-users feature flag is disabled', async () => {

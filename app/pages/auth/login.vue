@@ -217,7 +217,7 @@ const signInWithGoogle = async () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--text-base);
+  font-size: var(--fs-base);
   color: var(--fg-muted);
   cursor: pointer;
   user-select: none;
@@ -232,7 +232,7 @@ const signInWithGoogle = async () => {
 }
 
 .auth-forgot-link {
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--primary);
   font-weight: 500;
   text-decoration: none;

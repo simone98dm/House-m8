@@ -70,7 +70,7 @@ const labelSizeClasses = computed(() => {
       :aria-label="!label ? ariaLabel : undefined"
       :disabled="disabled"
       :class="[
-        'relative inline-flex flex-shrink-0 rounded-full transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+        'relative inline-flex shrink-0 rounded-full transition-colors duration-150 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
         sizeClasses,
         modelValue
           ? 'bg-primary-600 hover:bg-primary-700'

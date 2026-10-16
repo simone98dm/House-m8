@@ -33,12 +33,14 @@
       "reports": "Segnalazioni",
       "pricing": "Prezzi",
       "privacy": "Privacy Policy",
-      "terms": "Termini di Servizio"
+      "terms": "Termini di Servizio",
+      "cookies": "Cookie Policy"
     },
     "descriptions": {
       "pricing": "Prezzi semplici e trasparenti per la vita condivisa. Inizia gratis, aggiorna quando hai bisogno.",
       "privacy": "Privacy Policy di House M8 — come raccogliamo, usiamo e proteggiamo i tuoi dati.",
-      "terms": "Termini di Servizio di House M8 — le regole per l'utilizzo dell'app."
+      "terms": "Termini di Servizio di House M8 — le regole per l'utilizzo dell'app.",
+      "cookies": "Cookie Policy di House M8 — i cookie e l'archiviazione del browser utilizzati dall'app e come gestirli."
     }
   },
   "common": {
@@ -629,6 +631,7 @@
       "email": "Email",
       "emailPlaceholder": "tu{'@'}esempio.com",
       "emailHint": "È l'indirizzo con cui accedi.",
+      "emailLockedHint": "È l'indirizzo con cui accedi. Non può essere modificato da questo modulo.",
       "emailTaken": "Questo indirizzo email è già in uso.",
       "title": "Informazioni Personali",
       "gender": "Genere",
@@ -896,6 +899,8 @@
     "inviteByEmailLabel": "Invita via email",
     "inviteByEmailPlaceholder": "Invita via email…",
     "inviteByEmailSubmit": "Invia invito",
+    "inviteSentTitle": "Invito inviato",
+    "inviteSentDesc": "Abbiamo inviato un link e un codice per entrare nella casa all'indirizzo indicato. Entrerà nella casa dopo aver accettato.",
     "removeMemberTitle": "Rimuovi membro",
     "removeMemberMessage": "{name} perderà immediatamente l'accesso a questa casa. Questa azione non può essere annullata: dovrà ricevere un nuovo invito per rientrare.",
     "removeMemberConfirm": "Rimuovi membro",
@@ -1282,8 +1287,35 @@
   "legal": {
     "incompleteNotice": {
       "title": "Questo documento è incompleto",
-      "privacyBody": "Questa informativa sulla privacy è una bozza non ancora completata. I campi tra parentesi quadre — nome dell'azienda, indirizzo, email del titolare e provider di hosting — sono segnaposto, non dati reali.",
       "termsBody": "Questi termini di servizio sono una bozza non ancora completata. Il campo tra parentesi quadre — la città del foro competente — è un segnaposto, non un dato reale."
+    },
+    "storage": {
+      "firstParty": "Prima parte",
+      "purpose": {
+        "accessToken": "Mantiene la tua sessione autenticata (token di autenticazione, non leggibile dagli script).",
+        "refreshToken": "Rinnova la sessione senza richiederti di nuovo la password.",
+        "oauthState": "Controllo di sicurezza durante l'accesso con Google (previene richieste contraffatte).",
+        "authRedirect": "Ricorda la pagina che volevi aprire per riportarti lì dopo l'accesso.",
+        "locale": "Ricorda la lingua che hai scelto.",
+        "colorMode": "Ricorda la scelta del tema chiaro o scuro."
+      },
+      "duration": {
+        "minutes15": "15 minuti",
+        "minutes10": "10 minuti",
+        "sessionOr7Days": "Sessione del browser, oppure 7 giorni se scegli \"ricordami\"",
+        "tab": "Fino alla chiusura della scheda (rimosso dopo l'uso)",
+        "days365": "365 giorni",
+        "untilCleared": "Finché non cancelli i dati del sito"
+      },
+      "category": {
+        "necessary": "Necessario",
+        "preferences": "Preferenze"
+      },
+      "kind": {
+        "cookie": "Cookie",
+        "localStorage": "Local storage",
+        "sessionStorage": "Session storage"
+      }
     }
   },
   "landing": {
@@ -1295,7 +1327,8 @@
       "goToDashboard": "Vai alla dashboard",
       "profile": "Profilo",
       "logIn": "Accedi",
-      "signUpFree": "Registrati gratis"
+      "signUpFree": "Registrati gratis",
+      "sectionsLabel": "Sezioni della pagina"
     },
     "footer": {
       "tagline": "Rendiamo la convivenza semplice, trasparente ed equa per tutti.",
@@ -1304,7 +1337,6 @@
       "howItWorks": "Come funziona",
       "pricing": "Prezzi",
       "faq": "FAQ",
-      "company": "Azienda",
       "github": "GitHub",
       "legal": "Note legali",
       "privacyPolicy": "Informativa sulla privacy",
@@ -1312,38 +1344,30 @@
       "connect": "Contatti",
       "a11y": {
         "productLinks": "Link prodotto",
-        "companyLinks": "Link azienda",
         "legalLinks": "Link note legali",
         "connectLinks": "Link contatti"
-      }
+      },
+      "cookiePolicy": "Cookie Policy"
     },
     "hero": {
-      "badge": "Un unico posto per bollette, saldi, contratti e organizzazione della casa",
-      "headline": "Convivenza condivisa,",
-      "headlineAccent": "finanze semplificate.",
-      "subtitle": "Traccia le spese, dividi le bollette all'istante e non discutere mai più su chi deve cosa. Il modo più semplice di gestire il budget di casa.",
+      "headline": "Sai sempre quanto devi.",
+      "headlineAccent": "Nessuno deve rincorrere nessuno.",
+      "subtitle": "House M8 tiene aggiornati spese, bollette e saldi per tutti in casa. Aggiungi una spesa una volta sola: divisione, promemoria e piano per saldare sono già pronti.",
       "ctaAuthenticated": "Apri la dashboard",
       "ctaGuest": "Inizia gratis",
       "ctaSecondary": "Scopri le funzionalità",
-      "mock": {
-        "dashboard": "Dashboard",
-        "expenses": "Spese",
-        "roommates": "Coinquilini",
-        "totalBalance": "Saldo totale",
-        "youAreOwed": "Devi ricevere",
-        "balanceAmount": "142,50 €",
-        "addExpense": "Aggiungi spesa",
-        "recentActivity": "Attività recenti",
-        "internetBill": "Bolletta Internet",
-        "paidBySarah": "Pagata da Sarah • Ieri",
-        "youOwe": "Devi 25,00 €",
-        "weeklyGroceries": "Spesa settimanale",
-        "paidByYou": "Pagata da te • Oggi",
-        "youAreOwedAmount": "Devi ricevere 82,50 €"
+      "ledger": {
+        "label": "Il tuo saldo",
+        "owe": "Devi 47,00 € a Marco",
+        "oweDue": "entro venerdì",
+        "settle": "Salda",
+        "owed": "Sarah ti deve 82,50 €",
+        "owedNote": "spesa e internet",
+        "bill": "Luce · 64,00 €",
+        "billDue": "scade il 28 ott, divisa in 4"
       }
     },
     "features": {
-      "eyebrow": "Funzionalità",
       "title": "Tutto ciò che serve per gestire la convivenza",
       "subtitle": "Pensato per coinquilini, partner e amici che vivono insieme.",
       "problem": {
@@ -1361,7 +1385,7 @@
           "title": "I pagamenti in ritardo rovinano le amicizie",
           "description": "Un pagamento rimandato diventa un mese di tensione."
         },
-        "cta": "C'è un modo migliore — ecco come House M8 risolve tutto questo →"
+        "cta": "C'è un modo migliore. Ecco come House M8 gestisce ognuno di questi casi."
       },
       "cards": {
         "smartSplitting": {
@@ -1398,14 +1422,6 @@
       "ownerContact": {
         "title": "Contatto diretto col proprietario",
         "description": "Segnala manutenzioni, problemi di fatturazione o dubbi contrattuali direttamente al proprietario. Comunicazione semplice per risolvere prima."
-      },
-      "mock": {
-        "reportIssue": "Segnala un problema",
-        "issueType": "Tipo di problema",
-        "maintenance": "Manutenzione",
-        "description": "Descrizione",
-        "placeholder": "Descrivi il problema...",
-        "sendReport": "Invia segnalazione"
       }
     },
     "seo": {
@@ -1497,5 +1513,39 @@
         }
       }
     }
+  },
+  "cookiePolicy": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Ultimo aggiornamento: {date}",
+    "whatTitle": "Che cosa sono i cookie?",
+    "whatBody": "I cookie sono piccoli file di testo che un sito salva sul tuo dispositivo. Tecnologie simili, come local storage e session storage, funzionano allo stesso modo. Questa informativa riguarda entrambi e li indica insieme come \"cookie\".",
+    "usedTitle": "Cookie utilizzati da House M8",
+    "usedIntro": "House M8 utilizza esclusivamente cookie tecnici e archiviazione di preferenze, tutti installati da House M8 stesso (prima parte). Non utilizziamo cookie di analisi, pubblicitari o di profilazione e non carichiamo tracker di terze parti.",
+    "table": {
+      "caption": "Cookie e archiviazione del browser utilizzati da House M8",
+      "name": "Nome",
+      "provider": "Fornitore",
+      "type": "Tipo",
+      "category": "Categoria",
+      "purpose": "Finalità",
+      "duration": "Durata"
+    },
+    "noConsentTitle": "Perché non c'è un banner cookie",
+    "noConsentBody": "I cookie tecnici e le preferenze che scegli tu stesso (lingua, tema) non richiedono il tuo consenso preventivo. Lo prevedono l'art. 122 del Codice Privacy (D.Lgs. 196/2003) e le Linee guida cookie del Garante per la protezione dei dati personali del 10 giugno 2021. Se in futuro introdurremo cookie che richiedono consenso, lo chiederemo prima e aggiorneremo questa pagina.",
+    "thirdPartyTitle": "Servizi di terze parti",
+    "thirdPartyBody": "Se accedi con Google, vieni reindirizzato al sito di Google. Questo servizio può installare cookie propri sul proprio dominio, secondo la propria informativa; House M8 non lo controlla.",
+    "manageTitle": "Come eliminare o bloccare i cookie",
+    "manageBody": "Puoi eliminare o bloccare i cookie dalle impostazioni del browser. Bloccare i cookie necessari ti impedirà di accedere. Istruzioni ufficiali:",
+    "browsers": {
+      "chrome": "Google Chrome",
+      "firefox": "Mozilla Firefox",
+      "safari": "Apple Safari",
+      "edge": "Microsoft Edge"
+    },
+    "clearTitle": "Reimpostare le preferenze",
+    "clearBody": "La lingua e il tema scelti sono salvati solo nel tuo browser. Eliminando i dati del sito di House M8 dal browser li rimuovi e tornano i valori predefiniti.",
+    "contactTitle": "Contatti",
+    "contactBody": "Per domande su questa informativa scrivi a {email}. Vedi anche la {privacyLink}.",
+    "privacyLinkText": "Privacy Policy"
   }
 }

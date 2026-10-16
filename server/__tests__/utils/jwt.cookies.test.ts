@@ -4,10 +4,9 @@ vi.stubGlobal('useRuntimeConfig', () => ({
   jwtSecret: 'test-jwt-secret-must-be-at-least-32chars!!',
 }));
 
+const queryMock = vi.hoisted(() => vi.fn());
 vi.mock('~~/server/utils/postgres', () => ({
-  getPostgresPool: () => ({
-    query: vi.fn().mockResolvedValue({ rows: [] }),
-  }),
+  getPostgresPool: () => ({ query: queryMock }),
 }));
 
 const getCookieMock = vi.fn();
@@ -50,6 +49,8 @@ const makeEvent = (authHeader?: string) =>
 describe('server/utils/jwt — cookie helpers', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Active refresh token row by default
+    queryMock.mockResolvedValue({ rows: [{ revoked_at: null }] });
   });
 
   describe('setAuthCookies', () => {
@@ -189,6 +190,39 @@ describe('server/utils/jwt — cookie helpers', () => {
       const result = await refreshAccessToken(makeEvent());
       expect(typeof result).toBe('string');
       expect(result!.split('.')).toHaveLength(3);
+    });
+
+    it('returns null when the refresh token row is revoked', async () => {
+      const refreshToken = await generateRefreshToken('u-1', 'me@example.com');
+      getCookieMock.mockReturnValue(refreshToken);
+      queryMock.mockResolvedValue({ rows: [{ revoked_at: new Date() }] });
+      expect(await refreshAccessToken(makeEvent())).toBeNull();
+      expect(setCookieMock).not.toHaveBeenCalled();
+    });
+
+    it('returns null when the refresh token row does not exist', async () => {
+      const refreshToken = await generateRefreshToken('u-1', 'me@example.com');
+      getCookieMock.mockReturnValue(refreshToken);
+      queryMock.mockResolvedValue({ rows: [] });
+      expect(await refreshAccessToken(makeEvent())).toBeNull();
+    });
+
+    it('returns null for a refresh token without jti', async () => {
+      const { SignJWT } = await import('jose');
+      const noJti = await new SignJWT({
+        userId: 'u-1',
+        email: 'me@example.com',
+        typ: 'refresh',
+      })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setExpirationTime('7d')
+        .sign(
+          new TextEncoder().encode(
+            'test-jwt-secret-must-be-at-least-32chars!!',
+          ),
+        );
+      getCookieMock.mockReturnValue(noJti);
+      expect(await refreshAccessToken(makeEvent())).toBeNull();
     });
 
     it('calls setCookie to update the access token cookie after refresh', async () => {

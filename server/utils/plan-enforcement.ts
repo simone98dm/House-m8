@@ -10,7 +10,9 @@ export const PLAN_LIMITS = {
 export async function getUserPlan(userId: string): Promise<Plan> {
   const repos = getRepositories();
   const { data: sub } = await repos.subscriptions.getByUserId(userId);
-  if (!sub || sub.status === 'canceled') return 'free';
+  // past_due, incomplete, unpaid, paused, ... do not keep paid features.
+  if (!sub || (sub.status !== 'active' && sub.status !== 'trialing'))
+    return 'free';
   return sub.plan;
 }
 

@@ -564,8 +564,10 @@ export class PostgresExpenseRepository implements IExpenseRepository {
     const result = await repoQuery(async () => {
       const r = await this.pool.query<{ exists: boolean }>(
         `SELECT EXISTS(
-          SELECT 1 FROM expenses
-          WHERE id = $1 AND created_by = $2
+          SELECT 1 FROM expenses e
+          JOIN house_members hm
+            ON hm.house_id = e.house_id AND hm.user_id = e.created_by AND hm.left_at IS NULL
+          WHERE e.id = $1 AND e.created_by = $2
         )`,
         [expenseId, userId],
       );

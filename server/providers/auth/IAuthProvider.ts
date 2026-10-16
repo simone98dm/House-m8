@@ -53,14 +53,33 @@ export interface IAuthProvider {
   signUpEmailOnly(email: string): Promise<AuthUser | null>;
 
   /**
+   * Find an existing account for this email that never confirmed it
+   * (email_confirmed_at IS NULL). Used to resend the sign-up link.
+   * @returns The unconfirmed user, or null if none / already confirmed
+   */
+  getUnconfirmedUserByEmail(email: string): Promise<AuthUser | null>;
+
+  /**
+   * Check a plain-text password against the user's stored hash.
+   * @returns 'no_password' when the account has none (e.g. Google-only)
+   */
+  verifyPassword(
+    userId: string,
+    password: string,
+  ): Promise<'valid' | 'invalid' | 'no_password'>;
+
+  /**
    * Verify an email-verification token and return the user identity.
    * Marks the token used and sets email_confirmed_at in one transaction.
    * @param token - Verification token
    * @returns User identity or null if token is invalid/expired/used
    */
-  confirmEmailVerificationToken(
-    token: string,
-  ): Promise<{ userId: string; email: string } | null>;
+  confirmEmailVerificationToken(token: string): Promise<{
+    userId: string;
+    email: string;
+    /** True when the token moved the account to a different address. */
+    isEmailChange: boolean;
+  } | null>;
 
   /**
    * Set (or reset) a user's password hash directly by user ID.

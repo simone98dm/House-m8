@@ -44,6 +44,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
          implicit contentinfo landmark role per the HTML-ARIA mapping, which
          would make it unreachable via screen-reader landmark navigation
          everywhere except these three auth pages. -->
+    <LegalLinks class="relative z-[1] py-2" />
     <AppFooter class="app-footer-themed auth-footer" />
   </div>
 </template>
@@ -70,7 +71,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
      it here consistently is an intentional visible change on /auth/confirm. */
   text-align: center;
   margin-top: 22px;
-  font-size: var(--text-base);
+  font-size: var(--fs-base);
   color: var(--fg-muted);
 }
 .auth-footer :deep(a) {
@@ -81,7 +82,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
 .auth-altlink {
   text-align: center;
   margin-top: 22px;
-  font-size: var(--text-base);
+  font-size: var(--fs-base);
   color: var(--fg-muted);
 }
 .auth-altlink :deep(a) {
@@ -109,7 +110,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
   max-width: var(--auth-card-max-width, 420px);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-card);
   padding: 36px 32px var(--auth-card-pb, 32px);
   box-shadow: var(--shadow-lg);
 }
@@ -134,14 +135,14 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: var(--text-base);
+  font-size: var(--fs-base);
   color: #fff;
   letter-spacing: -0.5px;
-  flex-shrink: 0;
+  shrink: 0;
 }
 
 .auth-logo-text {
-  font-size: var(--text-2xl);
+  font-size: var(--fs-2xl);
   font-weight: 700;
   color: var(--fg);
   letter-spacing: -0.4px;
@@ -151,7 +152,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
    slot (headings, alerts, forms), not markup this component renders itself,
    so :deep() is required to reach across the slot boundary. */
 :deep(.auth-heading) {
-  font-size: var(--text-5xl);
+  font-size: var(--fs-5xl);
   font-weight: 700;
   letter-spacing: -0.6px;
   color: var(--fg);
@@ -160,7 +161,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
 }
 
 :deep(.auth-sub) {
-  font-size: var(--text-md);
+  font-size: var(--fs-md);
   color: var(--fg-muted);
   margin-bottom: 24px;
   line-height: 1.5;
@@ -177,7 +178,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
   align-items: center;
   gap: 12px;
   color: var(--fg-subtle);
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -197,8 +198,8 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
   padding: 10px 16px;
   background: var(--surface-raised);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  font-size: var(--text-md);
+  border-radius: var(--radius-control);
+  font-size: var(--fs-md);
   font-weight: 500;
   color: var(--fg);
   font-family: inherit;
@@ -223,8 +224,8 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
   align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: var(--radius);
-  font-size: var(--text-base);
+  border-radius: var(--radius-control);
+  font-size: var(--fs-base);
   margin-bottom: 16px;
 }
 :deep(.auth-alert-success) {
@@ -255,7 +256,7 @@ const hasFooterLink = computed(() => !!slots['footer-link']);
   width: 16px;
   height: 16px;
   animation: spin 1s linear infinite;
-  flex-shrink: 0;
+  shrink: 0;
 }
 @keyframes spin {
   to {

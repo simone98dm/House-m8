@@ -86,9 +86,7 @@ const formattedTime = computed(() => {
           >
             {{ i18n ? $t(notification.title) : notification.title }}
           </p>
-          <span
-            class="text-xs text-gray-500 dark:text-gray-400 ml-2 flex-shrink-0"
-          >
+          <span class="text-xs text-gray-500 dark:text-gray-400 ml-2 shrink-0">
             {{ formattedTime }}
           </span>
         </div>
@@ -115,10 +113,10 @@ const formattedTime = computed(() => {
 
       <!-- Close button. Raw: bespoke tiny icon-only dismiss (p-1), same
            reason the action button above it uses UiButton but this doesn't. -->
-      <div class="ml-3 flex-shrink-0">
+      <div class="ml-3 shrink-0">
         <button
           type="button"
-          class="inline-flex text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-md p-1 transition-colors duration-150"
+          class="inline-flex text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-hidden focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-md p-1 transition-colors duration-150"
           :aria-label="t('common.close')"
           @click="handleDismiss"
         >

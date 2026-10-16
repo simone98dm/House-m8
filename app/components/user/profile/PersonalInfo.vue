@@ -43,11 +43,11 @@ const handleSave = async (data: Partial<User>) => {
     <UiCard>
       <template #header>
         <div class="flex items-center gap-2">
-          <div class="flex-grow flex items-center gap-2">
+          <div class="grow flex items-center gap-2">
             <div class="p-2 rounded-lg bg-[var(--secondary-subtle)]">
               <Icon
                 name="heroicons:user-circle"
-                class="h-5 w-5 text-[var(--secondary-hover)]"
+                class="h-5 w-5 text-[color:var(--secondary-hover)]"
                 aria-hidden="true"
               />
             </div>

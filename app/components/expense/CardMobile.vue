@@ -70,7 +70,7 @@ const {
            padding box for the click/focus-ring hit area. -->
         <button
           type="button"
-          class="absolute inset-0 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset"
+          class="absolute inset-0 rounded-xl cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-inset"
           :aria-label="
             $t('expenses.card.viewDetailsLabel', {
               description: expense.description,

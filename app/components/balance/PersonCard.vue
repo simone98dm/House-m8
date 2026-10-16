@@ -54,22 +54,22 @@ const statusIconBg = computed(() => {
   if (isEven.value)
     return 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400';
   return isOwedToThem.value
-    ? 'bg-[var(--success-subtle)] text-[var(--success-fg)]'
-    : 'bg-[var(--danger-subtle)] text-[var(--danger-fg)]';
+    ? 'bg-ok-subtle text-ok-fg'
+    : 'bg-danger-subtle text-danger-fg';
 });
 </script>
 
 <template>
   <div
     :class="[
-      'flex items-center justify-between rounded-xl bg-[var(--surface)] border shadow-sm px-4 py-3 transition-shadow hover:shadow-md',
+      'flex items-center justify-between rounded-xl bg-surface border shadow-sm px-4 py-3 transition-shadow hover:shadow-md',
       borderColor,
     ]"
   >
     <div class="flex items-center gap-3">
       <div class="relative shrink-0">
         <div
-          class="size-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-base"
+          class="size-12 rounded-full bg-linear-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-base"
           aria-hidden="true"
         >
           {{ initials }}

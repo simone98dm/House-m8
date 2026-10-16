@@ -1,3 +1,4 @@
+import { toSafeErrorMessage } from './utils';
 /**
  * PostgreSQL Balance Repository Implementation
  *
@@ -63,7 +64,7 @@ export class PostgresBalanceRepository implements IBalanceRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -84,7 +85,7 @@ export class PostgresBalanceRepository implements IBalanceRepository {
       let user = ledger.users.get(userId);
       if (!user) {
         const userResult = await this.pool.query<User>(
-          'SELECT * FROM users WHERE id = $1',
+          'SELECT id, email, first_name, last_name, avatar_url FROM users WHERE id = $1',
           [userId],
         );
         user = userResult.rows[0];
@@ -104,7 +105,7 @@ export class PostgresBalanceRepository implements IBalanceRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -142,7 +143,7 @@ export class PostgresBalanceRepository implements IBalanceRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }
@@ -156,7 +157,7 @@ export class PostgresBalanceRepository implements IBalanceRepository {
     } catch (error) {
       return {
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: toSafeErrorMessage(error),
       };
     }
   }

@@ -18,6 +18,24 @@ export interface UserExportData {
     created_at: string;
     terms_accepted_at: string | null;
     consent_version: string | null;
+    avatar_url: string | null;
+    birthdate: string | null;
+    bio: string | null;
+    is_smoker: boolean | null;
+    gender: string | null;
+    birthplace: string | null;
+    nationality: string | null;
+    occupation_type: string | null;
+    study_field: string | null;
+    job_title: string | null;
+    languages: string[] | null;
+    pets: string | null;
+    telephone: string | null;
+    instagram: string | null;
+    twitter: string | null;
+    tiktok: string | null;
+    linkedin: string | null;
+    profile_pictures: string[] | null;
   };
   houses: Array<{
     id: string;
@@ -48,6 +66,21 @@ export interface UserExportData {
     text: string;
     created_at: string;
   }>;
+  bulletin_notes: Array<{
+    id: string;
+    house_id: string;
+    message: string;
+    dismiss_date: string | null;
+    created_at: string;
+  }>;
+  reports: Array<{
+    id: string;
+    house_id: string;
+    description: string;
+    created_at: string;
+    read_at: string | null;
+    solved_at: string | null;
+  }>;
   gdpr_requests: Array<{
     type: string;
     status: string;
@@ -68,5 +101,7 @@ export interface IGdprRepository {
     pseudonymized: number;
     tokensCleared: number;
     invitationsCleared: number;
+    resetTokensCleared: number;
+    gdprRequestsCleared: number;
   }>;
 }

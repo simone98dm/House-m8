@@ -13,12 +13,16 @@ import { useHouseDetailsPage } from '~/composables/useHouseDetailsPage';
 import { useHousesStore } from '~/stores/houses';
 import { useBillsStore } from '~/stores/bills';
 import { useUserStore } from '~/stores/user';
+import { useNotificationStore } from '~/stores/notifications';
 import { useHouses } from '~/composables/useHouses';
 import type { House, HouseMember } from '~/types';
 
 vi.mock('~/stores/houses', () => ({ useHousesStore: vi.fn() }));
 vi.mock('~/stores/bills', () => ({ useBillsStore: vi.fn() }));
 vi.mock('~/stores/user', () => ({ useUserStore: vi.fn() }));
+vi.mock('~/stores/notifications', () => ({
+  useNotificationStore: vi.fn(),
+}));
 vi.mock('~/composables/useHouses', () => ({ useHouses: vi.fn() }));
 
 mockNuxtImport('useI18n', () => () => ({
@@ -51,7 +55,12 @@ const houseWith = (members: HouseMember[]): House =>
     members,
   }) as House;
 
+const notify = { success: vi.fn() };
+
 async function setup(house: House, currentUserId: string) {
+  vi.mocked(useNotificationStore).mockReturnValue(
+    notify as unknown as ReturnType<typeof useNotificationStore>,
+  );
   vi.mocked(useHousesStore).mockReturnValue({
     initialize: vi.fn(),
     updateHouse: vi.fn(),
@@ -67,7 +76,7 @@ async function setup(house: House, currentUserId: string) {
       .fn()
       .mockResolvedValue({ data: house, error: null }),
     generateInvitation: vi.fn(),
-    addMember: vi.fn(),
+    inviteMember: vi.fn(),
     removeMember: vi.fn(),
     updateMemberRole: vi.fn(),
   } as unknown as ReturnType<typeof useHouses>);
@@ -142,5 +151,49 @@ describe('useHouseDetailsPage — who can invite', () => {
     const api = await setup(full, 'user-1');
     expect(api.canInviteMembers.value).toBe(true);
     expect(api.enableInvitation.value).toBe(false);
+  });
+});
+
+describe('useHouseDetailsPage — invite by email', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  const owned = () =>
+    houseWith([member('user-1', 'owner'), member('user-2', 'member')]);
+
+  it('confirms the invitation was sent without expecting a new member', async () => {
+    const api = await setup(owned(), 'user-1');
+    const housesApi = vi.mocked(useHouses)();
+    vi.mocked(housesApi.inviteMember).mockResolvedValue({
+      data: { invited: true },
+      error: null,
+    });
+    vi.mocked(housesApi.getHouseWithMembers).mockClear();
+
+    await api.handleInviteMember('new@example.com');
+
+    expect(housesApi.inviteMember).toHaveBeenCalledWith(
+      'house-1',
+      'new@example.com',
+    );
+    expect(notify.success).toHaveBeenCalledWith(
+      'houseProfile.inviteSentTitle',
+      'houseProfile.inviteSentDesc',
+      { i18n: true },
+    );
+    expect(api.memberActionError.value).toBe('');
+    expect(housesApi.getHouseWithMembers).not.toHaveBeenCalled();
+  });
+
+  it('shows the error and no confirmation when the invite fails', async () => {
+    const api = await setup(owned(), 'user-1');
+    vi.mocked(vi.mocked(useHouses)().inviteMember).mockResolvedValue({
+      data: null,
+      error: 'Forbidden',
+    });
+
+    await api.handleInviteMember('new@example.com');
+
+    expect(api.memberActionError.value).toBe('Forbidden');
+    expect(notify.success).not.toHaveBeenCalled();
   });
 });

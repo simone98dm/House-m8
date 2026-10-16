@@ -28,22 +28,19 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Check DB revocation
-  const pool = getPostgresPool();
-  if (payload.jti) {
-    const row = await pool.query(
-      'SELECT revoked_at FROM refresh_tokens WHERE jti = $1',
-      [payload.jti],
-    );
-    if (!row.rows[0] || row.rows[0].revoked_at) {
-      clearAuthCookies(event);
-      throw createError({ statusCode: 401, statusMessage: 'Token revoked' });
-    }
-    // Revoke old token
-    await pool.query(
-      'UPDATE refresh_tokens SET revoked_at = NOW() WHERE jti = $1',
-      [payload.jti],
-    );
+  // Rotation is one atomic statement: of two concurrent requests presenting
+  // the same token only one can revoke it, and only that one gets a new pair.
+  // A token without jti, or one already revoked/unknown, is rejected.
+  const rotated = payload.jti
+    ? await getPostgresPool().query(
+        'UPDATE refresh_tokens SET revoked_at = NOW() WHERE jti = $1 AND revoked_at IS NULL',
+        [payload.jti],
+      )
+    : null;
+
+  if (!rotated?.rowCount) {
+    clearAuthCookies(event);
+    throw createError({ statusCode: 401, statusMessage: 'Token revoked' });
   }
 
   // Generate new tokens

@@ -47,13 +47,10 @@ const handleDelete = () => {
         class="flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700"
       >
         <div
-          class="size-12 rounded-xl bg-[var(--primary-subtle)] flex items-center justify-center shrink-0"
+          class="size-12 rounded-xl bg-brand-subtle flex items-center justify-center shrink-0"
           aria-hidden="true"
         >
-          <Icon
-            name="heroicons:banknotes"
-            class="w-5 h-5 text-[var(--primary-hover)]"
-          />
+          <Icon name="heroicons:banknotes" class="w-5 h-5 text-brand-hover" />
         </div>
         <div class="min-w-0">
           <h3

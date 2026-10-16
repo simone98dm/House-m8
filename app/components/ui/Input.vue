@@ -75,7 +75,7 @@ const inputClasses = computed(() => {
     'border',
     'transition-all',
     'duration-150',
-    'focus:outline-none',
+    'focus:outline-hidden',
     'focus:ring-2',
     'focus:ring-offset-0',
     // gray-400 placeholder measured ~3.3:1 on white (fails the 4.5:1 AA

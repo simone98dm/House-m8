@@ -91,7 +91,7 @@ const {
           <div
             v-for="n in 4"
             :key="n"
-            class="flex items-center gap-4 bg-[var(--surface)] p-4 rounded-xl border border-gray-100 dark:border-gray-700"
+            class="flex items-center gap-4 bg-surface p-4 rounded-xl border border-gray-100 dark:border-gray-700"
             aria-hidden="true"
           >
             <UiSkeleton class="size-12 rounded-lg shrink-0" />

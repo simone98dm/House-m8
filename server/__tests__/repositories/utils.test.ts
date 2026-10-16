@@ -23,6 +23,47 @@ describe('repoQuery', () => {
   });
 });
 
+describe('repoQuery database error sanitising', () => {
+  const pgError = (code: string, message: string) =>
+    Object.assign(new Error(message), { code });
+
+  it('maps unique violations to a message matching /duplicate key|unique/', async () => {
+    const result = await repoQuery(async () => {
+      throw pgError('23505', 'duplicate key value violates "users_email_key"');
+    });
+    expect(result.error).toBe('duplicate key');
+  });
+
+  it('maps malformed identifiers to "Invalid identifier"', async () => {
+    const result = await repoQuery(async () => {
+      throw pgError('22P02', 'invalid input syntax for type uuid: "x"');
+    });
+    expect(result.error).toBe('Invalid identifier');
+  });
+
+  it('hides other pg errors behind "Database error"', async () => {
+    const result = await repoQuery(async () => {
+      throw pgError('42703', 'column "secret_col" does not exist');
+    });
+    expect(result.error).toBe('Database error');
+  });
+
+  it('passes deliberate application errors through unchanged', async () => {
+    const result = await repoQuery(async () => {
+      throw new Error('CODE_LOCKED');
+    });
+    expect(result.error).toBe('CODE_LOCKED');
+  });
+
+  it('sanitises errors in repoPaginated too', async () => {
+    const pool = {
+      query: vi.fn().mockRejectedValue(pgError('42P01', 'relation "x"')),
+    } as unknown as Pool;
+    const result = await repoPaginated(pool, 'c', 'd', []);
+    expect(result.error).toBe('Database error');
+  });
+});
+
 describe('repoPaginated', () => {
   const makePool = (countRows: object[], dataRows: object[]) => {
     const query = vi

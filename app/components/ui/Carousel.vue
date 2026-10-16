@@ -138,7 +138,7 @@ watch(
       <template v-if="images.length > 1">
         <button
           type="button"
-          class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary-500 flex"
+          class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur-xs transition-all hover:bg-white hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-primary-500 flex"
           :aria-label="$t('a11y.carousel.previous')"
           @click="prevSlide"
         >
@@ -150,7 +150,7 @@ watch(
         </button>
         <button
           type="button"
-          class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary-500 flex"
+          class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur-xs transition-all hover:bg-white hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-primary-500 flex"
           :aria-label="$t('a11y.carousel.next')"
           @click="nextSlide"
         >
@@ -160,7 +160,7 @@ watch(
 
       <div
         v-if="images.length > 1"
-        class="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm"
+        class="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-xs"
       >
         {{ currentIndex + 1 }} / {{ images.length }}
       </div>
@@ -176,7 +176,7 @@ watch(
         v-for="(image, index) in images"
         :key="`thumb-${index}`"
         type="button"
-        class="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-all"
+        class="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-all"
         :class="
           index === currentIndex
             ? 'border-primary-500 ring-2 ring-primary-200'
@@ -215,14 +215,14 @@ watch(
       <Transition name="fullscreen">
         <div
           v-if="isFullscreen"
-          class="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm"
+          class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xs"
           @click="closeFullscreen"
         >
           <!-- Close Button. Raw: same bespoke circular icon-overlay case as
                the nav buttons above. -->
           <button
             type="button"
-            class="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-3 text-white backdrop-blur-sm transition-all hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+            class="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-3 text-white backdrop-blur-xs transition-all hover:bg-white/20 focus:outline-hidden focus:ring-2 focus:ring-white"
             :aria-label="$t('a11y.close')"
             @click="closeFullscreen"
           >
@@ -253,7 +253,7 @@ watch(
             <template v-if="images.length > 1">
               <button
                 type="button"
-                class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white"
+                class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-xs transition-all hover:bg-white/20 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white"
                 :aria-label="$t('a11y.carousel.previous')"
                 @click.stop="prevSlide"
               >
@@ -265,7 +265,7 @@ watch(
               </button>
               <button
                 type="button"
-                class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white"
+                class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-xs transition-all hover:bg-white/20 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white"
                 :aria-label="$t('a11y.carousel.next')"
                 @click.stop="nextSlide"
               >
@@ -279,7 +279,7 @@ watch(
 
             <div
               v-if="images.length > 1"
-              class="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm"
+              class="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-xs"
             >
               {{ currentIndex + 1 }} / {{ images.length }}
             </div>

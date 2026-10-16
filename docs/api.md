@@ -59,7 +59,6 @@ Error (Nitro `createError`):
 | POST   | `/api/auth/signin`                 | public      | Email/password login → sets JWT cookies  |
 | POST   | `/api/auth/signout`                | public      | Clears JWT cookies                       |
 | POST   | `/api/auth/refresh`                | cookie      | Rotates access token using refresh token |
-| GET    | `/api/auth/verify-email`           | token param | Confirms email address via link          |
 | POST   | `/api/auth/confirm`                | public      | Alternative email confirmation           |
 | POST   | `/api/auth/password-reset/request` | public      | Sends reset email                        |
 | POST   | `/api/auth/password-reset/confirm` | token param | Sets new password                        |
@@ -242,7 +241,7 @@ Protected by `CRON_SECRET` header, not JWT cookies. Intended for Vercel cron job
 | Method | Path                        | Description                             |
 | ------ | --------------------------- | --------------------------------------- |
 | POST   | `/api/cron/bill-reminders`  | Send upcoming bill reminders            |
-| POST   | `/api/cron/monthly-reports` | Generate pre-aggregated monthly reports |
+| GET    | `/api/cron/monthly-reports` | Generate pre-aggregated monthly reports |
 
 ---
 
