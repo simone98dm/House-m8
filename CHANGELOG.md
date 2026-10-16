@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 0.10.0 (2026-10-16)
+
+
+### Features
+
+* security hardening, Tailwind 4 migration and legal pages ([0f8ee78](https://github.com/simone98dm/HouseM8/commit/0f8ee78d8e6f0a6e3101c67b469b3b425e170e07))
+
 ## 0.9.0 (2026-08-20)
 
 
